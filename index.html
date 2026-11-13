@@ -12,7 +12,6 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px 15px; padding-top: max(20px, env(safe-area-inset-top)); }
         
         .card { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: relative; }
-        /* 클릭 가능한 카드 스타일 */
         .clickable { cursor: pointer; transition: transform 0.1s ease-in-out, background-color 0.2s; -webkit-tap-highlight-color: transparent; }
         .clickable:active { transform: scale(0.97); background-color: #252525; }
         
@@ -25,8 +24,7 @@
         .positive { color: var(--green); background: rgba(76, 175, 80, 0.1); }
         .negative { color: var(--red); background: rgba(244, 67, 54, 0.1); }
         
-        /* 차트 컨테이너 */
-        .chart-container { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #333; width: 100%; height: 120px; position: relative; }
+        .chart-container { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #333; width: 100%; height: 130px; position: relative; }
         canvas { width: 100%; height: 100%; display: block; }
         .loading-chart { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: var(--gray); }
 
@@ -39,44 +37,45 @@
         .history-item { flex: 1; }
         .h-date { font-size: 12px; color: var(--gray); margin-bottom: 4px; }
         .h-val { font-size: 16px; font-weight: 600; }
-        .last-update { text-align: center; font-size: 11px; color: var(--gray); margin-top: 20px; }
+        .last-update { text-align: center; font-size: 11px; color: var(--gray); margin-top: 20px; padding-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- 비트코인 카드 (터치 가능) -->
+    <!-- 자산 1: 비트코인 -->
     <div class="card clickable" onclick="toggleChart('BTC', 'btc')">
         <div class="header">
             <h2>Bitcoin (BTC)</h2>
-            <span class="click-hint">📈 클릭하여 30일 추세</span>
+            <span class="click-hint">📈 30일 추세 토글</span>
         </div>
         <div class="price" id="btc-price">로딩 중...</div>
         <div class="change" id="btc-change">-</div>
-        
         <div class="chart-container" id="btc-chart-container">
             <div class="loading-chart" id="btc-loading">데이터 불러오는 중...</div>
             <canvas id="btc-chart"></canvas>
         </div>
     </div>
 
-    <!-- 이더리움 카드 (터치 가능) -->
+    <!-- 자산 2: 이더리움 -->
     <div class="card clickable" onclick="toggleChart('ETH', 'eth')">
         <div class="header">
             <h2>Ethereum (ETH)</h2>
-            <span class="click-hint">📈 클릭하여 30일 추세</span>
+            <span class="click-hint">📈 30일 추세 토글</span>
         </div>
         <div class="price" id="eth-price">로딩 중...</div>
         <div class="change" id="eth-change">-</div>
-        
         <div class="chart-container" id="eth-chart-container">
             <div class="loading-chart" id="eth-loading">데이터 불러오는 중...</div>
             <canvas id="eth-chart"></canvas>
         </div>
     </div>
 
-    <!-- 공포 탐욕 지수 카드 -->
+    <!-- 심리지표 1: 비트코인 (API) -->
     <div class="card">
-        <div class="header"><h2>Crypto Fear & Greed Index</h2></div>
+        <div class="header">
+            <h2>Fear & Greed (BTC)</h2>
+            <span class="click-hint" style="background:transparent; border:1px solid #333">Alternative API</span>
+        </div>
         <div class="fng-container">
             <div class="fng-value" id="fng-val">-</div>
             <div class="fng-class" id="fng-class">로딩 중...</div>
@@ -85,18 +84,33 @@
         <div class="history-grid" id="fng-history"></div>
     </div>
 
+    <!-- 심리지표 2: 이더리움 (RSI 모델) -->
+    <div class="card">
+        <div class="header">
+            <h2>Fear & Greed (ETH)</h2>
+            <span class="click-hint" style="background:transparent; border:1px solid #333">RSI(14) 연산 추정</span>
+        </div>
+        <div class="fng-container">
+            <div class="fng-value" id="eth-fng-val">-</div>
+            <div class="fng-class" id="eth-fng-class">로딩 중...</div>
+        </div>
+        <div class="history-title">최근 7일 추세</div>
+        <div class="history-grid" id="eth-fng-history"></div>
+    </div>
+
     <div class="last-update" id="last-update">업데이트 대기 중...</div>
 
     <script>
-        // API Endpoints
         const API_BINANCE = 'https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT"]';
         const API_FNG = 'https://api.alternative.me/fng/?limit=7';
 
-        // 유틸리티 함수
+        let btcPricesGlobal = [];
+        let ethPricesGlobal = [];
+        
         const getFnGColor = (val) => val <= 25 ? '#f44336' : val <= 45 ? '#ff9800' : val <= 55 ? '#ffeb3b' : val <= 75 ? '#8bc34a' : '#4caf50';
-        const formatPrice = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        const formatPrice = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        const formatChartY = (num) => num >= 1000 ? '$' + (num / 1000).toFixed(1) + 'k' : '$' + num.toFixed(0);
 
-        // 시세 불러오기
         async function fetchPrices() {
             try {
                 const res = await fetch(API_BINANCE);
@@ -113,66 +127,129 @@
                 });
                 
                 const now = new Date();
-                document.getElementById('last-update').innerText = `마지막 업데이트: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-            } catch (error) {
-                console.error('Price Fetch Error:', error);
-            }
+                document.getElementById('last-update').innerText = `마지막 동기화: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            } catch (error) { console.error('Price Fetch Error:', error); }
         }
 
-        // 공포탐욕지수 불러오기
-        async function fetchFnG() {
+        async function fetchFnGBTC() {
             try {
                 const res = await fetch(API_FNG);
                 const json = await res.json();
                 const today = json.data[0];
                 
-                const fngValEl = document.getElementById('fng-val');
-                const fngClassEl = document.getElementById('fng-class');
-                fngValEl.innerText = today.value;
-                fngValEl.style.color = getFnGColor(today.value);
-                fngClassEl.innerText = today.value_classification;
-                fngClassEl.style.color = getFnGColor(today.value);
+                const valEl = document.getElementById('fng-val');
+                const classEl = document.getElementById('fng-class');
+                valEl.innerText = today.value;
+                valEl.style.color = getFnGColor(today.value);
+                classEl.innerText = today.value_classification;
+                classEl.style.color = getFnGColor(today.value);
 
-                const historyHtml = json.data.slice(1, 7).map(item => {
+                // API 데이터는 역순(인덱스 0이 오늘)이므로 1~7 추출 후 뒤집어서 시간순 정렬
+                const historyHtml = json.data.slice(1, 7).reverse().map(item => {
                     const date = new Date(item.timestamp * 1000);
                     return `<div class="history-item">
                                 <div class="h-date">${date.getMonth()+1}/${date.getDate()}</div>
                                 <div class="h-val" style="color: ${getFnGColor(item.value)}">${item.value}</div>
                             </div>`;
-                }).reverse().join('');
+                }).join('');
                 document.getElementById('fng-history').innerHTML = historyHtml;
-            } catch (error) {
-                console.error('F&G Fetch Error:', error);
-            }
+            } catch (error) { console.error('F&G Fetch Error:', error); }
         }
 
-        // 30일 차트 토글 및 그리기 로직 (Native Canvas)
+        // Wilder's RMA RSI(14) 계산 알고리즘
+        function getRSIArray(prices, period = 14) {
+            let rsiArray = [];
+            let gains = 0, losses = 0;
+            
+            for (let i = 1; i <= period; i++) {
+                const diff = prices[i] - prices[i-1];
+                if (diff >= 0) gains += diff;
+                else losses -= diff;
+            }
+            let avgGain = gains / period;
+            let avgLoss = losses / period;
+            rsiArray.push(avgLoss === 0 ? 100 : 100 - (100 / (1 + (avgGain/avgLoss))));
+            
+            for (let i = period + 1; i < prices.length; i++) {
+                const diff = prices[i] - prices[i-1];
+                const gain = diff >= 0 ? diff : 0;
+                const loss = diff < 0 ? -diff : 0;
+                avgGain = (avgGain * (period - 1) + gain) / period;
+                avgLoss = (avgLoss * (period - 1) + loss) / period;
+                rsiArray.push(avgLoss === 0 ? 100 : 100 - (100 / (1 + (avgGain/avgLoss))));
+            }
+            return rsiArray;
+        }
+
+        function renderEthFnG(dataList) {
+            const prices = dataList.map(d => d.price);
+            const rsiArr = getRSIArray(prices, 14); // 30일 데이터 기준 16개의 RSI 배열 생성
+            
+            const last7RSI = rsiArr.slice(-7); 
+            const last7Data = dataList.slice(-7); // 시간 동기화
+            
+            const todayVal = Math.round(last7RSI[6]); // 배열 마지막 요소가 오늘(현재)
+            document.getElementById('eth-fng-val').innerText = todayVal;
+            document.getElementById('eth-fng-val').style.color = getFnGColor(todayVal);
+            
+            const fngClass = todayVal <= 25 ? 'Extreme Fear' : todayVal <= 45 ? 'Fear' : todayVal <= 55 ? 'Neutral' : todayVal <= 75 ? 'Greed' : 'Extreme Greed';
+            document.getElementById('eth-fng-class').innerText = fngClass;
+            document.getElementById('eth-fng-class').style.color = getFnGColor(todayVal);
+            
+            const historyHtml = last7RSI.slice(0, 6).map((val, i) => {
+                const date = new Date(last7Data[i].time);
+                return `
+                    <div class="history-item">
+                        <div class="h-date">${date.getMonth()+1}/${date.getDate()}</div>
+                        <div class="h-val" style="color: ${getFnGColor(val)}">${Math.round(val)}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('eth-fng-history').innerHTML = historyHtml;
+        }
+
+        async function fetchKlines() {
+            try {
+                // 병렬 비동기 호출로 속도 극대화
+                const [btcRes, ethRes] = await Promise.all([
+                    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=30'),
+                    fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=30')
+                ]);
+                const btcData = await btcRes.json();
+                const ethData = await ethRes.json();
+                
+                ethDataList = ethData.map(d => ({ time: d[0], price: parseFloat(d[4]) }));
+                btcPricesGlobal = btcData.map(d => parseFloat(d[4]));
+                ethPricesGlobal = ethDataList.map(d => d.price);
+                
+                renderEthFnG(ethDataList); // ETH 심리지수 연산 및 렌더링
+                
+                // 차트가 열려있을 경우 데이터 즉시 갱신
+                if(document.getElementById('btc-chart-container').style.display === 'block') drawChart('btc-chart', btcPricesGlobal);
+                if(document.getElementById('eth-chart-container').style.display === 'block') drawChart('eth-chart', ethPricesGlobal);
+            } catch (error) { console.error('Kline Error:', error); }
+        }
+
         async function toggleChart(symbol, elementId) {
             const container = document.getElementById(`${elementId}-chart-container`);
             const loading = document.getElementById(`${elementId}-loading`);
             
-            // 닫기
             if (container.style.display === 'block') {
                 container.style.display = 'none';
                 return;
             }
             
-            // 열기 및 렌더링
             container.style.display = 'block';
-            loading.style.display = 'block';
+            const prices = symbol === 'BTC' ? btcPricesGlobal : ethPricesGlobal;
             
-            try {
-                // 바이낸스 일봉 데이터 (30일치) 호출
-                const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1d&limit=30`);
-                const data = await res.json();
-                // 종가(Close Price) 추출
-                const prices = data.map(d => parseFloat(d[4]));
-                loading.style.display = 'none';
-                drawChart(`${elementId}-chart`, prices);
-            } catch (error) {
-                loading.innerText = "데이터를 불러올 수 없습니다.";
-                console.error('Chart Data Error:', error);
+            if (prices.length === 0) {
+                loading.style.display = 'block';
+                setTimeout(() => toggleChart(symbol, elementId), 500);
+                return;
             }
+            
+            loading.style.display = 'none';
+            drawChart(`${elementId}-chart`, prices);
         }
 
         function drawChart(canvasId, prices) {
@@ -180,10 +257,9 @@
             const ctx = canvas.getContext('2d');
             const parentRect = canvas.parentElement.getBoundingClientRect();
             
-            // 고해상도(Retina) 디스플레이 대응
             const dpr = window.devicePixelRatio || 1;
             const width = parentRect.width;
-            const height = parentRect.height - 32; // 패딩 제외
+            const height = parentRect.height - 32; 
             
             canvas.width = width * dpr;
             canvas.height = height * dpr;
@@ -193,29 +269,40 @@
             const max = Math.max(...prices);
             const range = (max - min) || 1;
             
-            // 30일 기준 시작가 대비 현재가로 색상 결정
+            // Y축 텍스트 겹침 방지용 패딩(15%)
+            const pad = range * 0.15; 
+            const drawMin = min - pad;
+            const drawMax = max + pad;
+            const drawRange = drawMax - drawMin;
+            
             const isPositive = prices[prices.length - 1] >= prices[0];
             const color = isPositive ? '#4caf50' : '#f44336';
             const bgColor = isPositive ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)';
 
             ctx.clearRect(0, 0, width, height);
-            ctx.beginPath();
             
+            // Y축 레이블 (가이드) 텍스트 렌더링
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.font = '10px -apple-system, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'top';
+            ctx.fillText(formatChartY(drawMax), width - 5, 5); // 최고점 가이드
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(formatChartY(drawMin), width - 5, height - 5); // 최저점 가이드
+            
+            ctx.beginPath();
             prices.forEach((p, i) => {
                 const x = (i / (prices.length - 1)) * width;
-                const y = height - 10 - ((p - min) / range) * (height - 20); // 상하 여백 10px
-                
+                const y = height - ((p - drawMin) / drawRange) * height;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             });
             
-            // 선 그리기
             ctx.strokeStyle = color;
             ctx.lineWidth = 2.5;
             ctx.lineJoin = 'round';
             ctx.stroke();
 
-            // 하단 그라데이션 채우기
             ctx.lineTo(width, height);
             ctx.lineTo(0, height);
             const grad = ctx.createLinearGradient(0, 0, 0, height);
@@ -227,8 +314,15 @@
 
         function initApp() {
             fetchPrices();
-            fetchFnG();
-            setInterval(fetchPrices, 60000);
+            fetchFnGBTC();
+            fetchKlines(); // 차트 데이터 선행 로딩 및 ETH RSI 연산
+            
+            // 60초마다 전체 데이터 백그라운드 갱신
+            setInterval(() => {
+                fetchPrices();
+                fetchFnGBTC();
+                fetchKlines();
+            }, 60000);
         }
 
         initApp();
