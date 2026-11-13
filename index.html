@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <!-- iOS PWA(웹앱) 최적화 메타 태그 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Crypto Pulse">
+    <title>Crypto Pulse</title>
+    <style>
+        :root { --bg: #121212; --card: #1e1e1e; --text: #ffffff; --green: #4caf50; --red: #f44336; --gray: #888888; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px 15px; padding-top: max(20px, env(safe-area-inset-top)); }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        h2 { margin: 0; font-size: 18px; color: #aaaaaa; }
+        .price { font-size: 32px; font-weight: 700; margin: 4px 0; letter-spacing: -0.5px; }
+        .change { font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,0.1); }
+        .positive { color: var(--green); background: rgba(76, 175, 80, 0.1); }
+        .negative { color: var(--red); background: rgba(244, 67, 54, 0.1); }
+        
+        .fng-container { text-align: center; padding: 10px 0; }
+        .fng-value { font-size: 48px; font-weight: 800; margin-bottom: 4px; }
+        .fng-class { font-size: 20px; font-weight: 600; text-transform: uppercase; margin-bottom: 20px; }
+        
+        .history-title { font-size: 14px; color: var(--gray); margin-bottom: 12px; border-top: 1px solid #333; padding-top: 16px; }
+        .history-grid { display: flex; justify-content: space-between; text-align: center; }
+        .history-item { flex: 1; }
+        .h-date { font-size: 12px; color: var(--gray); margin-bottom: 4px; }
+        .h-val { font-size: 16px; font-weight: 600; }
+        .last-update { text-align: center; font-size: 11px; color: var(--gray); margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="header"><h2>Bitcoin (BTC)</h2></div>
+        <div class="price" id="btc-price">로딩 중...</div>
+        <div class="change" id="btc-change">-</div>
+    </div>
+
+    <div class="card">
+        <div class="header"><h2>Ethereum (ETH)</h2></div>
+        <div class="price" id="eth-price">로딩 중...</div>
+        <div class="change" id="eth-change">-</div>
+    </div>
+
+    <div class="card">
+        <div class="header"><h2>Fear & Greed Index (공포·탐욕 지수)</h2></div>
+        <div class="fng-container">
+            <div class="fng-value" id="fng-val">-</div>
+            <div class="fng-class" id="fng-class">로딩 중...</div>
+        </div>
+        <div class="history-title">최근 7일 추세</div>
+        <div class="history-grid" id="fng-history"></div>
+    </div>
+
+    <div class="last-update" id="last-update">업데이트 대기 중...</div>
+
+    <script>
+        // API Endpoints
+        const API_BINANCE = 'https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT"]';
+        const API_FNG = 'https://api.alternative.me/fng/?limit=7';
+
+        // 색상 판별 로직
+        const getFnGColor = (val) => val <= 25 ? '#f44336' : val <= 45 ? '#ff9800' : val <= 55 ? '#ffeb3b' : val <= 75 ? '#8bc34a' : '#4caf50';
+        const formatPrice = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+
+        async function fetchPrices() {
+            try {
+                const res = await fetch(API_BINANCE);
+                const data = await res.json();
+                
+                data.forEach(coin => {
+                    const idPrefix = coin.symbol === 'BTCUSDT' ? 'btc' : 'eth';
+                    const change = parseFloat(coin.priceChangePercent);
+                    
+                    document.getElementById(`${idPrefix}-price`).innerText = formatPrice(coin.lastPrice);
+                    
+                    const changeEl = document.getElementById(`${idPrefix}-change`);
+                    changeEl.innerText = `${change > 0 ? '+' : ''}${change.toFixed(2)}%`;
+                    changeEl.className = `change ${change >= 0 ? 'positive' : 'negative'}`;
+                });
+                
+                const now = new Date();
+                document.getElementById('last-update').innerText = `마지막 업데이트: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            } catch (error) {
+                console.error('Price Fetch Error:', error);
+            }
+        }
+
+        async function fetchFnG() {
+            try {
+                const res = await fetch(API_FNG);
+                const json = await res.json();
+                const today = json.data[0];
+                
+                // 오늘 지수
+                const fngValEl = document.getElementById('fng-val');
+                const fngClassEl = document.getElementById('fng-class');
+                fngValEl.innerText = today.value;
+                fngValEl.style.color = getFnGColor(today.value);
+                fngClassEl.innerText = today.value_classification;
+                fngClassEl.style.color = getFnGColor(today.value);
+
+                // 7일 추세 (오늘 제외, 과거 6일)
+                const historyHtml = json.data.slice(1, 7).map(item => {
+                    const date = new Date(item.timestamp * 1000);
+                    return `
+                        <div class="history-item">
+                            <div class="h-date">${date.getMonth()+1}/${date.getDate()}</div>
+                            <div class="h-val" style="color: ${getFnGColor(item.value)}">${item.value}</div>
+                        </div>
+                    `;
+                }).reverse().join('');
+                document.getElementById('fng-history').innerHTML = historyHtml;
+            } catch (error) {
+                console.error('F&G Fetch Error:', error);
+            }
+        }
+
+        function initApp() {
+            fetchPrices();
+            fetchFnG();
+            setInterval(fetchPrices, 60000); // 60초마다 가격 업데이트
+        }
+
+        // 앱 실행
+        initApp();
+    </script>
+</body>
+</html>
