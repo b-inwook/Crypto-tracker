@@ -65,7 +65,6 @@
             transition: background-color 0.2s, color 0.2s;
         }
 
-        /* 1. 상단 프로 헤더 */
         .app-header {
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
@@ -155,7 +154,6 @@
             cursor: pointer;
         }
 
-        /* 2. 바이낸스 프로 2열 시세 그리드 */
         .market-overview {
             background: var(--bg-card);
             padding: 12px 14px;
@@ -222,7 +220,6 @@
             font-weight: 600;
         }
 
-        /* 탭 컨테이너 */
         .view-section {
             display: none;
         }
@@ -231,7 +228,6 @@
             display: block;
         }
 
-        /* 3. 차트 컨트롤 & 멀티 패널 */
         .chart-controls {
             background: var(--bg-card);
             padding: 7px 12px;
@@ -345,7 +341,6 @@
             justify-content: space-between;
         }
 
-        /* 공통 카드 스타일 */
         .page-pad {
             padding: 12px;
             display: flex;
@@ -384,7 +379,6 @@
             color: var(--text-sub);
         }
 
-        /* 4. 인텔리전스 탭: 반감기 + 기관 리스크 + 뉴스 */
         .halving-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -418,7 +412,6 @@
             transition: width 0.4s ease;
         }
 
-        /* 기관 리스크 카드 */
         .inst-item {
             background: var(--bg-main);
             border: 1px solid var(--border);
@@ -464,7 +457,6 @@
         .im-row span:first-child { color: var(--text-sub); }
         .im-row span:last-child { font-weight: 600; }
 
-        /* 뉴스 리스트 */
         .news-item {
             padding: 11px 0;
             border-bottom: 1px solid var(--border);
@@ -510,7 +502,6 @@
             text-decoration: none;
         }
 
-        /* 5. AI 추매 전략 탭 */
         .score-hero {
             display: flex;
             align-items: center;
@@ -573,7 +564,6 @@
             margin-bottom: 4px;
         }
 
-        /* F&G 요약 미니 그리드 */
         .fng-split {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -587,7 +577,6 @@
             padding: 11px;
         }
 
-        /* 6. 내 평단 & 설정 탭 */
         .form-label {
             display: block;
             font-size: 11.5px;
@@ -646,7 +635,6 @@
             font-size: 12.5px;
         }
 
-        /* 7. 하단 고정 내비게이션 바 (iOS Native Style) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -735,7 +723,6 @@
 </head>
 <body>
 
-    <!-- 상단 프로 헤더 -->
     <header class="app-header">
         <div class="brand-box">
             <div class="pair-switch">
@@ -757,7 +744,6 @@
         </div>
     </header>
 
-    <!-- 바이낸스 프로 2열 시세 요약 -->
     <section class="market-overview">
         <div>
             <div class="price-hero" id="hero-usd">$--,--</div>
@@ -790,7 +776,6 @@
         </div>
     </section>
 
-    <!-- [탭 1] 프로 차트 -->
     <main class="view-section active" id="sec-chart">
         <div class="chart-controls">
             <div class="tf-tabs">
@@ -809,7 +794,6 @@
             <div class="ind-chip active" id="chip-avg" onclick="toggleInd('avg')">매수평균선</div>
         </div>
 
-        <!-- 범례 및 터치 크로스헤어 HUD -->
         <div class="chart-hud" id="chart-hud">
             <span><i class="dot" style="background:#F6465D"></i>MA5</span>
             <span><i class="dot" style="background:#3B82F6"></i>MA10</span>
@@ -829,10 +813,8 @@
         </div>
     </main>
 
-    <!-- [탭 2] 인텔리전스 (반감기 + 기관 리스크 + 엄선 뉴스) -->
     <main class="view-section" id="sec-intel">
         <div class="page-pad">
-            <!-- 1. 비트코인 반감기 현황 -->
             <div class="pro-card">
                 <div class="card-header">
                     <span class="card-title">
@@ -868,17 +850,15 @@
                 </div>
             </div>
 
-            <!-- 2. 주요 크립토 기관 부채 및 파산 리스크 -->
             <div class="pro-card">
                 <div class="card-header">
                     <span class="card-title">
                         <svg class="ui-icon" style="color:var(--gold);" viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
                         기관 부채·청산 리스크 모니터
                     </span>
-                    <span class="tag-pill">실시간 시세 연동</span>
+                    <span class="tag-pill" id="inst-sync-badge">SEC 자동연동</span>
                 </div>
 
-                <!-- Strategy (MSTR) -->
                 <div class="inst-item">
                     <div class="inst-top">
                         <div>
@@ -897,7 +877,6 @@
                     </div>
                 </div>
 
-                <!-- Bitmine Immersion (BMNR) -->
                 <div class="inst-item">
                     <div class="inst-top">
                         <div>
@@ -907,17 +886,16 @@
                         <span class="pct-pill" id="bmnr-risk-badge">--</span>
                     </div>
                     <div class="inst-metrics">
-                        <div class="im-row"><span>보유량</span><span id="bmnr-eth-amt">6,070,000 ETH</span></div>
+                        <div class="im-row"><span>보유량</span><span id="bmnr-eth-amt">6,070,092 ETH</span></div>
                         <div class="im-row"><span>실시간 평가액</span><span id="bmnr-val">--</span></div>
                         <div class="im-row"><span>총 부채 규모</span><span id="bmnr-debt">$0.30B</span></div>
-                        <div class="im-row"><span>현금·유가증권</span><span id="bmnr-cash">$1.30B</span></div>
+                        <div class="im-row"><span>현금·유가증권</span><span id="bmnr-cash">$0.48B</span></div>
                         <div class="im-row"><span>부채 커버리지</span><span id="bmnr-cov" style="color:var(--green);">--</span></div>
-                        <div class="im-row"><span>스테이킹 비중</span><span>~85.6% (MAVAN)</span></div>
+                        <div class="im-row"><span>스테이킹 비중</span><span>~86.1% (MAVAN)</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. 엄선 크립토 뉴스 (중요도순 정렬 + 자동 한국어 번역) -->
             <div class="pro-card">
                 <div class="card-header">
                     <span class="card-title">
@@ -935,10 +913,8 @@
         </div>
     </main>
 
-    <!-- [탭 3] AI 종합 분위기 & 추매 전략 -->
     <main class="view-section" id="sec-strategy">
         <div class="page-pad">
-            <!-- 시장 심리 요약 -->
             <div class="fng-split">
                 <div class="fng-card">
                     <div style="font-size:11px; color:var(--text-sub); margin-bottom:4px;">BTC 공포·탐욕 (공식)</div>
@@ -956,7 +932,6 @@
                 </div>
             </div>
 
-            <!-- 종합 매수 매력도 & 추매 전략 -->
             <div class="pro-card">
                 <div class="card-header">
                     <span class="card-title" id="st-coin-header">
@@ -994,14 +969,12 @@
                     </div>
                 </div>
 
-                <!-- 4대 팩터 세부 점수 바 -->
                 <div style="font-size:12px; font-weight:700; margin-bottom:8px;">팩터별 세부 진단</div>
                 <div id="st-factors"></div>
             </div>
         </div>
     </main>
 
-    <!-- [탭 4] 내 평단 & 기관 데이터 관리 -->
     <main class="view-section" id="sec-position">
         <div class="page-pad">
             <div class="pro-card">
@@ -1023,17 +996,16 @@
                 </div>
             </div>
 
-            <!-- 기관 공시 수치 수동 보정 카드 -->
             <div class="pro-card">
                 <div class="card-header">
                     <span class="card-title">
                         <svg class="ui-icon" style="color:var(--gold);" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-                        기관 공시 데이터 보정 (선택)
+                        기관 공시 데이터 수동 보정
                     </span>
-                    <button class="pro-btn secondary" onclick="resetInstDefaults()">기본값 복원</button>
+                    <button class="pro-btn secondary" onclick="resetInstDefaults()">자동동기화 복원</button>
                 </div>
                 <p style="font-size:11px; color:var(--text-sub); margin-bottom:10px; line-height:1.4;">
-                    최신 SEC 공시(2026년 11월 기준)가 기본 반영되어 있습니다. 추후 추가 매수나 부채 변동 발표 시 아래 값을 수정해 반영할 수 있습니다.
+                    GitHub Actions가 매일 SEC EDGAR 공시(`inst_data.json`)를 자동 수집해 반영합니다. 수동으로 값을 덮어쓴 경우 우측 [자동동기화 복원]을 누르면 최신 공시 연동으로 돌아갑니다.
                 </p>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
                     <div>
@@ -1053,14 +1025,13 @@
                         <input type="number" step="0.1" class="pro-input" style="width:100%;" id="cfg-bmnr-debt">
                     </div>
                 </div>
-                <button class="pro-btn" style="width:100%; padding:10px;" onclick="saveInstConfig()">기관 데이터 반영</button>
+                <button class="pro-btn" style="width:100%; padding:10px;" onclick="saveInstConfig()">수동 보정값 적용</button>
             </div>
         </div>
     </main>
 
     <div class="toast-msg" id="toast-msg"></div>
 
-    <!-- 하단 고정 네비게이션 바 -->
     <nav class="bottom-nav">
         <button class="nav-item active" data-sec="chart" onclick="switchSection('chart')">
             <span class="nav-icon">
@@ -1089,19 +1060,19 @@
     </nav>
 
     <script>
-        // 기본 기관 공시 상수 (2026년 11월 SEC 공시 기준)
         const DEFAULT_INST = {
             mstrBtc: 850364,
             mstrAvgCost: 75450,
             mstrDebtB: 6.7,
             mstrCashB: 4.92,
-            bmnrEth: 6070000,
+            mstrFilingDate: '2026-11-09',
+            bmnrEth: 6070092,
             bmnrAvgCost: 2810,
             bmnrDebtB: 0.3,
-            bmnrCashB: 1.30
+            bmnrCashB: 0.48,
+            bmnrFilingDate: '2026-11-09'
         };
 
-        // 전역 상태
         const app = {
             theme: localStorage.getItem('cp_theme') || 'dark',
             coin: 'BTC',
@@ -1116,12 +1087,12 @@
             fng: { btc: 26, btcLabel: 'Fear', eth: 32, ethLabel: 'Fear' },
             halving: { currentBlock: 923500, progressPct: 39.8, daysLeft: 878 },
             inst: Object.assign({}, DEFAULT_INST, JSON.parse(localStorage.getItem('cp_inst_cfg') || '{}')),
+            instManual: localStorage.getItem('cp_inst_manual') === '1',
             avgPrices: JSON.parse(localStorage.getItem('cp_avg_prices') || '{"BTC":0,"ETH":0}'),
             crosshairIdx: null,
             ws: null
         };
 
-        // 초기 테마 적용
         const ICON_SUN = '<svg class="ui-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
         const ICON_MOON = '<svg class="ui-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
         const ICON_COMPASS = '<svg class="ui-icon" style="color:var(--gold);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>';
@@ -1147,7 +1118,6 @@
             applyTheme(app.theme === 'dark' ? 'light' : 'dark');
         }
 
-        // 포맷터
         const fmtUSD = (v, dec = 2) => {
             if (!v || isNaN(v)) return '$--';
             const d = v >= 1000 ? 2 : dec;
@@ -1163,7 +1133,6 @@
         const fmtAxis = (v) => v >= 1000 ? Math.round(v).toLocaleString('en-US') : v.toFixed(1);
         const getFnGColor = (v) => v <= 25 ? 'var(--up)' : v <= 45 ? '#F59E0B' : v <= 55 ? 'var(--gold)' : 'var(--green)';
 
-        // 기술적 지표 계산
         function calcSMA(arr, p) {
             return arr.map((_, i) => {
                 if (i < p - 1) return null;
@@ -1217,7 +1186,29 @@
             });
         }
 
-        // 1. 시세 REST 초기 로드 + WebSocket 실시간 연결
+        // GitHub Actions가 매일 커밋한 inst_data.json 자동 동기화
+        async function fetchAutoInstData() {
+            if (app.instManual) {
+                document.getElementById('inst-sync-badge').innerText = '사용자 수동 보정중';
+                return;
+            }
+            try {
+                const res = await fetch(`./inst_data.json?t=${Date.now()}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data && data.mstrBtc && data.bmnrEth) {
+                    app.inst = Object.assign({}, DEFAULT_INST, data);
+                    localStorage.setItem('cp_inst_cfg', JSON.stringify(app.inst));
+                    loadInstInputs();
+                    updateInstitutionUI();
+                    updateStrategyUI();
+                    const syncLabel = data.mstrFilingDate ? `SEC 공시 · ${data.mstrFilingDate}` : 'SEC 자동동기화 완료';
+                    document.getElementById('inst-sync-badge').innerText = syncLabel;
+                    document.getElementById('inst-sync-badge').style.color = 'var(--green)';
+                }
+            } catch (e) {}
+        }
+
         async function fetchTickers() {
             try {
                 const [bRes, uRes] = await Promise.all([
@@ -1322,7 +1313,6 @@
             updatePnLCard();
         }
 
-        // 2. 캔들 데이터 로드
         async function fetchCandles(coin, tf) {
             const sym = coin === 'BTC' ? 'BTCUSDT' : 'ETHUSDT';
             const key = `${coin}_${tf}`;
@@ -1353,7 +1343,6 @@
             } catch (e) { console.error('Kline error:', e); }
         }
 
-        // 3. BTC 공포·탐욕 지수
         async function fetchBtcFnG() {
             try {
                 const res = await fetch('https://api.alternative.me/fng/?limit=1');
@@ -1384,7 +1373,6 @@
             eLbl.style.color = getFnGColor(app.fng.eth);
         }
 
-        // 4. 비트코인 5차 반감기 현황 (mempool.space API)
         async function fetchHalvingInfo() {
             const HALVING_4 = 840000;
             const HALVING_5 = 1050000;
@@ -1412,12 +1400,10 @@
             updateStrategyUI();
         }
 
-        // 5. 기관(Strategy & Bitmine) 부채·청산 리스크 실시간 연산
         function updateInstitutionUI() {
             const btcP = app.ticker.BTC.usd || 64200;
             const ethP = app.ticker.ETH.usd || 1800;
 
-            // Strategy (MSTR)
             const mValB = (app.inst.mstrBtc * btcP) / 1e9;
             const mDebtB = Math.max(0.01, app.inst.mstrDebtB);
             const mCov = mValB / mDebtB;
@@ -1449,7 +1435,6 @@
                 mBadge.style.color = 'var(--up)';
             }
 
-            // Bitmine Immersion (BMNR)
             const bValB = (app.inst.bmnrEth * ethP) / 1e9;
             const bDebtB = Math.max(0.01, app.inst.bmnrDebtB);
             const bCov = bValB / bDebtB;
@@ -1472,7 +1457,6 @@
             }
         }
 
-        // 6. 공신력 있는 1군 매체 뉴스 수집 + 중요도 정렬 + 자동 한국어 번역
         const TRUSTED_FEEDS = [
             { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
             { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
@@ -1538,7 +1522,6 @@
                 let articles = [];
                 results.forEach(r => { if (r.status === 'fulfilled') articles.push(...r.value); });
 
-                // 중복 제거 및 중요도/연관성 점수 산출
                 const seen = new Set();
                 articles = articles.filter(a => {
                     const key = a.title.toLowerCase().slice(0, 35);
@@ -1554,7 +1537,6 @@
                     HIGH_IMPACT_WORDS.forEach(kw => {
                         if (lower.includes(kw.w)) score += kw.s;
                     });
-                    // 타 매체 교차 보도 가산점
                     const tokens = lower.split(/\W+/).filter(w => w.length > 4);
                     let overlapCount = 0;
                     articles.forEach(other => {
@@ -1563,13 +1545,11 @@
                         }
                     });
                     score += Math.min(25, overlapCount * 6);
-                    // 최신성 감쇠 보정 (시간당 -1.2점)
                     const hoursOld = Math.max(0, (now - a.pubDate) / 3600000);
                     score -= hoursOld * 1.2;
                     a.score = score;
                 });
 
-                // 중요도 내림차순 정렬 후 상위 7건 추출
                 articles.sort((a, b) => b.score - a.score);
                 const topArticles = articles.slice(0, 7);
 
@@ -1578,7 +1558,6 @@
                     return;
                 }
 
-                // 순차/병렬 한국어 번역
                 const rendered = await Promise.all(topArticles.map(async (art) => {
                     const koTitle = await translateToKo(art.title);
                     const isTranslated = koTitle !== art.title;
@@ -1607,7 +1586,6 @@
             }
         }
 
-        // 7. AI 종합 분위기 & 분할 추매 전략 엔진
         function updateStrategyUI() {
             const coin = app.coin;
             document.getElementById('st-coin-header').innerHTML = `${ICON_COMPASS} ${coin} 종합 매수 매력도`;
@@ -1632,11 +1610,9 @@
                 if (lastBB.mid) sma20Val = lastBB.mid;
             }
 
-            // 1) 기술적 모멘텀 (35점 만점)
             let techScore = rsiVal <= 30 ? 33 : rsiVal <= 40 ? 26 : rsiVal <= 55 ? 18 : rsiVal <= 68 ? 11 : 5;
             if (liveP <= bbLower * 1.015) techScore = Math.min(35, techScore + 4);
 
-            // 2) 시장 심리 및 수급 (25점 만점)
             const fngVal = coin === 'BTC' ? app.fng.btc : app.fng.eth;
             let sentScore = fngVal <= 20 ? 24 : fngVal <= 35 ? 19 : fngVal <= 55 ? 13 : fngVal <= 70 ? 8 : 4;
             const t = app.ticker[coin];
@@ -1646,11 +1622,8 @@
                 else if (kimp > 4.5) sentScore = Math.max(2, sentScore - 4);
             }
 
-            // 3) 기관 건전성 리스크 (20점 만점)
             const mCov = ((app.inst.mstrBtc * (app.ticker.BTC.usd || 64000)) / 1e9) / Math.max(0.1, app.inst.mstrDebtB);
             const instScore = mCov >= 5 ? 19 : mCov >= 3 ? 15 : 9;
-
-            // 4) 반감기 사이클 위치 (20점 만점)
             const hvScore = app.halving.progressPct < 65 ? 17 : 13;
 
             const total = Math.round(techScore + sentScore + instScore + hvScore);
@@ -1688,13 +1661,11 @@
                 descEl.innerText = `RSI(${Math.round(rsiVal)}) 또는 시장 탐욕 지수가 높은 상태입니다. 신규 추매를 자제하고 눌림목 조정이 나올 때까지 현금 비중을 유지하세요.`;
             }
 
-            // 1차 / 2차 분할 매수 타점 계산
             const target1 = Math.min(liveP * 0.985, Math.max(bbLower, liveP * 0.965));
             const target2 = bbLower * 0.96;
             document.getElementById('st-buy-1').innerText = `${fmtUSD(target1, 0)} (-${(((liveP - target1)/liveP)*100).toFixed(1)}%)`;
             document.getElementById('st-buy-2').innerText = `${fmtUSD(target2, 0)} (-${(((liveP - target2)/liveP)*100).toFixed(1)}%)`;
 
-            // 세부 팩터 렌더링
             const factors = [
                 { name: '기술적 모멘텀 (RSI·볼린저밴드)', val: techScore, max: 35, color: 'var(--green)' },
                 { name: '시장 심리 및 김프 수급', val: sentScore, max: 25, color: 'var(--gold)' },
@@ -1715,7 +1686,6 @@
             `).join('');
         }
 
-        // 8. 업비트/바이낸스 스타일 3단 멀티 패널 차트 렌더링 (+ 터치 크로스헤어)
         let lastChartMeta = null;
 
         function renderChart() {
@@ -1751,7 +1721,6 @@
             const vMa10 = calcSMA(vols, 10).slice(-VIEW);
             const vMa20 = calcSMA(vols, 20).slice(-VIEW);
 
-            // 상단 RSI 배지
             const curRsi = rsi[rsi.length - 1];
             const curSig = sig[sig.length - 1];
             const rBadge = document.getElementById('chart-rsi-badge');
@@ -1787,7 +1756,7 @@
 
             const yAxisW = 64;
             const plotW = W - yAxisW;
-            const activeW = plotW * 0.90; // 미래 여백 10% 확보
+            const activeW = plotW * 0.90;
 
             const pTop = 14, pBot = H * 0.56;
             const dateH = 18;
@@ -1798,7 +1767,6 @@
 
             lastChartMeta = { candles, rsi, sig, VIEW, xAt, plotW, H, pTop, pBot, vTop, vBot, rTop, rBot };
 
-            // 구분선
             ctx.strokeStyle = cBorder;
             ctx.lineWidth = 1;
             [pBot, vTop, vBot, rTop].forEach(y => {
@@ -1806,7 +1774,6 @@
             });
             ctx.beginPath(); ctx.moveTo(plotW, 0); ctx.lineTo(plotW, H); ctx.stroke();
 
-            // [1] 메인 가격 패널
             let pool = [];
             candles.forEach((c, i) => {
                 pool.push(c.high, c.low);
@@ -1821,7 +1788,6 @@
             const minP = rawMin - pad, maxP = rawMax + pad;
             const yPrice = (v) => pBot - ((v - minP) / (maxP - minP)) * (pBot - pTop);
 
-            // 수평 격자 & 우측 가격 눈금
             ctx.fillStyle = cSub;
             ctx.font = '10px -apple-system, sans-serif';
             ctx.textAlign = 'left';
@@ -1833,7 +1799,6 @@
                 ctx.fillText(fmtAxis(val), plotW + 6, y);
             }
 
-            // 볼린저 밴드
             if (app.ind.bb) {
                 ctx.beginPath();
                 bb.forEach((b, i) => { if (b.upper) { i === 0 ? ctx.moveTo(xAt(i), yPrice(b.upper)) : ctx.lineTo(xAt(i), yPrice(b.upper)); } });
@@ -1851,7 +1816,6 @@
                 });
             }
 
-            // 다중 이동평균선
             if (app.ind.ma) {
                 [
                     { a: ma5, c: '#F6465D', w: 1.2 },
@@ -1873,7 +1837,6 @@
                 });
             }
 
-            // 메인 가격선
             ctx.beginPath();
             candles.forEach((c, i) => {
                 const x = xAt(i), y = yPrice(c.close);
@@ -1883,7 +1846,6 @@
             ctx.lineWidth = 1.8;
             ctx.stroke();
 
-            // 최고·최저 콜아웃
             let hiIdx = 0, loIdx = 0;
             candles.forEach((c, i) => {
                 if (c.close > candles[hiIdx].close) hiIdx = i;
@@ -1903,7 +1865,6 @@
             ctx.textAlign = loIdx > VIEW * 0.65 ? 'right' : 'left';
             ctx.fillText(`최저 ${fmtAxis(loVal)} (+${loPct}%)`, xAt(loIdx), Math.min(pBot - 6, yPrice(loVal) + 12));
 
-            // 내 매수평균선
             if (app.ind.avg && avgP > 0 && avgP >= minP && avgP <= maxP) {
                 const ay = yPrice(avgP);
                 ctx.beginPath(); ctx.moveTo(0, ay); ctx.lineTo(plotW, ay);
@@ -1918,7 +1879,6 @@
                 ctx.fillText('매수평균', 23, ay);
             }
 
-            // B / S 타점핀
             if (app.ind.signals) {
                 for (let i = 1; i < VIEW; i++) {
                     if (rsi[i] === null || rsi[i - 1] === null) continue;
@@ -1931,14 +1891,12 @@
                 }
             }
 
-            // 현재가 점선 및 Y축 배지
             const curY = yPrice(curVal);
             const curColor = curVal >= candles[0].close ? cUp : cDown;
             ctx.beginPath(); ctx.setLineDash([2, 2]); ctx.moveTo(0, curY); ctx.lineTo(plotW, curY);
             ctx.strokeStyle = curColor; ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]);
             drawYBadge(ctx, plotW, curY, yAxisW, fmtAxis(curVal), curColor);
 
-            // X축 날짜
             ctx.fillStyle = cSub;
             ctx.font = '10px -apple-system';
             ctx.textAlign = 'center';
@@ -1951,7 +1909,6 @@
                 ctx.fillText(lbl, xAt(idx), pBot + dateH / 2);
             });
 
-            // [2] 거래량 + 거래량 MA 패널
             const vSlice = vols.slice(-VIEW);
             const maxVol = Math.max(...vSlice) * 1.15 || 1;
             const yVol = (v) => vBot - (v / maxVol) * (vBot - vTop - 14);
@@ -1984,7 +1941,6 @@
             const lastVol = vSlice[vSlice.length - 1];
             drawYBadge(ctx, plotW, yVol(lastVol), yAxisW, fmtCompact(lastVol), cDown);
 
-            // [3] RSI(14) + Signal(9) 패널
             const yRsi = (v) => rBot - (v / 100) * (rBot - rTop - 12);
             ctx.fillStyle = 'rgba(168, 85, 247, 0.08)';
             ctx.fillRect(0, yRsi(70), plotW, yRsi(30) - yRsi(70));
@@ -2025,7 +1981,6 @@
             if (curRsi !== null) drawYBadge(ctx, plotW, yRsi(curRsi), yAxisW, curRsi.toFixed(2), '#C026D3');
             if (curSig !== null) drawYBadge(ctx, plotW, yRsi(curSig) + 13, yAxisW, curSig.toFixed(2), '#D97706');
 
-            // 터치 크로스헤어 오버레이
             if (app.crosshairIdx !== null && candles[app.crosshairIdx]) {
                 const idx = app.crosshairIdx;
                 const cx = xAt(idx);
@@ -2070,7 +2025,6 @@
             ctx.fillText(label, x, y);
         }
 
-        // 차트 터치/드래그 크로스헤어 핸들링
         function handleCanvasPointer(clientX) {
             if (!lastChartMeta) return;
             const rect = document.getElementById('canvas-container').getBoundingClientRect();
@@ -2119,7 +2073,6 @@
         cBox.addEventListener('mousemove', (e) => { if (e.buttons === 1) handleCanvasPointer(e.clientX); });
         cBox.addEventListener('mouseup', () => setTimeout(clearCrosshair, 2000));
 
-        // 네비게이션 & 컨트롤 이벤트
         function switchCoin(coin) {
             app.coin = coin;
             app.crosshairIdx = null;
@@ -2158,7 +2111,6 @@
             if (sec === 'strategy') updateStrategyUI();
         }
 
-        // 내 평단 & 기관 설정 저장
         function saveMyAvg() {
             const v = parseFloat(document.getElementById('avg-input').value);
             app.avgPrices[app.coin] = isNaN(v) || v <= 0 ? 0 : v;
@@ -2194,19 +2146,25 @@
             app.inst.mstrDebtB = parseFloat(document.getElementById('cfg-mstr-debt').value) || DEFAULT_INST.mstrDebtB;
             app.inst.bmnrEth = parseFloat(document.getElementById('cfg-bmnr-eth').value) || DEFAULT_INST.bmnrEth;
             app.inst.bmnrDebtB = parseFloat(document.getElementById('cfg-bmnr-debt').value) || DEFAULT_INST.bmnrDebtB;
+            app.instManual = true;
+            localStorage.setItem('cp_inst_manual', '1');
             localStorage.setItem('cp_inst_cfg', JSON.stringify(app.inst));
+            document.getElementById('inst-sync-badge').innerText = '사용자 수동 보정중';
             updateInstitutionUI();
             updateStrategyUI();
-            showToast('기관 데이터가 업데이트되었습니다.');
+            showToast('수동 보정값이 적용되었습니다.');
         }
 
-        function resetInstDefaults() {
-            app.inst = Object.assign({}, DEFAULT_INST);
+        async function resetInstDefaults() {
+            app.instManual = false;
+            localStorage.removeItem('cp_inst_manual');
             localStorage.removeItem('cp_inst_cfg');
+            app.inst = Object.assign({}, DEFAULT_INST);
             loadInstInputs();
             updateInstitutionUI();
             updateStrategyUI();
-            showToast('최신 공시 기본값으로 복원되었습니다.');
+            await fetchAutoInstData();
+            showToast('최신 SEC 자동 동기화 모드로 복원되었습니다.');
         }
 
         async function forceRefresh() {
@@ -2215,7 +2173,8 @@
                 fetchCandles('BTC', app.tf),
                 fetchCandles('ETH', app.tf),
                 fetchBtcFnG(),
-                fetchHalvingInfo()
+                fetchHalvingInfo(),
+                fetchAutoInstData()
             ]);
             if (app.tf !== '1d') fetchCandles('ETH', '1d');
             fetchCuratedNews();
@@ -2225,7 +2184,6 @@
             if (document.getElementById('sec-chart').classList.contains('active')) renderChart();
         }).observe(document.getElementById('canvas-container'));
 
-        // 앱 초기화
         applyTheme(app.theme);
         document.getElementById('avg-input').value = app.avgPrices.BTC || '';
         loadInstInputs();
