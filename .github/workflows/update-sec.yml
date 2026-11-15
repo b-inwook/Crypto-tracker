@@ -1,9 +1,12 @@
 name: Auto Update SEC Institutional Data
 on:
 schedule:
-- cron: '0 0 * * *'   # 매일 한국시간 09:00 자동 실행
-- cron: '0 14 * * *'  # 매일 한국시간 23:00 자동 실행 (미국 공시 직후)
-workflow_dispatch:       # GitHub 앱에서 수동 즉시 실행 버튼 활성화
+- cron: '0 0 * * *'
+- cron: '0 14 * * *'
+workflow_dispatch:
+push:
+paths:
+- '.github/workflows/update-sec.yml'
 permissions:
 contents: write
 jobs:
@@ -12,6 +15,8 @@ runs-on: ubuntu-latest
 steps:
 - name: Checkout repository
 uses: actions/checkout@v4
+with:
+token: ${{ secrets.GITHUB_TOKEN }}
 - name: Set up Python
 uses: actions/setup-python@v5
 with:
@@ -46,7 +51,6 @@ data = {
 "bmnrCashB": 0.48,
 "bmnrFilingDate": "2026-11-09"
 }
-# 1. Strategy (MSTR, CIK: 0001050446) 최신 SEC 8-K 공시 파싱
 try:
 sub = json.loads(fetch_text('https://data.sec.gov/submissions/CIK0001050446.json'))
 recent = sub['filings']['recent']
@@ -65,7 +69,7 @@ val = int(m_btc.group(1).replace(',', ''))
 if val >= 500000:
 data['mstrBtc'] = val
 data['mstrFilingDate'] = fdate
-m_cash = re.search(r'$\s([\d.]+)\s*billion\s+(?:of\s+)?(?:usd|cash)', txt, re.I)
+m_cash = re.search(r'$\s([\d.]+)\sbillion\s+(?:of\s+)?(?:usd|cash)', txt, re.I)
 if m_cash:
 cval = float(m_cash.group(1))
 if 0.5 <= cval <= 50.0:
@@ -74,7 +78,6 @@ if m_btc:
 break
 except Exception as e:
 print("MSTR fetch warning:", e)
-# 2. Bitmine Immersion (BMNR, CIK: 0001829311) 최신 SEC 8-K / Exhibit 99.1 파싱
 try:
 sub = json.loads(fetch_text('https://data.sec.gov/submissions/CIK0001829311.json'))
 recent = sub['filings']['recent']
@@ -96,7 +99,7 @@ if val >= 3000000:
 data['bmnrEth'] = val
 data['bmnrFilingDate'] = fdate
 found = True
-m_cash = re.search(r'cash\s+and\s+marketable\s+securities[^$]{0,30}$\s([\d,.]+)\s*(million|billion)', txt, re.I)
+m_cash = re.search(r'cash\s+and\s+marketable\s+securities[^$]{0,30}$\s*([\d,.]+)\s*(million|billion)', txt, re.I)
 if m_cash:
 num = float(m_cash.group(1).replace(',', ''))
 unit = m_cash.group(2).lower()
