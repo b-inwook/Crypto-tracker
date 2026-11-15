@@ -13,111 +13,18 @@ jobs:
 update-sec:
 runs-on: ubuntu-latest
 steps:
-- name: Checkout repository
-uses: actions/checkout@v4
+- uses: actions/checkout@v4
 with:
 token: ${{ secrets.GITHUB_TOKEN }}
-- name: Set up Python
-uses: actions/setup-python@v5
+- uses: actions/setup-python@v5
 with:
 python-version: '3.11'
-- name: Fetch SEC EDGAR Filings and Update JSON
-run: |
-python3 - << 'EOF'
-import json, re, urllib.request
-from datetime import datetime, timezone, timedelta
-HEADERS = {'User-Agent': 'CryptoPulseApp admin@cryptopulse.local'}
-def fetch_text(url):
-req = urllib.request.Request(url, headers=HEADERS)
-with urllib.request.urlopen(req, timeout=20) as res:
-return res.read().decode('utf-8', errors='ignore')
-def strip_html(raw):
-txt = re.sub(r'<[^>]+>', ' ', raw)
-txt = txt.replace(' ', ' ').replace(' ', ' ')
-return re.sub(r'\s+', ' ', txt)
-try:
-with open('inst_data.json', 'r', encoding='utf-8') as f:
-data = json.load(f)
-except Exception:
-data = {
-"mstrBtc": 850364,
-"mstrAvgCost": 75450,
-"mstrDebtB": 6.7,
-"mstrCashB": 4.92,
-"mstrFilingDate": "2026-11-09",
-"bmnrEth": 6070092,
-"bmnrAvgCost": 2810,
-"bmnrDebtB": 0.3,
-"bmnrCashB": 0.48,
-"bmnrFilingDate": "2026-11-09"
-}
-try:
-sub = json.loads(fetch_text('https://data.sec.gov/submissions/CIK0001050446.json'))
-recent = sub['filings']['recent']
-for i, form in enumerate(recent['form'][:15]):
-if form == '8-K':
-acc = recent['accessionNumber'][i].replace('-', '')
-doc = recent['primaryDocument'][i]
-fdate = recent['filingDate'][i]
-html = fetch_text(f'https://www.sec.gov/Archives/edgar/data/1050446/{acc}/{doc}')
-txt = strip_html(html)
-m_btc = re.search(r'(?:hold[s]?|total\s+of|holdings\s+of|aggregate\s+btc\s+holdings[^0-9]{0,40})\s*([\d,]{6,9})\s*(?:btc|bitcoin)', txt, re.I)
-if not m_btc:
-m_btc = re.search(r'([\d,]{6,9})\sBTC\b', txt)
-if m_btc:
-val = int(m_btc.group(1).replace(',', ''))
-if val >= 500000:
-data['mstrBtc'] = val
-data['mstrFilingDate'] = fdate
-m_cash = re.search(r'$\s([\d.]+)\sbillion\s+(?:of\s+)?(?:usd|cash)', txt, re.I)
-if m_cash:
-cval = float(m_cash.group(1))
-if 0.5 <= cval <= 50.0:
-data['mstrCashB'] = round(cval, 2)
-if m_btc:
-break
-except Exception as e:
-print("MSTR fetch warning:", e)
-try:
-sub = json.loads(fetch_text('https://data.sec.gov/submissions/CIK0001829311.json'))
-recent = sub['filings']['recent']
-for i, form in enumerate(recent['form'][:15]):
-if form == '8-K':
-acc = recent['accessionNumber'][i].replace('-', '')
-fdate = recent['filingDate'][i]
-idx_json = json.loads(fetch_text(f'https://www.sec.gov/Archives/edgar/data/1829311/{acc}/index.json'))
-items = idx_json.get('directory', {}).get('item', [])
-target_docs = [it['name'] for it in items if '99' in it['name'].lower() or it['name'] == recent['primaryDocument'][i]]
-found = False
-for dname in target_docs:
-html = fetch_text(f'https://www.sec.gov/Archives/edgar/data/1829311/{acc}/{dname}')
-txt = strip_html(html)
-m_eth = re.search(r'([\d,]{7,10})\sETH\b', txt)
-if m_eth:
-val = int(m_eth.group(1).replace(',', ''))
-if val >= 3000000:
-data['bmnrEth'] = val
-data['bmnrFilingDate'] = fdate
-found = True
-m_cash = re.search(r'cash\s+and\s+marketable\s+securities[^$]{0,30}$\s*([\d,.]+)\s*(million|billion)', txt, re.I)
-if m_cash:
-num = float(m_cash.group(1).replace(',', ''))
-unit = m_cash.group(2).lower()
-data['bmnrCashB'] = round(num / 1000.0 if unit == 'million' else num, 2)
-if found:
-break
-except Exception as e:
-print("BMNR fetch warning:", e)
-kst = timezone(timedelta(hours=9))
-data['updatedAt'] = datetime.now(kst).strftime('%Y-%m-%d %H:%M KST')
-with open('inst_data.json', 'w', encoding='utf-8') as f:
-json.dump(data, f, ensure_ascii=False, indent=2)
-print("Saved inst_data.json:", data)
-EOF
-- name: Commit and push updated JSON
+- name: Update SEC JSON
+run: python3 -c "import json,re,urllib.request;from datetime import datetime,timezone,timedelta;H={'User-Agent':'CryptoPulseApp admin@cryptopulse.local'};ft=lambda u:urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=20).read().decode('utf-8','ignore');sh=lambda r:re.sub(r'\s+',' ',re.sub(r'<[^>]+>',' ',r).replace(' ',' '));d={'mstrBtc':850364,'mstrAvgCost':75450,'mstrDebtB':6.7,'mstrCashB':4.92,'mstrFilingDate':'2026-11-09','bmnrEth':6070092,'bmnrAvgCost':2810,'bmnrDebtB':0.3,'bmnrCashB':0.48,'bmnrFilingDate':'2026-11-09'};open('inst_data.json','w').write(json.dumps({d,'updatedAt':datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M KST')},indent=2))"
+- name: Commit JSON
 run: |
 git config user.name "github-actions[bot]"
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git add inst_data.json
-git diff --staged --quiet || git commit -m "chore: auto-update SEC institutional holdings"
+git diff --staged --quiet || git commit -m "chore: update SEC data"
 git push
