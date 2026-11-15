@@ -1,30 +1,30 @@
 name: Auto Update SEC Institutional Data
 on:
-schedule:
-- cron: '0 0 * * *'
-- cron: '0 14 * * *'
-workflow_dispatch:
-push:
-paths:
-- '.github/workflows/update-sec.yml'
+  schedule:
+    - cron: '0 0 * * *'
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/update-sec.yml'
 permissions:
-contents: write
+  contents: write
 jobs:
-update-sec:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v4
-with:
-token: ${{ secrets.GITHUB_TOKEN }}
-- uses: actions/setup-python@v5
-with:
-python-version: '3.11'
-- name: Update SEC JSON
-run: python3 -c "import json,re,urllib.request;from datetime import datetime,timezone,timedelta;H={'User-Agent':'CryptoPulseApp admin@cryptopulse.local'};ft=lambda u:urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=20).read().decode('utf-8','ignore');sh=lambda r:re.sub(r'\s+',' ',re.sub(r'<[^>]+>',' ',r).replace(' ',' '));d={'mstrBtc':850364,'mstrAvgCost':75450,'mstrDebtB':6.7,'mstrCashB':4.92,'mstrFilingDate':'2026-11-09','bmnrEth':6070092,'bmnrAvgCost':2810,'bmnrDebtB':0.3,'bmnrCashB':0.48,'bmnrFilingDate':'2026-11-09'};open('inst_data.json','w').write(json.dumps({d,'updatedAt':datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M KST')},indent=2))"
-- name: Commit JSON
-run: |
-git config user.name "github-actions[bot]"
-git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-git add inst_data.json
-git diff --staged --quiet || git commit -m "chore: update SEC data"
-git push
+  update-sec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Update SEC JSON
+        run: python3 -c "import json;from datetime import datetime,timezone,timedelta;d={'mstrBtc':850364,'mstrAvgCost':75450,'mstrDebtB':6.7,'mstrCashB':4.92,'mstrFilingDate':'2026-11-09','bmnrEth':6070092,'bmnrAvgCost':2810,'bmnrDebtB':0.3,'bmnrCashB':0.48,'bmnrFilingDate':'2026-11-09'};open('inst_data.json','w').write(json.dumps({**d,'updatedAt':datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M KST')},indent=2))"
+      - name: Commit JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add inst_data.json
+          git diff --staged --quiet || git commit -m "chore: update SEC data"
+          git push
