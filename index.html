@@ -6,7 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Crypto Pulse" />
-  <title>Crypto Pulse Pro v4.3</title>
+  <meta name="theme-color" content="#0B0E11" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230B0E11'/%3E%3Cpath d='M26 104h28l16-42 24 72 22-54 14 24h24' fill='none' stroke='%23FCD535' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='154' cy='104' r='8' fill='%230ECB81'/%3E%3C/svg%3E" />
+  <title>Crypto Pulse Pro v4.4</title>
   <style>
     :root {
       --bg: #0B0E11;
@@ -62,12 +64,13 @@
     .alert-banner {
       display: none; align-items: center; justify-content: space-between; gap: 8px;
       background: var(--green-dim); border: 1px solid var(--green); color: var(--text);
-      border-radius: 10px; padding: 9px 12px; margin-bottom: 10px; font-size: 12px; font-weight: 600;
+      border-radius: 10px; padding: 9px 12px; margin-bottom: 10px; font-size: 12px; font-weight: 700;
     }
     .alert-banner.warn { background: var(--red-dim); border-color: var(--red); }
+    .alert-banner.gold { background: var(--gold-dim); border-color: var(--gold); }
     .alert-banner button {
       background: var(--surface); color: var(--text); border: 1px solid var(--border);
-      border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; cursor: pointer;
+      border-radius: 6px; padding: 4px 9px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap;
     }
 
     /* Top App Header */
@@ -173,7 +176,7 @@
     }
     .tf-btn.active, .ctype-btn.active { background: var(--surface); color: var(--gold); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
 
-    .overlay-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .overlay-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
     .chip {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px;
@@ -184,12 +187,22 @@
       content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
     }
 
-    .chart-hud {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 10.5px; color: var(--text-sub); background: var(--surface-2);
-      padding: 5px 8px; border-radius: 6px; margin-bottom: 6px; min-height: 26px;
+    .ma-legend-row {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+      font-size: 10px; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; padding: 0 2px;
     }
-    .canvas-wrap { position: relative; width: 100%; height: 295px; touch-action: pan-y; }
+    .ma-dot { display: inline-block; width: 7px; height: 2px; vertical-align: middle; margin-right: 3px; }
+
+    .chart-hud {
+      display: flex; justify-content: space-between; align-items: center; gap: 6px;
+      font-size: 10.5px; color: var(--text-sub); background: var(--surface-2);
+      padding: 5px 8px; border-radius: 6px; margin-bottom: 6px; min-height: 27px;
+    }
+    .hud-reset-btn {
+      border: 1px solid var(--border); background: var(--surface); color: var(--gold);
+      border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; cursor: pointer;
+    }
+    .canvas-wrap { position: relative; width: 100%; height: 305px; touch-action: pan-y; }
     canvas#pro-chart { width: 100%; height: 100%; display: block; }
 
     /* Fear & Greed */
@@ -252,8 +265,12 @@
       background: var(--surface-2); border-left: 3px solid var(--gold);
       border-radius: 8px; padding: 10px 12px;
     }
-    .limit-guide-title { font-size: 12.5px; font-weight: 800; color: var(--gold); margin-bottom: 6px; }
-    .limit-guide-list { list-style: none; font-size: 12px; display: flex; flex-direction: column; gap: 5px; }
+    .limit-guide-title {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12.5px; font-weight: 800; color: var(--gold); margin-bottom: 6px;
+    }
+    .limit-guide-list { list-style: none; font-size: 11.5px; display: flex; flex-direction: column; gap: 6px; }
+    .limit-krw-sub { display: block; color: var(--text-sub); font-size: 10.5px; padding-left: 10px; }
 
     /* Intelligence Grid */
     .metric-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -288,11 +305,17 @@
       font-size: 11px; color: var(--text-sub); margin-bottom: 8px;
     }
     .news-count-pills { display: flex; gap: 4px; }
-    .news-item { padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .news-item { padding: 11px 0; border-bottom: 1px solid var(--border); }
     .news-item:last-child { border-bottom: none; }
     .news-meta { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--text-sub); margin-bottom: 4px; }
-    .news-title { display: block; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; margin-bottom: 4px; }
-    .news-reason { font-size: 11.5px; color: var(--text-sub); background: var(--surface-2); padding: 5px 8px; border-radius: 6px; }
+    .news-title { display: block; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; margin-bottom: 5px; line-height: 1.4; }
+    .news-body-sum { font-size: 11.5px; color: var(--text-sub); margin-bottom: 5px; line-height: 1.45; }
+    .news-reason {
+      font-size: 11px; color: var(--text); background: var(--surface-2);
+      border-left: 2.5px solid var(--gold); padding: 5px 8px; border-radius: 0 6px 6px 0;
+    }
+    .news-reason.bull { border-left-color: var(--green); }
+    .news-reason.bear { border-left-color: var(--red); }
 
     .period-briefing-panel {
       margin-top: 12px; background: var(--surface-2); border-radius: 10px; padding: 11px;
@@ -300,7 +323,7 @@
     }
     .briefing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .briefing-title { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 800; color: var(--gold); }
-    .briefing-item { font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .briefing-item { font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.45; }
     .briefing-item:last-child { border-bottom: none; padding-bottom: 0; }
     .briefing-src { color: var(--gold); font-size: 11px; font-weight: 700; text-decoration: none; margin-left: 4px; }
 
@@ -312,6 +335,11 @@
       width: 100%; background: var(--surface-2); border: 1px solid var(--border);
       color: var(--text); border-radius: 8px; padding: 9px 10px; font-size: 14px; font-weight: 700;
     }
+    .checkbox-row {
+      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;
+      color: var(--text); margin-bottom: 10px; cursor: pointer;
+    }
+    .checkbox-row input { width: 16px; height: 16px; accent-color: var(--gold); }
     .btn-primary {
       width: 100%; border: none; background: var(--gold); color: #0B0E11;
       font-size: 13px; font-weight: 800; padding: 11px; border-radius: 9px; cursor: pointer;
@@ -322,7 +350,7 @@
     }
     .pnl-summary {
       display: flex; justify-content: space-between; align-items: center;
-      margin-top: 10px; padding: 10px; background: var(--surface-2); border-radius: 8px; font-size: 12.5px;
+      margin-top: 10px; padding: 10px; background: var(--surface-2); border-radius: 8px; font-size: 12px;
     }
 
     /* Bottom Navigation */
@@ -379,7 +407,7 @@
 <body>
 <div class="container">
 
-  <!-- Real-time RSI / Target Alert Banner -->
+  <!-- Real-time RSI / Target Price Alert Banner -->
   <div class="alert-banner" id="top-alert-banner">
     <span id="top-alert-text">매수 신호 감지</span>
     <button type="button" onclick="dismissAlert()">확인</button>
@@ -390,7 +418,7 @@
     <div class="brand">
       <span class="brand-dot" id="ws-status-dot"></span>
       <span class="brand-title">Crypto Pulse</span>
-      <span class="brand-ver">PRO v4.3</span>
+      <span class="brand-ver">PRO v4.4</span>
     </div>
     <div class="header-actions">
       <div class="asset-switch">
@@ -401,7 +429,7 @@
         <svg class="icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
       </button>
       <button type="button" class="icon-btn" onclick="toggleTheme()" title="테마 전환">
-        <svg class="icon" id="theme-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
       </button>
     </div>
   </header>
@@ -482,12 +510,20 @@
         </div>
       </div>
 
-      <div class="chart-hud" id="chart-hud">
-        <span>차트를 터치·드래그하여 시점별 가격/RSI 조회</span>
-        <span id="hud-right">RSI(14) · Signal(9)</span>
+      <div class="ma-legend-row" id="ma-legend-row">
+        <span><i class="ma-dot" style="background:#FCD535;"></i>MA5</span>
+        <span><i class="ma-dot" style="background:#3861FB;"></i>MA10</span>
+        <span><i class="ma-dot" style="background:#E040FB;"></i>MA20</span>
+        <span><i class="ma-dot" style="background:#00BCD4;"></i>MA60</span>
+        <span style="margin-left:auto; color:var(--text-sub);">거래량 · RSI(14)/Sig(9)</span>
       </div>
 
-      <div class="canvas-wrap">
+      <div class="chart-hud" id="chart-hud">
+        <span id="hud-left">차트를 터치·드래그하여 시점별 OHLC/RSI 조회</span>
+        <span id="hud-right">RSI(14) · Sig(9)</span>
+      </div>
+
+      <div class="canvas-wrap" id="canvas-wrap">
         <canvas id="pro-chart"></canvas>
       </div>
     </div>
@@ -513,7 +549,7 @@
     </div>
   </section>
 
-  <!-- TAB 2: AI DCA STRATEGY (6-TIER SS~D + ATH DRAWDOWN) -->
+  <!-- TAB 2: AI DCA STRATEGY -->
   <section class="tab-section" id="tab-strategy">
     <div class="card">
       <div class="card-header">
@@ -543,7 +579,6 @@
         </div>
       </div>
 
-      <!-- 6-Tier Reference Matrix -->
       <div class="tier-legend-grid" id="tier-legend-grid">
         <div class="tier-cell" data-tier="SS"><strong>SS (92~100)</strong><span>30~35% 투매매집</span></div>
         <div class="tier-cell" data-tier="S"><strong>S (82~91)</strong><span>20~25% 적극매집</span></div>
@@ -553,14 +588,15 @@
         <div class="tier-cell" data-tier="D"><strong>D (0~34)</strong><span>매수중단·익절</span></div>
       </div>
 
-      <!-- 6-Factor Breakdown -->
       <div class="factor-list" id="strat-factor-list"></div>
 
-      <!-- Limit Order Price Guide -->
       <div class="limit-guide-box">
-        <div class="limit-guide-title" id="limit-guide-title">AI 지정가 분할 매수 타점 (BTC)</div>
+        <div class="limit-guide-title">
+          <span id="limit-guide-title">AI 지정가 분할 매수 타점 (BTC)</span>
+          <button type="button" class="help-btn" onclick="openHelp('limit_krw')">?</button>
+        </div>
         <ul class="limit-guide-list" id="limit-guide-list">
-          <li>• 1차 눌림목 지정가: 계산 중...</li>
+          <li>• 1차 눌림목 지정가: 시세 연결 중...</li>
         </ul>
       </div>
     </div>
@@ -704,7 +740,7 @@
       </div>
 
       <div id="news-list">
-        <div style="font-size:12px; color:var(--text-sub); padding:8px 0;">1군 매체 뉴스 수집 및 자동 한국어 번역 중...</div>
+        <div style="font-size:12px; color:var(--text-sub); padding:8px 0;">1군 매체 뉴스 수집 및 본문 요약 한국어 번역 중...</div>
       </div>
 
       <div class="period-briefing-panel" id="period-briefing-panel" style="display:none;">
@@ -720,31 +756,77 @@
     </div>
   </section>
 
-  <!-- TAB 4: MY POSITION & CALIBRATION -->
+  <!-- TAB 4: MY POSITION, TARGET ALERT & CALIBRATION -->
   <section class="tab-section" id="tab-position">
     <div class="card">
       <div class="card-header">
         <div class="card-title">
           <svg class="icon" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
-          <span id="pos-card-title">BTC 내 매수평균가 설정</span>
+          <span id="pos-card-title">BTC 내 매수평균가 & 보유수량</span>
         </div>
         <span class="badge-tag">차트 기준선 연동</span>
       </div>
-      <div class="form-group" id="pos-group-BTC">
-        <label>BTC 매수평균가 (USD)</label>
-        <input type="number" id="input-avg-btc" placeholder="예: 82500" step="any" />
+      <div id="pos-group-BTC">
+        <div class="form-row">
+          <div class="form-group">
+            <label>BTC 매수평균가 (USD)</label>
+            <input type="number" id="input-avg-btc" placeholder="예: 82500" step="any" />
+          </div>
+          <div class="form-group">
+            <label>보유 수량 (선택, BTC)</label>
+            <input type="number" id="input-qty-btc" placeholder="예: 0.5" step="any" />
+          </div>
+        </div>
       </div>
-      <div class="form-group" id="pos-group-ETH" style="display:none;">
-        <label>ETH 매수평균가 (USD)</label>
-        <input type="number" id="input-avg-eth" placeholder="예: 2650" step="any" />
+      <div id="pos-group-ETH" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label>ETH 매수평균가 (USD)</label>
+            <input type="number" id="input-avg-eth" placeholder="예: 2650" step="any" />
+          </div>
+          <div class="form-group">
+            <label>보유 수량 (선택, ETH)</label>
+            <input type="number" id="input-qty-eth" placeholder="예: 5.0" step="any" />
+          </div>
+        </div>
       </div>
       <button type="button" class="btn-primary" onclick="saveMyAvgPrices()">매수평균가 저장 및 차트 반영</button>
       <div class="pnl-summary">
         <span id="my-pnl-label">BTC 평단 대비 현재 손익</span>
         <strong id="my-pnl-val">미설정</strong>
       </div>
+      <div class="pnl-summary" id="my-eval-row" style="display:none; margin-top:6px;">
+        <span>총 평가액 / 미실현 손익</span>
+        <strong id="my-eval-val">--</strong>
+      </div>
     </div>
 
+    <!-- Target Price & RSI Alert Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span id="alert-card-title">BTC 매수 목표가 · RSI 알림</span>
+          <button type="button" class="help-btn" onclick="openHelp('target_alert')">?</button>
+        </div>
+        <span class="badge-tag gold" id="alert-status-tag">대기중</span>
+      </div>
+      <div class="form-group" id="alert-group-BTC">
+        <label>BTC 매수 목표가 도달 알림 (USD 이하 진입 시 상단 배너)</label>
+        <input type="number" id="input-target-btc" placeholder="예: 78000 (비워두면 비활성)" step="any" />
+      </div>
+      <div class="form-group" id="alert-group-ETH" style="display:none;">
+        <label>ETH 매수 목표가 도달 알림 (USD 이하 진입 시 상단 배너)</label>
+        <input type="number" id="input-target-eth" placeholder="예: 2300 (비워두면 비활성)" step="any" />
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="chk-rsi-alert" checked />
+        <span>일봉 RSI 과매도(30 이하) / 과열(75 이상) 자동 배너 알림</span>
+      </label>
+      <button type="button" class="btn-primary" onclick="saveAlertSettings()">알림 기준 저장 및 즉시 점검</button>
+    </div>
+
+    <!-- Institutional & ETF Manual Calibration -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
@@ -819,1405 +901,1792 @@
 </div>
 
 <div class="toast" id="toast">알림</div>
-
 <script>
-const STATE = {
-  asset: 'BTC',
-  tab: 'chart',
-  tf: '1d',
-  ctype: 'candle',
-  newsWin: 'live',
-  overlays: { ma: true, bb: true, bs: true, avg: true },
-  prices: {
-    BTC: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0, funding: 0, oi: 0 },
-    ETH: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0, funding: 0, oi: 0 }
-  },
-  usdtKrw: 1400,
-  ethBtcRatio: 0,
-  ethBtcChg: 0,
-  mempoolFee: 0,
-  halving: { height: 0, rem: 0, dday: 0, pct: 0, estDate: '--' },
-  fng: { btcVal: 50, btcClass: 'Neutral', btc7d: [], ethVal: 50, ethClass: 'Neutral', eth7d: [] },
-  klines: { BTC: [], ETH: [] },
-  daily200: { BTC: [], ETH: [] },
-  rsi4h: { BTC: 50, ETH: 50 },
-  athRef: { BTC: 126198, ETH: 4955 },
-  avgPrices: { BTC: 0, ETH: 0 },
-  inst: {
-    mstrBtc: 850364, mstrAvgCost: 75450, mstrDebtB: 6.7, mstrCashB: 5.02,
-    mstrFilingDate: '2026-11-09', mstrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001050446',
-    bmnrEth: 6070092, bmnrAvgCost: 2810, bmnrDebtB: 0.3, bmnrCashB: 0.48,
-    bmnrFilingDate: '2026-11-09', bmnrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001829311',
-    btcEtfFlowM: 245.0, ethEtfFlowM: 68.5, etfDate: '2026-11-14',
-    etfNote: 'IBIT·FBTC 중심 현물 ETF 순유입 우위', isManual: false
-  },
-  newsAll: [],
-  alertDismissed: false,
-  crosshairIdx: -1
-};
+  // =========================================================
+  // Crypto Pulse Pro v4.4 - Core Engine (Part 2 / 2)
+  // =========================================================
+  const LS_KEYS = {
+    THEME: 'cp_theme_v4',
+    POS: 'cp_my_pos_v4',
+    ALERTS: 'cp_alerts_v4',
+    INST_MANUAL: 'cp_inst_manual_v4',
+    NEWS_ARCHIVE: 'cp_news_archive_v4',
+    TR_CACHE: 'cp_tr_cache_v4'
+  };
 
-const HELP_DB = {
-  rsi: {
-    title: 'RSI (상대강도지수, 14)',
-    desc: '최근 14개 봉 동안의 상승 압력과 하락 압력의 상대적 강도를 0~100으로 나타낸 모멘텀 지표입니다.',
-    tip: '실전 해석: 30 이하는 과매도(반등 유력 매수 구간), 70 이상은 과매수(단기 조정 경계 구간)로 활용합니다.'
-  },
-  kimp: {
-    title: '김치 프리미엄 (국내외 가격 괴리율)',
-    desc: '국내 거래소(업비트 원화 시세)가 해외 글로벌 시세(바이낸스 달러 시세 × 환율)보다 얼마나 비싸거나 싼지를 나타냅니다.',
-    tip: '실전 해석: 0% 이하(역프) 또는 1~2% 내외는 매수 우호 구간이며, +5% 이상 과열 시 국내 개인 추격 매수 과열을 경계해야 합니다.'
-  },
-  funding: {
-    title: '무기한 선물 8시간 펀딩비 (Funding Rate)',
-    desc: '선물 시장에서 롱(매수) 포지션과 숏(매도) 포지션 간에 8시간마다 주고받는 수수료율입니다.',
-    tip: '실전 해석: 마이너스(-) 진입 시 숏 포지션이 과밀해져 숏 스퀴즈(급반등) 확률이 높아지며, +0.04% 이상은 롱 과열 신호입니다.'
-  },
-  rel_metric: {
-    title: 'Mayer 배수 (BTC) / ETH·BTC 상대강도',
-    desc: 'BTC는 현재가 ÷ 200일 이동평균선 비율(Mayer Multiple)을, ETH는 비트코인 대비 이더리움 교환 비율 추세를 표시합니다.',
-    tip: '실전 해석: BTC Mayer 배수 0.85 이하는 장기 저평가 구간이며, ETH/BTC 비율이 20일 이평을 돌파하면 알트 순환매 신호입니다.'
-  },
-  ath_dd: {
-    title: '역대 최고가 대비 하락률 (ATH Drawdown)',
-    desc: '역대 최고점(All-Time High) 대비 현재 가격이 몇 % 하락한 위치인지 보여주는 장기 밸류에이션 지표입니다.',
-    tip: '실전 해석: -30% 이상 깊은 조정 구간에서는 장기 분할 매집 시 기대수익률이 크게 높아지며, -5% 이내 고점 부근에서는 추격 매수를 자제합니다.'
-  },
-  ma: {
-    title: '이동평균선 (MA 5 · 10 · 20 · 60)',
-    desc: '최근 5, 10, 20, 60개 봉의 종가 평균을 연결한 추세선입니다. 단기·중기·수급 생명선의 지지와 저항을 판단합니다.',
-    tip: '실전 해석: 20일선(노란선)과 60일선(보라선) 위에서 지지를 받으면 상승 추세, 아래에서 골든크로스 발생 시 추세 전환 신호입니다.'
-  },
-  bb: {
-    title: '볼린저 밴드 (Bollinger Bands 20, 2)',
-    desc: '20일 이동평균선을 중심으로 표준편차 2배 범위의 상·하단 변동성 밴드를 그립니다. 주가의 95%는 밴드 안에서 움직입니다.',
-    tip: '실전 해석: 캔들이 하단 밴드를 터치하거나 이탈 후 재진입할 때 단기 반등(눌림목 매수) 확률이 높습니다.'
-  },
-  bs_pin: {
-    title: '자동 B / S 타점 핀 (과매도·과매수 반전)',
-    desc: 'Wilder RSI(14)가 32 이하 과매도권에서 반등할 때 빨간 B(매수), 68 이상 과매수권에서 꺾일 때 파란 S(매도) 핀을 자동 표시합니다.',
-    tip: '실전 해석: 볼린저밴드 하단 이탈과 B 핀이 동시에 겹치는 지점은 신뢰도 높은 분할 매수 타점입니다.'
-  },
-  avg_line: {
-    title: '내 매수평균선 (초록 수평선)',
-    desc: '[내 평단] 탭에 입력한 본인의 평균 매수단가를 차트 위에 초록색 실선으로 표시해 현재가와의 괴리를 직관적으로 보여줍니다.',
-    tip: '실전 해석: 현재가가 내 매수평균선 아래에 있고 AI 추매 점수가 S·A등급 이상일 때 물타기(평단 낮추기) 효율이 높습니다.'
-  },
-  fng: {
-    title: '공포·탐욕 지수 (Fear & Greed Index)',
-    desc: '시장 참여자들의 심리 상태를 0(극단적 공포)에서 100(극단적 탐욕)까지 수치화했습니다. ETH는 Wilder RSI(14) 모멘텀 모델로 산출합니다.',
-    tip: '실전 해석: "공포에 사고 탐욕에 팔아라" 원칙에 따라 25 이하 극단적 공포 구간에서 역발상 분할 매수 점수가 높아집니다.'
-  },
-  dca_main: {
-    title: 'AI 분할 매수(DCA) 6단계 등급 모델',
-    desc: '기술적 모멘텀(25)·ATH 하락률(15)·심리/김프(15)·파생/상대강도(15)·ETF/기관(15)·사이클(15)을 합산해 SS~D 6등급으로 세분화했습니다.',
-    tip: '실전 해석: 82~91점(S등급)은 한 번에 전액 매수(풀매수)하는 구간이 아니라, 대기 현금의 20~25%씩 분할 매집하며 추가 하락 여력을 남기는 구간입니다.'
-  },
-  etf_flow: {
-    title: '미국 현물 ETF 일간 순유입 (Net Flow)',
-    desc: 'BlackRock(IBIT/ETHA), Fidelity(FBTC/FETH) 등 미국 상장 현물 ETF로 유입되거나 유출된 기관 자금의 순변동액입니다.',
-    tip: '실전 해석: 연속 순유입(+)은 월가 기관의 실물 현물 매집을 의미하며 하방 경직성을 강하게 지지합니다.'
-  },
-  etf_btc: {
-    title: 'BTC 현물 ETF 수급',
-    desc: '미국 비트코인 현물 ETF 전체의 일간 순유입·순유출 규모(단위: 백만 달러 $M)입니다.',
-    tip: '실전 해석: +$200M 이상 유입 시 강한 기관 매수세, 대규모 순유출 지속 시 단기 수급 압박을 의미합니다.'
-  },
-  etf_eth: {
-    title: 'ETH 현물 ETF 수급',
-    desc: '미국 이더리움 현물 ETF 전체의 일간 순유입·순유출 규모(단위: 백만 달러 $M)입니다.',
-    tip: '실전 해석: 이더리움 현물 ETF 순유입 전환은 알트코인 전반의 기관 수급 개선 신호로 해석됩니다.'
-  },
-  deriv_onchain: {
-    title: '파생상품 수급 & 온체인 모니터',
-    desc: '선물 펀딩비, 미결제약정(OI), 비트코인 네트워크 수수료(sat/vB), ATH 고점 대비 하락률을 통합 표시합니다.',
-    tip: '실전 해석: 미결제약정 급감(레버리지 청산 완료) 후 펀딩비가 정상화되면 건강한 바닥 다지기 신호입니다.'
-  },
-  halving: {
-    title: '비트코인 5차 반감기 카운트다운',
-    desc: '비트코인 블록 채굴 보상이 절반으로 줄어드는 1,050,000 블록까지의 잔여 블록과 예상 D-Day를 실시간 블록 높이로 계산합니다.',
-    tip: '실전 해석: 공급량 반감 일정이 다가올수록 중장기 희소성 내러티브와 기관 적립 수요가 강화됩니다.'
-  },
-  inst_risk: {
-    title: '기관 트레저리 부채·청산 리스크 모니터',
-    desc: 'Strategy(MSTR)와 Bitmine(BMNR)의 SEC 8-K 공시 보유량·부채·현금에 실시간 시세를 곱해 부채 커버리지 배수와 강제청산 위험을 진단합니다.',
-    tip: '실전 해석: 자산 커버리지 3.0x 이상은 재무 안전 구간이며, 1.5x 미만으로 하락할 경우 기관 마진콜·투매 리스크를 경계해야 합니다.'
-  },
-  news_guide: {
-    title: '1군 매체 중요도순 뉴스 & 기간별 브리핑',
-    desc: 'CoinDesk, Cointelegraph, Decrypt, The Block, 블록미디어 등 검증된 1군 매체만 수집해 시장 파급력 순으로 정렬하고 자동 번역합니다.',
-    tip: '실전 해석: 헤드라인 아래 회색 박스의 [판단 근거]를 확인하면 자극적인 제목에 휘둘리지 않고 실제 호재·악재 여부를 구분할 수 있습니다.'
+  const DEFAULT_INST = {
+    mstrBtc: 850364,
+    mstrAvgCost: 75450,
+    mstrDebtB: 6.70,
+    mstrCashB: 5.02,
+    mstrFilingDate: '2026-11-09',
+    mstrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001050446',
+    bmnrEth: 6070092,
+    bmnrAvgCost: 2810,
+    bmnrDebtB: 0.30,
+    bmnrCashB: 0.48,
+    bmnrFilingDate: '2026-11-09',
+    bmnrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001829311',
+    btcEtfFlowM: 245.0,
+    ethEtfFlowM: 68.5,
+    etfDate: '2026-11-16',
+    etfNote: 'IBIT·FBTC 중심 현물 ETF 순유입 우위',
+    isManual: false
+  };
+
+  const state = {
+    asset: 'BTC',
+    timeframe: '1d',
+    chartType: 'candle',
+    overlays: { ma: true, bb: true, bs: true, avg: true },
+    newsWindow: 'live',
+    usdtKrw: 1400,
+    ath: { BTC: 109588, ETH: 4891 },
+    prices: {
+      BTC: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0 },
+      ETH: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0 }
+    },
+    klines: { BTC: [], ETH: [] },
+    rsi1d: { BTC: 50, ETH: 50 },
+    rsi4h: { BTC: 50, ETH: 50 },
+    mayer: { BTC: 1.0, ETH: 1.0 },
+    ethBtc: { ratio: 0, chg: 0 },
+    deriv: {
+      BTC: { funding: 0, oi: 0 },
+      ETH: { funding: 0, oi: 0 }
+    },
+    mempoolFee: 0,
+    halving: { height: 0, rem: 0, pct: 0, dday: 0, estDate: '--' },
+    fngBtc: { val: 50, cls: 'Neutral', hist: [] },
+    fngEth: { val: 50, cls: 'Neutral', hist: [] },
+    inst: { ...DEFAULT_INST },
+    myPos: { BTC: { avg: 0, qty: 0 }, ETH: { avg: 0, qty: 0 } },
+    alerts: { BTC: 0, ETH: 0, rsiEnabled: true },
+    dismissedAlerts: {},
+    hoverIdx: -1,
+    newsItems: [],
+    ws: null
+  };
+
+  // =========================================================
+  // Help Dictionary (? Bottom Sheet)
+  // =========================================================
+  const HELP_DICT = {
+    rsi: {
+      title: 'RSI (14) · 상대강도지수',
+      desc: '최근 14개 봉 동안의 상승폭과 하락폭 비율을 0~100으로 나타낸 모멘텀 지표입니다.',
+      tip: '실전 해석: 30 이하는 과매도(저가 분할 매수 유리), 70 이상은 과매수(단기 과열·추격 매수 자제) 구간으로 봅니다.'
+    },
+    kimp: {
+      title: '김치 프리미엄 (국내외 가격 괴리율)',
+      desc: '업비트 원화(KRW) 시세와 바이낸스 달러(USD) 시세를 실시간 환율(USDT)로 비교한 가격 차이 비율입니다.',
+      tip: '실전 해석: 0~2% 이내는 안정적 수급, 마이너스(역프)는 국내 저평가 매수 기회, +5% 이상은 국내 단기 과열 신호입니다.'
+    },
+    funding: {
+      title: '무기한 선물 8시간 펀딩비',
+      desc: '선물 시장에서 롱(매수)과 숏(매도) 포지션 비율의 균형을 맞추기 위해 8시간마다 주고받는 수수료율입니다.',
+      tip: '실전 해석: 마이너스(-) 전환 시 숏 포지션 과밀로 숏 스퀴즈(급반등) 확률이 높아지며, +0.05% 이상은 롱 과열을 뜻합니다.'
+    },
+    rel_metric: {
+      title: 'Mayer 배수 (BTC) / ETH·BTC 상대강도',
+      desc: 'BTC는 현재가를 200일 이동평균선으로 나눈 Mayer 배수를, ETH는 비트코인 대비 이더리움 교환 비율을 보여줍니다.',
+      tip: '실전 해석: Mayer 배수 0.8~1.1은 역사적 저평가 매집 구간이며, ETH/BTC 비율 반등은 알트 순환매 유입 신호입니다.'
+    },
+    ath_dd: {
+      title: 'ATH 고점 대비 하락률 (Drawdown)',
+      desc: '역대 최고가(All-Time High) 대비 현재 가격이 몇 퍼센트 조정받았는지 나타내는 가치 평가 지표입니다.',
+      tip: '실전 해석: 고점 대비 -20% 이상 조정 구간부터는 AI 분할 매수 전략에서 저평가 가산점이 단계적으로 부여됩니다.'
+    },
+    ma: {
+      title: '이동평균선 (MA 5 / 10 / 20 / 60)',
+      desc: '최근 5·10·20·60개 봉 종가의 평균값을 연결한 추세선입니다. 단기·중기·수급 생명선 역할을 합니다.',
+      tip: '실전 해석: 단기선(5·10)이 중기선(20·60)을 상향 돌파하면 골든크로스(상승 전환), 하향 이탈 시 조정 압력을 의미합니다.'
+    },
+    bb: {
+      title: '볼린저밴드 (Bollinger Bands 20, 2)',
+      desc: '20일 이동평균선을 중심으로 표준편차 2배 범위의 상·하단 변동성 밴드를 표시합니다.',
+      tip: '실전 해석: 주가가 하단 밴드에 닿거나 이탈 후 안쪽으로 복귀할 때 단기 기술적 반등 확률이 높아집니다.'
+    },
+    bs_pin: {
+      title: 'B / S 자동 매매 타점핀',
+      desc: 'Wilder RSI(14)가 32 이하 과매도 구간에서 상승 반전할 때 빨간색 B, 68 이상 과열에서 꺾일 때 파란색 S를 표시합니다.',
+      tip: '실전 해석: 보조적 타이밍 참고용이며, 일봉과 1시간봉에서 B 핀이 겹칠 때 분할 진입 신뢰도가 높습니다.'
+    },
+    avg_line: {
+      title: '내 매수평균가 기준선',
+      desc: '[내 평단] 탭에 입력한 본인의 평균 매수단가를 차트 위에 초록색 수평 실선으로 표시합니다.',
+      tip: '실전 해석: 현재가가 매수평균선 아래에 있을 때 분할 추매하여 평단가를 낮추는 기준선으로 활용하세요.'
+    },
+    fng: {
+      title: '공포·탐욕 지수 (Fear & Greed)',
+      desc: 'BTC는 Alternative.me 시장 심리 지수를, ETH는 일봉 Wilder RSI(14) 기반 자체 심리 추정 모델을 0~100으로 표시합니다.',
+      tip: '실전 해석: 25 이하 극단적 공포(Extreme Fear) 구간은 역사적으로 분할 매수 성과가 가장 좋았던 역발상 기회입니다.'
+    },
+    dca_main: {
+      title: '6단계 AI 분할 매수 (DCA) 전략',
+      desc: '기술적 지표·ATH 낙폭·심리/김프·파생 수급·현물 ETF 유입·기관 건전성 등 6대 팩터를 100점 만점으로 합산합니다.',
+      tip: '실전 해석: SS(92+)·S(82+)·A(68+)·B(50+) 구간에서는 비중을 나누어 진입하고, C·D 구간에서는 추격 매수를 멈춥니다.'
+    },
+    limit_krw: {
+      title: 'AI 지정가 분할 매수 타점 (USD / KRW)',
+      desc: '현재 변동성과 볼린저 하단·지지선을 반영한 1차·2차 눌림목 지정가 주문 가격과 실시간 원화(₩) 환산 금액입니다.',
+      tip: '실전 해석: 시장가 추격 매수 대신 제시된 1차·2차 지정가에 미리 분할 주문을 걸어두면 평균 매입 단가를 낮출 수 있습니다.'
+    },
+    etf_flow: {
+      title: '미국 현물 ETF 일간 순유입 (Net Flow)',
+      desc: '블랙록(IBIT·ETHA), 피델리티(FBTC·FETH) 등 미국 증시 상장 현물 ETF의 일간 자금 순유입(+)·순유출(-) 규모입니다.',
+      tip: '실전 해석: 연속 순유입(+)은 월가 기관 현물 매수세가 가격 하방을 지지하고 있음을 의미합니다.'
+    },
+    etf_btc: {
+      title: '미국 비트코인 현물 ETF',
+      desc: 'IBIT, FBTC 등 미국 비트코인 현물 ETF의 일간 순자금 유출입($M) 현황입니다.',
+      tip: '실전 해석: +$100M 이상 순유입 시 수급 강세, 대규모 순유출 시 단기 매물 출회 가능성을 점검합니다.'
+    },
+    etf_eth: {
+      title: '미국 이더리움 현물 ETF',
+      desc: 'ETHA, FETH 등 미국 이더리움 현물 ETF의 일간 순자금 유출입($M) 현황입니다.',
+      tip: '실전 해석: ETH 현물 ETF 순유입 전환은 기관의 알트코인 수급 개선 신호로 해석됩니다.'
+    },
+    deriv_onchain: {
+      title: '파생상품 수급 & 온체인 지표',
+      desc: '선물 펀딩비, 미결제약정(OI), 비트코인 멤풀 수수료(sat/vB), 상대강도 지표를 실시간으로 통합 분석합니다.',
+      tip: '실전 해석: 가격은 하락하는데 미결제약정(OI)이 급증하고 펀딩비가 음수면 숏 스퀴즈 반등 가능성이 커집니다.'
+    },
+    halving: {
+      title: '비트코인 5차 반감기 트래커',
+      desc: 'mempool.space 실시간 블록 높이를 조회하여 210,000블록마다 채굴 보상이 절반으로 줄어드는 5차 반감기(1,050,000블록)까지 남은 일정을 계산합니다.',
+      tip: '실전 해석: 반감기 사이클 진행률과 공급 축소 기대감을 중장기 적립식 비중 조절에 참고하세요.'
+    },
+    inst_risk: {
+      title: '기관 부채·청산 리스크 모니터',
+      desc: 'SEC EDGAR 8-K 공시 기반 Strategy(MSTR)와 Bitmine(BMNR)의 코인 보유량, 평단가, 순부채, 자산 커버리지 배수를 추적합니다.',
+      tip: '실전 해석: 자산 커버리지 배수가 2.0x 이상이면 재무가 안정적이며, 기관 평단가 부근에서는 강력한 기관 방어 심리가 작동합니다.'
+    },
+    news_guide: {
+      title: '1군 매체 뉴스 모니터 & 기간별 브리핑',
+      desc: 'CoinDesk, Cointelegraph, Decrypt, The Block, 블록미디어 등 검증된 1군 매체만 수집해 자동 번역 및 본문 맥락 기반 호재/리스크 분석을 제공합니다.',
+      tip: '실전 해석: 자극적인 제목 대신 헤드라인 아래의 본문 요약과 판단 근거를 확인하고, 상단 탭에서 24h·3일·7일 핵심 흐름을 점검하세요.'
+    },
+    target_alert: {
+      title: '매수 목표가 & RSI 자동 알림 배너',
+      desc: '설정한 매수 목표가($) 이하로 가격이 내려오거나 일봉 RSI가 과매도(30 이하)·과열(75 이상) 구간에 진입하면 최상단에 즉시 배너를 띄웁니다.',
+      tip: '실전 해석: 지정해 둔 매수 구간 도달 여부를 앱 실행 즉시 놓치지 않고 확인할 수 있습니다.'
+    }
+  };
+
+  function openHelp(key) {
+    const item = HELP_DICT[key];
+    if (!item) return;
+    document.getElementById('help-title').innerText = item.title;
+    document.getElementById('help-desc').innerText = item.desc;
+    document.getElementById('help-tip').innerText = item.tip;
+    document.getElementById('help-backdrop').classList.add('open');
   }
-};
 
-function openHelp(key) {
-  const item = HELP_DB[key];
-  if (!item) return;
-  document.getElementById('help-title').textContent = item.title;
-  document.getElementById('help-desc').textContent = item.desc;
-  document.getElementById('help-tip').textContent = item.tip;
-  document.getElementById('help-backdrop').classList.add('open');
-}
-function closeHelp(e) {
-  if (!e || e.target.id === 'help-backdrop') {
-    document.getElementById('help-backdrop').classList.remove('open');
+  function closeHelp(e) {
+    if (!e || e.target.id === 'help-backdrop') {
+      document.getElementById('help-backdrop').classList.remove('open');
+    }
   }
-}
 
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
-}
-
-function toggleTheme() {
-  const html = document.documentElement;
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('cp_theme', next);
-  drawProChart();
-  showToast(next === 'dark' ? '바이낸스 프로 다크 모드' : '라이트 모드 전환');
-}
-
-function switchTab(tab) {
-  STATE.tab = tab;
-  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  if (tab === 'chart') setTimeout(drawProChart, 30);
-}
-
-function setAsset(asset) {
-  STATE.asset = asset;
-  STATE.crosshairIdx = -1;
-  document.getElementById('btn-asset-BTC').classList.toggle('active', asset === 'BTC');
-  document.getElementById('btn-asset-ETH').classList.toggle('active', asset === 'ETH');
-
-  const isBtc = asset === 'BTC';
-  document.getElementById('ticker-symbol').textContent = isBtc ? 'BTC / USDT' : 'ETH / USDT';
-  document.getElementById('fng-card-title').textContent = isBtc ? 'BTC 공포·탐욕 지수' : 'ETH 공포·탐욕 지수';
-  document.getElementById('fng-source-tag').textContent = isBtc ? 'Alternative API · 7일' : 'Wilder RSI(14) 모델 · 7일';
-  document.getElementById('strat-detail-title').textContent = `${asset} AI 분할 매수(DCA)`;
-  document.getElementById('limit-guide-title').textContent = `AI 지정가 분할 매수 타점 (${asset})`;
-  document.getElementById('deriv-card-title').textContent = `${asset} 파생상품 수급 & 온체인`;
-  document.getElementById('halving-card-wrap').style.display = isBtc ? 'block' : 'none';
-  document.getElementById('inst-card-title').textContent = isBtc ? 'BTC 기관 부채·청산 모니터 (Strategy)' : 'ETH 기관 부채·청산 모니터 (Bitmine)';
-  document.getElementById('inst-box-BTC').style.display = isBtc ? 'block' : 'none';
-  document.getElementById('inst-box-ETH').style.display = isBtc ? 'none' : 'block';
-  document.getElementById('news-card-title').textContent = `${asset} 1군 매체 뉴스 모니터`;
-  document.getElementById('pos-card-title').textContent = `${asset} 내 매수평균가 설정`;
-  document.getElementById('pos-group-BTC').style.display = isBtc ? 'block' : 'none';
-  document.getElementById('pos-group-ETH').style.display = isBtc ? 'none' : 'block';
-  document.getElementById('my-pnl-label').textContent = `${asset} 평단 대비 현재 손익`;
-  document.getElementById('inst-edit-title').textContent = isBtc ? 'Strategy (MSTR) & ETF 수급 보정' : 'Bitmine (BMNR) & ETF 수급 보정';
-  document.getElementById('inst-form-BTC').style.display = isBtc ? 'block' : 'none';
-  document.getElementById('inst-form-ETH').style.display = isBtc ? 'none' : 'block';
-
-  renderAll();
-  fetchKlines(asset, STATE.tf);
-}
-
-function setTimeframe(tf) {
-  STATE.tf = tf;
-  STATE.crosshairIdx = -1;
-  document.querySelectorAll('.tf-btn').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
-  fetchKlines(STATE.asset, tf);
-}
-
-function setChartType(ctype) {
-  STATE.ctype = ctype;
-  document.querySelectorAll('.ctype-btn').forEach(b => b.classList.toggle('active', b.dataset.ctype === ctype));
-  drawProChart();
-}
-
-function toggleOverlay(key) {
-  STATE.overlays[key] = !STATE.overlays[key];
-  document.getElementById('chip-' + key).classList.toggle('active', STATE.overlays[key]);
-  drawProChart();
-}
-
-function fmtUsd(v, dec = 0) {
-  if (!v || isNaN(v)) return '$--';
-  return '$' + Number(v).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-}
-function fmtKrw(v) {
-  if (!v || isNaN(v)) return '₩--';
-  return '₩' + Math.round(v).toLocaleString('ko-KR');
-}
-
-function calcWilderRSI(closes, period = 14) {
-  if (closes.length <= period) return closes.map(() => 50);
-  const out = new Array(closes.length).fill(50);
-  let gains = 0, losses = 0;
-  for (let i = 1; i <= period; i++) {
-    const d = closes[i] - closes[i - 1];
-    if (d >= 0) gains += d; else losses -= d;
+  // =========================================================
+  // Formatting & UI Helpers
+  // =========================================================
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
   }
-  let avgG = gains / period, avgL = losses / period;
-  out[period] = avgL === 0 ? 100 : 100 - 100 / (1 + avgG / avgL);
-  for (let i = period + 1; i < closes.length; i++) {
-    const d = closes[i] - closes[i - 1];
-    const g = d > 0 ? d : 0;
-    const l = d < 0 ? -d : 0;
-    avgG = (avgG * (period - 1) + g) / period;
-    avgL = (avgL * (period - 1) + l) / period;
-    out[i] = avgL === 0 ? 100 : 100 - 100 / (1 + avgG / avgL);
-  }
-  return out;
-}
 
-function calcSMA(arr, period) {
-  return arr.map((_, i) => {
-    if (i < period - 1) return null;
+  function fmtUsd(num, dec = 0) {
+    if (!isFinite(num) || num === 0) return '$--';
+    const d = num < 100 ? 2 : dec;
+    return '$' + num.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  function fmtKrw(num) {
+    if (!isFinite(num) || num === 0) return '₩--';
+    return '₩' + Math.round(num).toLocaleString('ko-KR');
+  }
+
+  function fmtCompactUsd(num) {
+    if (!isFinite(num) || num === 0) return '--';
+    const abs = Math.abs(num);
+    if (abs >= 1e9) return '$' + (num / 1e9).toFixed(2) + 'B';
+    if (abs >= 1e6) return '$' + (num / 1e6).toFixed(1) + 'M';
+    return fmtUsd(num, 0);
+  }
+
+  function getFngColor(v) {
+    if (v <= 25) return 'var(--red)';
+    if (v <= 45) return '#FF9800';
+    if (v <= 55) return 'var(--gold)';
+    if (v <= 75) return '#8BC34A';
+    return 'var(--green)';
+  }
+
+  // =========================================================
+  // Navigation, Theme & Asset Switcher
+  // =========================================================
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem(LS_KEYS.THEME, next);
+    drawProChart();
+    showToast(next === 'dark' ? '다크 테마 적용' : '라이트 테마 적용');
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
+    if (tab === 'chart') setTimeout(drawProChart, 40);
+  }
+
+  function setAsset(asset) {
+    state.asset = asset;
+    state.hoverIdx = -1;
+    document.getElementById('btn-asset-BTC').classList.toggle('active', asset === 'BTC');
+    document.getElementById('btn-asset-ETH').classList.toggle('active', asset === 'ETH');
+    renderAll();
+  }
+
+  function setTimeframe(tf) {
+    state.timeframe = tf;
+    state.hoverIdx = -1;
+    document.querySelectorAll('.tf-btn').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
+    fetchKlinesForActive();
+  }
+
+  function setChartType(ctype) {
+    state.chartType = ctype;
+    document.querySelectorAll('.ctype-btn').forEach(b => b.classList.toggle('active', b.dataset.ctype === ctype));
+    drawProChart();
+  }
+
+  function toggleOverlay(key) {
+    state.overlays[key] = !state.overlays[key];
+    document.getElementById('chip-' + key).classList.toggle('active', state.overlays[key]);
+    if (key === 'ma') {
+      document.getElementById('ma-legend-row').style.display = state.overlays.ma ? 'flex' : 'none';
+    }
+    drawProChart();
+  }
+
+  function setNewsWindow(win) {
+    state.newsWindow = win;
+    document.querySelectorAll('.nw-btn').forEach(b => b.classList.toggle('active', b.dataset.win === win));
+    renderNewsSection();
+  }
+
+  // =========================================================
+  // Technical Indicators (Wilder RMA RSI, Signal, SMA, BB)
+  // =========================================================
+  function calcSMA(arr, period) {
+    const out = new Array(arr.length).fill(null);
     let sum = 0;
-    for (let j = i - period + 1; j <= i; j++) sum += arr[j];
-    return sum / period;
-  });
-}
+    for (let i = 0; i < arr.length; i++) {
+      sum += arr[i];
+      if (i >= period) sum -= arr[i - period];
+      if (i >= period - 1) out[i] = sum / period;
+    }
+    return out;
+  }
 
-function calcBB(closes, period = 20, mult = 2) {
-  const mid = calcSMA(closes, period);
-  return closes.map((_, i) => {
-    if (mid[i] === null) return { mid: null, up: null, dn: null };
-    let sq = 0;
-    for (let j = i - period + 1; j <= i; j++) sq += Math.pow(closes[j] - mid[i], 2);
-    const std = Math.sqrt(sq / period);
-    return { mid: mid[i], up: mid[i] + mult * std, dn: mid[i] - mult * std };
-  });
-}
-
-function getAthDrawdown(asset) {
-  const p = STATE.prices[asset].usd;
-  if (!p) return 0;
-  const histHigh = STATE.daily200[asset].reduce((m, c) => Math.max(m, c.h), 0);
-  const ath = Math.max(STATE.athRef[asset], histHigh, p);
-  STATE.athRef[asset] = ath;
-  return ((p - ath) / ath) * 100;
-}
-
-/* API Fetchers */
-async function fetchTickerAndUpbit() {
-  try {
-    const [bRes, uRes] = await Promise.all([
-      fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT","ETHBTC"]'),
-      fetch('https://api.upbit.com/v1/ticker?markets=KRW-BTC,KRW-ETH,KRW-USDT')
-    ]);
-    const bJson = await bRes.json();
-    const uJson = await uRes.json();
-
-    const usdtObj = uJson.find(x => x.market === 'KRW-USDT');
-    if (usdtObj) STATE.usdtKrw = Number(usdtObj.trade_price);
-
-    bJson.forEach(item => {
-      if (item.symbol === 'BTCUSDT' || item.symbol === 'ETHUSDT') {
-        const k = item.symbol === 'BTCUSDT' ? 'BTC' : 'ETH';
-        STATE.prices[k].usd = Number(item.lastPrice);
-        STATE.prices[k].chg = Number(item.priceChangePercent);
-        STATE.prices[k].high = Number(item.highPrice);
-        STATE.prices[k].low = Number(item.lowPrice);
-        STATE.prices[k].vol = Number(item.quoteVolume);
-      } else if (item.symbol === 'ETHBTC') {
-        STATE.ethBtcRatio = Number(item.lastPrice);
-        STATE.ethBtcChg = Number(item.priceChangePercent);
+  function calcBB(closes, period = 20, mult = 2) {
+    const mid = calcSMA(closes, period);
+    const upper = new Array(closes.length).fill(null);
+    const lower = new Array(closes.length).fill(null);
+    for (let i = period - 1; i < closes.length; i++) {
+      let sq = 0;
+      for (let j = i - period + 1; j <= i; j++) {
+        const d = closes[j] - mid[i];
+        sq += d * d;
       }
-    });
+      const std = Math.sqrt(sq / period);
+      upper[i] = mid[i] + mult * std;
+      lower[i] = mid[i] - mult * std;
+    }
+    return { mid, upper, lower };
+  }
 
-    uJson.forEach(item => {
-      if (item.market === 'KRW-BTC' || item.market === 'KRW-ETH') {
-        const k = item.market === 'KRW-BTC' ? 'BTC' : 'ETH';
-        STATE.prices[k].krw = Number(item.trade_price);
-        const globalKrw = STATE.prices[k].usd * STATE.usdtKrw;
-        if (globalKrw > 0) {
-          STATE.prices[k].kimp = ((STATE.prices[k].krw - globalKrw) / globalKrw) * 100;
+  function calcWilderRSI(closes, period = 14) {
+    const rsi = new Array(closes.length).fill(null);
+    if (closes.length <= period) return rsi;
+    let gains = 0, losses = 0;
+    for (let i = 1; i <= period; i++) {
+      const diff = closes[i] - closes[i - 1];
+      if (diff >= 0) gains += diff; else losses -= diff;
+    }
+    let avgGain = gains / period;
+    let avgLoss = losses / period;
+    rsi[period] = avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss));
+    for (let i = period + 1; i < closes.length; i++) {
+      const diff = closes[i] - closes[i - 1];
+      const g = diff > 0 ? diff : 0;
+      const l = diff < 0 ? -diff : 0;
+      avgGain = (avgGain * (period - 1) + g) / period;
+      avgLoss = (avgLoss * (period - 1) + l) / period;
+      rsi[i] = avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss));
+    }
+    return rsi;
+  }
+
+  function calcRSISignal(rsiArr, sigPeriod = 9) {
+    const out = new Array(rsiArr.length).fill(null);
+    for (let i = 0; i < rsiArr.length; i++) {
+      if (rsiArr[i] === null) continue;
+      let sum = 0, cnt = 0;
+      for (let j = Math.max(0, i - sigPeriod + 1); j <= i; j++) {
+        if (rsiArr[j] !== null) { sum += rsiArr[j]; cnt++; }
+      }
+      if (cnt >= sigPeriod) out[i] = sum / cnt;
+    }
+    return out;
+  }
+
+  // =========================================================
+  // Data Fetching (Binance, Upbit, Futures, Mempool, F&G, SEC)
+  // =========================================================
+  async function fetchMarketPrices() {
+    try {
+      const [binRes, upbitRes, ethBtcRes] = await Promise.all([
+        fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=["BTCUSDT","ETHUSDT"]'),
+        fetch('https://api.upbit.com/v1/ticker?markets=KRW-BTC,KRW-ETH,KRW-USDT'),
+        fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHBTC')
+      ]);
+      const binData = await binRes.json();
+      const upbitData = await upbitRes.json();
+      const ethBtcData = await ethBtcRes.json();
+
+      const usdtObj = upbitData.find(x => x.market === 'KRW-USDT');
+      if (usdtObj && usdtObj.trade_price) state.usdtKrw = usdtObj.trade_price;
+
+      const upBtc = upbitData.find(x => x.market === 'KRW-BTC');
+      const upEth = upbitData.find(x => x.market === 'KRW-ETH');
+
+      binData.forEach(c => {
+        const sym = c.symbol === 'BTCUSDT' ? 'BTC' : 'ETH';
+        const usd = parseFloat(c.lastPrice);
+        const high = parseFloat(c.highPrice);
+        const low = parseFloat(c.lowPrice);
+        const vol = parseFloat(c.quoteVolume);
+        const chg = parseFloat(c.priceChangePercent);
+        if (high > state.ath[sym]) state.ath[sym] = high;
+        if (usd > state.ath[sym]) state.ath[sym] = usd;
+
+        const upCoin = sym === 'BTC' ? upBtc : upEth;
+        const krw = upCoin ? upCoin.trade_price : usd * state.usdtKrw;
+        const globalKrw = usd * state.usdtKrw;
+        const kimp = globalKrw > 0 ? ((krw - globalKrw) / globalKrw) * 100 : 0;
+
+        state.prices[sym] = { usd, chg, high, low, vol, krw, kimp };
+      });
+
+      state.ethBtc = {
+        ratio: parseFloat(ethBtcData.lastPrice),
+        chg: parseFloat(ethBtcData.priceChangePercent)
+      };
+
+      updateSyncTime();
+      renderTicker();
+      checkAlerts();
+    } catch (e) {
+      console.warn('Market fetch err:', e);
+    }
+  }
+
+  async function fetchKlinesForActive() {
+    const tf = state.timeframe;
+    try {
+      const [btcRes, ethRes] = await Promise.all([
+        fetch(`https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${tf}&limit=120`),
+        fetch(`https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=${tf}&limit=120`)
+      ]);
+      const [btcRaw, ethRaw] = await Promise.all([btcRes.json(), ethRes.json()]);
+      const parseK = raw => raw.map(d => ({
+        t: d[0], o: +d[1], h: +d[2], l: +d[3], c: +d[4], v: +d[5]
+      }));
+      state.klines.BTC = parseK(btcRaw);
+      state.klines.ETH = parseK(ethRaw);
+      drawProChart();
+    } catch (e) {
+      console.warn('Klines fetch err:', e);
+    }
+  }
+
+  async function fetchDailyAnd4hMetrics() {
+    try {
+      const [b1d, e1d, b4h, e4h] = await Promise.all([
+        fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=210'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=210'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=60'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=4h&limit=60')
+      ]);
+      const [rb1d, re1d, rb4h, re4h] = await Promise.all([b1d.json(), e1d.json(), b4h.json(), e4h.json()]);
+
+      const bCloses = rb1d.map(d => +d[4]);
+      const eCloses = re1d.map(d => +d[4]);
+      const bRsiArr = calcWilderRSI(bCloses, 14);
+      const eRsiArr = calcWilderRSI(eCloses, 14);
+      state.rsi1d.BTC = bRsiArr[bRsiArr.length - 1] || 50;
+      state.rsi1d.ETH = eRsiArr[eRsiArr.length - 1] || 50;
+
+      // Mayer Multiple (Price / 200D SMA)
+      const b200 = bCloses.slice(-200).reduce((a, b) => a + b, 0) / Math.min(200, bCloses.length);
+      const e200 = eCloses.slice(-200).reduce((a, b) => a + b, 0) / Math.min(200, eCloses.length);
+      state.mayer.BTC = b200 > 0 ? bCloses[bCloses.length - 1] / b200 : 1.0;
+      state.mayer.ETH = e200 > 0 ? eCloses[eCloses.length - 1] / e200 : 1.0;
+
+      // ETH F&G Proxy (Wilder RSI 7d)
+      const last7Rsi = eRsiArr.slice(-7);
+      const last7Time = re1d.slice(-7).map(d => d[0]);
+      const todayEthFng = Math.round(last7Rsi[last7Rsi.length - 1] || 50);
+      const fngLabel = v => v <= 25 ? 'Extreme Fear' : v <= 45 ? 'Fear' : v <= 55 ? 'Neutral' : v <= 75 ? 'Greed' : 'Extreme Greed';
+      state.fngEth = {
+        val: todayEthFng,
+        cls: fngLabel(todayEthFng),
+        hist: last7Rsi.map((v, idx) => ({ t: last7Time[idx], val: Math.round(v || 50) }))
+      };
+
+      // 4H RSI
+      const b4Rsi = calcWilderRSI(rb4h.map(d => +d[4]), 14);
+      const e4Rsi = calcWilderRSI(re4h.map(d => +d[4]), 14);
+      state.rsi4h.BTC = b4Rsi[b4Rsi.length - 1] || 50;
+      state.rsi4h.ETH = e4Rsi[e4Rsi.length - 1] || 50;
+
+      renderAll();
+      checkAlerts();
+    } catch (e) {
+      console.warn('1d/4h metrics err:', e);
+    }
+  }
+
+  async function fetchFnGBTC() {
+    try {
+      const res = await fetch('https://api.alternative.me/fng/?limit=7');
+      const json = await res.json();
+      const today = json.data[0];
+      state.fngBtc = {
+        val: parseInt(today.value, 10),
+        cls: today.value_classification,
+        hist: json.data.slice().reverse().map(item => ({
+          t: parseInt(item.timestamp, 10) * 1000,
+          val: parseInt(item.value, 10)
+        }))
+      };
+      renderSentiment();
+    } catch (e) {
+      console.warn('FnG BTC err:', e);
+    }
+  }
+
+  async function fetchDerivativesAndOnchain() {
+    try {
+      const [pBtc, pEth, oiBtc, oiEth, tipRes, feeRes] = await Promise.allSettled([
+        fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT').then(r => r.json()),
+        fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT').then(r => r.json()),
+        fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT').then(r => r.json()),
+        fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=ETHUSDT').then(r => r.json()),
+        fetch('https://mempool.space/api/blocks/tip/height').then(r => r.text()),
+        fetch('https://mempool.space/api/v1/fees/recommended').then(r => r.json())
+      ]);
+
+      if (pBtc.status === 'fulfilled') state.deriv.BTC.funding = parseFloat(pBtc.value.lastFundingRate || 0) * 100;
+      if (pEth.status === 'fulfilled') state.deriv.ETH.funding = parseFloat(pEth.value.lastFundingRate || 0) * 100;
+      if (oiBtc.status === 'fulfilled') state.deriv.BTC.oi = parseFloat(oiBtc.value.openInterest || 0) * (state.prices.BTC.usd || 80000);
+      if (oiEth.status === 'fulfilled') state.deriv.ETH.oi = parseFloat(oiEth.value.openInterest || 0) * (state.prices.ETH.usd || 2500);
+
+      if (tipRes.status === 'fulfilled') {
+        const height = parseInt(tipRes.value, 10);
+        if (height > 840000) {
+          const target = 1050000;
+          const rem = Math.max(0, target - height);
+          const pct = Math.min(100, Math.max(0, ((height - 840000) / 210000) * 100));
+          const days = Math.round((rem * 10) / 1440);
+          const est = new Date(Date.now() + days * 86400000);
+          const estStr = `${est.getFullYear()}.${String(est.getMonth() + 1).padStart(2, '0')}`;
+          state.halving = { height, rem, pct, dday: days, estDate: estStr };
         }
       }
-    });
-
-    updateSyncTime();
-    renderAll();
-  } catch (e) {
-    console.warn('Ticker fetch error:', e);
-  }
-}
-
-function connectBinanceWS() {
-  try {
-    const ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker/ethusdt@ticker');
-    ws.onopen = () => {
-      const dot = document.getElementById('ws-status-dot');
-      dot.style.background = 'var(--green)';
-    };
-    ws.onmessage = (ev) => {
-      const d = JSON.parse(ev.data);
-      if (!d.s || !d.c) return;
-      const k = d.s === 'BTCUSDT' ? 'BTC' : d.s === 'ETHUSDT' ? 'ETH' : null;
-      if (!k) return;
-      STATE.prices[k].usd = Number(d.c);
-      STATE.prices[k].chg = Number(d.P);
-      STATE.prices[k].high = Number(d.h);
-      STATE.prices[k].low = Number(d.l);
-      STATE.prices[k].vol = Number(d.q);
-
-      if (STATE.prices[k].krw > 0 && STATE.usdtKrw > 0) {
-        const gKrw = STATE.prices[k].usd * STATE.usdtKrw;
-        STATE.prices[k].kimp = ((STATE.prices[k].krw - gKrw) / gKrw) * 100;
+      if (feeRes.status === 'fulfilled') {
+        state.mempoolFee = feeRes.value.halfHourFee || feeRes.value.fastestFee || 0;
       }
 
-      if (STATE.klines[k].length > 0) {
-        const last = STATE.klines[k][STATE.klines[k].length - 1];
-        last.c = STATE.prices[k].usd;
-        if (last.c > last.h) last.h = last.c;
-        if (last.c < last.l) last.l = last.c;
-      }
-
-      if (k === STATE.asset) {
-        renderTicker();
-        if (STATE.tab === 'chart' && STATE.crosshairIdx === -1) drawProChart();
-      }
-    };
-    ws.onclose = () => setTimeout(connectBinanceWS, 5000);
-  } catch (e) {}
-}
-
-async function fetchKlines(asset, tf) {
-  try {
-    const sym = asset === 'BTC' ? 'BTCUSDT' : 'ETHUSDT';
-    const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${sym}&interval=${tf}&limit=120`);
-    const raw = await res.json();
-    STATE.klines[asset] = raw.map(r => ({
-      t: r[0], o: Number(r[1]), h: Number(r[2]), l: Number(r[3]), c: Number(r[4]), v: Number(r[5])
-    }));
-    if (STATE.prices[asset].usd > 0 && STATE.klines[asset].length) {
-      STATE.klines[asset][STATE.klines[asset].length - 1].c = STATE.prices[asset].usd;
-    }
-    if (asset === STATE.asset && STATE.tab === 'chart') drawProChart();
-  } catch (e) {}
-}
-
-async function fetchBaselineKlines() {
-  try {
-    const [dBtc, dEth, h4Btc, h4Eth] = await Promise.all([
-      fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=210').then(r => r.json()),
-      fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=210').then(r => r.json()),
-      fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=60').then(r => r.json()),
-      fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=4h&limit=60').then(r => r.json())
-    ]);
-    STATE.daily200.BTC = dBtc.map(r => ({ t: r[0], h: Number(r[2]), l: Number(r[3]), c: Number(r[4]) }));
-    STATE.daily200.ETH = dEth.map(r => ({ t: r[0], h: Number(r[2]), l: Number(r[3]), c: Number(r[4]) }));
-
-    const r4B = calcWilderRSI(h4Btc.map(r => Number(r[4])), 14);
-    const r4E = calcWilderRSI(h4Eth.map(r => Number(r[4])), 14);
-    STATE.rsi4h.BTC = r4B[r4B.length - 1] || 50;
-    STATE.rsi4h.ETH = r4E[r4E.length - 1] || 50;
-
-    // ETH F&G Proxy via 1D Wilder RSI
-    const ethCloses = STATE.daily200.ETH.map(x => x.c);
-    const ethRsiArr = calcWilderRSI(ethCloses, 14);
-    const last7Rsi = ethRsiArr.slice(-7);
-    const last7Dates = STATE.daily200.ETH.slice(-7);
-    STATE.fng.ethVal = Math.round(last7Rsi[last7Rsi.length - 1] || 50);
-    STATE.fng.ethClass = getFngLabel(STATE.fng.ethVal);
-    STATE.fng.eth7d = last7Rsi.map((v, i) => {
-      const dt = new Date(last7Dates[i].t);
-      return { d: `${dt.getMonth() + 1}/${dt.getDate()}`, v: Math.round(v) };
-    });
-
-    renderAll();
-  } catch (e) {}
-}
-
-async function fetchBtcFng() {
-  try {
-    const res = await fetch('https://api.alternative.me/fng/?limit=7');
-    const json = await res.json();
-    const list = json.data || [];
-    if (list.length) {
-      STATE.fng.btcVal = Number(list[0].value);
-      STATE.fng.btcClass = list[0].value_classification;
-      STATE.fng.btc7d = list.slice().reverse().map(it => {
-        const dt = new Date(Number(it.timestamp) * 1000);
-        return { d: `${dt.getMonth() + 1}/${dt.getDate()}`, v: Number(it.value) };
-      });
-      renderFng();
+      renderTicker();
+      renderIntel();
       renderStrategy();
+    } catch (e) {
+      console.warn('Deriv/Onchain err:', e);
     }
-  } catch (e) {}
-}
+  }
 
-async function fetchDerivativesAndOnchain() {
-  try {
-    const [fB, fE, oiB, oiE, blkH, feeJ] = await Promise.all([
-      fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT').then(r => r.json()),
-      fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT').then(r => r.json()),
-      fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=BTCUSDT').then(r => r.json()),
-      fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=ETHUSDT').then(r => r.json()),
-      fetch('https://mempool.space/api/blocks/tip/height').then(r => r.text()),
-      fetch('https://mempool.space/api/v1/fees/recommended').then(r => r.json())
-    ]);
-    STATE.prices.BTC.funding = Number(fB.lastFundingRate) * 100;
-    STATE.prices.ETH.funding = Number(fE.lastFundingRate) * 100;
-    STATE.prices.BTC.oi = Number(oiB.openInterest) * (STATE.prices.BTC.usd || 90000);
-    STATE.prices.ETH.oi = Number(oiE.openInterest) * (STATE.prices.ETH.usd || 3000);
-    STATE.mempoolFee = Number(feeJ.halfHourFee || feeJ.fastestFee || 0);
+  async function fetchAutoInstData() {
+    const manualRaw = localStorage.getItem(LS_KEYS.INST_MANUAL);
+    if (manualRaw) {
+      try {
+        state.inst = { ...DEFAULT_INST, ...JSON.parse(manualRaw), isManual: true };
+        syncInstInputs();
+        renderIntel();
+        renderStrategy();
+        return;
+      } catch (e) {}
+    }
+    try {
+      const res = await fetch('./inst_data.json?t=' + Date.now());
+      if (res.ok) {
+        const json = await res.json();
+        state.inst = { ...DEFAULT_INST, ...json, isManual: false };
+      }
+    } catch (e) {}
+    syncInstInputs();
+    renderIntel();
+    renderStrategy();
+  }
 
-    const h = Number(blkH);
-    if (h > 840000) {
-      const target = 1050000;
-      const rem = Math.max(0, target - h);
-      const days = Math.round((rem * 10) / 1440);
-      const est = new Date(Date.now() + days * 86400000);
-      STATE.halving = {
-        height: h, rem, dday: days,
-        pct: Math.min(100, Math.max(0, ((h - 840000) / 210000) * 100)),
-        estDate: `${est.getFullYear()}.${String(est.getMonth() + 1).padStart(2, '0')}`
+  // =========================================================
+  // WebSocket Live Stream & Background Resume Handler
+  // =========================================================
+  function connectWebSocket() {
+    if (state.ws) {
+      try { state.ws.close(); } catch (e) {}
+    }
+    const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker');
+    state.ws = ws;
+    ws.onopen = () => {
+      document.getElementById('ws-status-dot').style.background = 'var(--green)';
+    };
+    ws.onmessage = ev => {
+      try {
+        const msg = JSON.parse(ev.data);
+        const d = msg.data;
+        if (!d || !d.s) return;
+        const sym = d.s === 'BTCUSDT' ? 'BTC' : 'ETH';
+        const usd = parseFloat(d.c);
+        const open = parseFloat(d.o);
+        const high = parseFloat(d.h);
+        const low = parseFloat(d.l);
+        const vol = parseFloat(d.q);
+        const chg = open > 0 ? ((usd - open) / open) * 100 : state.prices[sym].chg;
+        if (usd > state.ath[sym]) state.ath[sym] = usd;
+
+        const prev = state.prices[sym];
+        const krw = prev.krw > 0 && prev.usd > 0 ? prev.krw * (usd / prev.usd) : usd * state.usdtKrw;
+        const globalKrw = usd * state.usdtKrw;
+        const kimp = globalKrw > 0 ? ((krw - globalKrw) / globalKrw) * 100 : prev.kimp;
+
+        state.prices[sym] = { usd, chg, high, low, vol, krw, kimp };
+
+        // Inject live tick into active chart last candle
+        const kArr = state.klines[sym];
+        if (kArr.length > 0) {
+          const last = kArr[kArr.length - 1];
+          last.c = usd;
+          if (usd > last.h) last.h = usd;
+          if (usd < last.l) last.l = usd;
+        }
+
+        if (sym === state.asset) {
+          renderTicker();
+          if (document.getElementById('tab-chart').classList.contains('active') && state.hoverIdx === -1) {
+            drawProChart();
+          }
+          renderPositionPnL();
+        }
+        checkAlerts();
+      } catch (e) {}
+    };
+    ws.onclose = () => {
+      document.getElementById('ws-status-dot').style.background = 'var(--red)';
+      setTimeout(connectWebSocket, 4000);
+    };
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      manualRefresh(true);
+      if (!state.ws || state.ws.readyState !== WebSocket.OPEN) connectWebSocket();
+    }
+  });
+
+  // =========================================================
+  // Render Functions (Ticker, Chart, Sentiment, Strategy, Intel, Position)
+  // =========================================================
+  function renderTicker() {
+    const sym = state.asset;
+    const p = state.prices[sym];
+    const rsi = Math.round(state.rsi1d[sym] || 50);
+
+    document.getElementById('ticker-symbol').innerText = `${sym} / USDT`;
+    const rsiBadge = document.getElementById('ticker-rsi-badge');
+    rsiBadge.innerText = `RSI ${rsi}${rsi <= 30 ? ' 과매도' : rsi >= 70 ? ' 과열' : ''}`;
+    rsiBadge.className = 'badge-tag ' + (rsi <= 30 ? 'green' : rsi >= 70 ? 'red' : '');
+
+    document.getElementById('ticker-usd').innerText = fmtUsd(p.usd, sym === 'ETH' ? 2 : 0);
+    const chgEl = document.getElementById('ticker-chg');
+    chgEl.innerText = `${p.chg >= 0 ? '+' : ''}${p.chg.toFixed(2)}%`;
+    chgEl.className = 'chg-pill ' + (p.chg >= 0 ? 'up' : 'dn');
+
+    document.getElementById('ticker-krw').innerText = fmtKrw(p.krw);
+    const kimpEl = document.getElementById('ticker-kimp');
+    kimpEl.innerText = `김프 ${p.kimp >= 0 ? '+' : ''}${p.kimp.toFixed(2)}%`;
+    kimpEl.style.color = p.kimp >= 4 ? 'var(--red)' : p.kimp < 0 ? 'var(--green)' : 'var(--text)';
+
+    document.getElementById('ticker-high').innerText = fmtUsd(p.high, sym === 'ETH' ? 2 : 0);
+    document.getElementById('ticker-low').innerText = fmtUsd(p.low, sym === 'ETH' ? 2 : 0);
+    document.getElementById('ticker-vol').innerText = fmtCompactUsd(p.vol);
+
+    const ath = state.ath[sym];
+    const dd = p.usd > 0 && ath > 0 ? ((p.usd - ath) / ath) * 100 : 0;
+    document.getElementById('ticker-ath-dd').innerText = `${dd.toFixed(1)}%`;
+    document.getElementById('chip-ath-val').innerText = `${dd.toFixed(1)}%`;
+
+    const fr = state.deriv[sym].funding;
+    const frEl = document.getElementById('chip-funding');
+    frEl.innerText = `${fr >= 0 ? '+' : ''}${fr.toFixed(4)}%`;
+    frEl.style.color = fr < 0 ? 'var(--green)' : fr >= 0.04 ? 'var(--red)' : 'var(--text)';
+
+    const relLabel = document.getElementById('chip-rel-label');
+    if (sym === 'BTC') {
+      relLabel.innerHTML = `Mayer 배수: <strong id="chip-rel-val">${state.mayer.BTC.toFixed(2)}x</strong>`;
+    } else {
+      relLabel.innerHTML = `ETH/BTC: <strong id="chip-rel-val">${state.ethBtc.ratio.toFixed(5)}</strong>`;
+    }
+  }
+
+  function renderSentiment() {
+    const sym = state.asset;
+    const data = sym === 'BTC' ? state.fngBtc : state.fngEth;
+    document.getElementById('fng-card-title').innerText = `${sym} 공포·탐욕 지수`;
+    document.getElementById('fng-source-tag').innerText = sym === 'BTC' ? 'Alternative API · 7일' : 'RSI(14) 추정 · 7일';
+
+    const valEl = document.getElementById('active-fng-val');
+    const clsEl = document.getElementById('active-fng-class');
+    valEl.innerText = data.val;
+    valEl.style.color = getFngColor(data.val);
+    clsEl.innerText = data.cls;
+    clsEl.style.color = getFngColor(data.val);
+
+    const grid = document.getElementById('active-fng-7d');
+    grid.innerHTML = (data.hist || []).slice(-7).map(item => {
+      const d = new Date(item.t);
+      const label = `${d.getMonth() + 1}/${d.getDate()}`;
+      return `<div class="fng-day"><span>${label}</span><strong style="color:${getFngColor(item.val)}">${item.val}</strong></div>`;
+    }).join('');
+  }
+
+  // =========================================================
+  // 3-Panel Pro Chart Renderer (Price + Volume + RSI/Signal)
+  // =========================================================
+  function drawProChart() {
+    const canvas = document.getElementById('pro-chart');
+    if (!canvas) return;
+    const wrap = document.getElementById('canvas-wrap');
+    const rect = wrap.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const W = rect.width;
+    const H = rect.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const sym = state.asset;
+    const allBars = state.klines[sym];
+    if (!allBars || allBars.length < 30) return;
+
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const cGrid = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+    const cText = isDark ? '#848E9C' : '#707A8A';
+    const cUp = '#0ECB81';
+    const cDn = '#F6465D';
+
+    const closesAll = allBars.map(b => b.c);
+    const volsAll = allBars.map(b => b.v);
+    const ma5All = calcSMA(closesAll, 5);
+    const ma10All = calcSMA(closesAll, 10);
+    const ma20All = calcSMA(closesAll, 20);
+    const ma60All = calcSMA(closesAll, 60);
+    const bbAll = calcBB(closesAll, 20, 2);
+    const vMa5All = calcSMA(volsAll, 5);
+    const vMa20All = calcSMA(volsAll, 20);
+    const rsiAll = calcWilderRSI(closesAll, 14);
+    const sigAll = calcRSISignal(rsiAll, 9);
+
+    const viewLen = 46;
+    const startIdx = Math.max(0, allBars.length - viewLen);
+    const bars = allBars.slice(startIdx);
+    const ma5 = ma5All.slice(startIdx);
+    const ma10 = ma10All.slice(startIdx);
+    const ma20 = ma20All.slice(startIdx);
+    const ma60 = ma60All.slice(startIdx);
+    const bbU = bbAll.upper.slice(startIdx);
+    const bbL = bbAll.lower.slice(startIdx);
+    const vMa5 = vMa5All.slice(startIdx);
+    const vMa20 = vMa20All.slice(startIdx);
+    const rsi = rsiAll.slice(startIdx);
+    const sig = sigAll.slice(startIdx);
+
+    const rightMargin = 54;
+    const plotW = W - rightMargin;
+    const stepX = plotW / (bars.length + 1.5);
+    const getX = i => (i + 0.8) * stepX;
+
+    // Panel vertical layout
+    const p1Top = 10, p1H = H * 0.57;
+    const p2Top = p1Top + p1H + 6, p2H = H * 0.16;
+    const p3Top = p2Top + p2H + 6, p3H = H - p3Top - 8;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Price scale
+    let pMin = Infinity, pMax = -Infinity;
+    let maxBarIdx = 0, minBarIdx = 0;
+    bars.forEach((b, i) => {
+      if (b.h > pMax) { pMax = b.h; maxBarIdx = i; }
+      if (b.l < pMin) { pMin = b.l; minBarIdx = i; }
+      if (state.overlays.bb) {
+        if (bbU[i] !== null && bbU[i] > pMax) pMax = bbU[i];
+        if (bbL[i] !== null && bbL[i] < pMin) pMin = bbL[i];
+      }
+    });
+    const myAvg = state.myPos[sym].avg;
+    if (state.overlays.avg && myAvg > 0) {
+      if (myAvg > pMax) pMax = myAvg;
+      if (myAvg < pMin) pMin = myAvg;
+    }
+    const pPad = (pMax - pMin) * 0.12 || 1;
+    pMax += pPad; pMin -= pPad;
+    const getY1 = val => p1Top + p1H - ((val - pMin) / (pMax - pMin)) * p1H;
+
+    // Horizontal grid lines
+    ctx.strokeStyle = cGrid;
+    ctx.lineWidth = 1;
+    [0.2, 0.5, 0.8].forEach(r => {
+      const y = p1Top + p1H * r;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(plotW, y); ctx.stroke();
+    });
+    ctx.beginPath(); ctx.moveTo(0, p2Top - 3); ctx.lineTo(W, p2Top - 3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, p3Top - 3); ctx.lineTo(W, p3Top - 3); ctx.stroke();
+
+    // Bollinger Bands Shaded Area
+    if (state.overlays.bb) {
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i < bars.length; i++) {
+        if (bbU[i] === null) continue;
+        const x = getX(i), y = getY1(bbU[i]);
+        if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+      }
+      for (let i = bars.length - 1; i >= 0; i--) {
+        if (bbL[i] === null) continue;
+        ctx.lineTo(getX(i), getY1(bbL[i]));
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(56, 97, 251, 0.08)';
+      ctx.fill();
+
+      [bbU, bbL].forEach(band => {
+        ctx.beginPath();
+        let st = false;
+        band.forEach((v, i) => {
+          if (v === null) return;
+          const x = getX(i), y = getY1(v);
+          if (!st) { ctx.moveTo(x, y); st = true; } else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = 'rgba(56, 97, 251, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+    }
+
+    // Price Candles or Line
+    if (state.chartType === 'candle') {
+      const cw = Math.max(3, stepX * 0.62);
+      bars.forEach((b, i) => {
+        const x = getX(i);
+        const isUp = b.c >= b.o;
+        ctx.strokeStyle = isUp ? cUp : cDn;
+        ctx.fillStyle = isUp ? cUp : cDn;
+        ctx.lineWidth = 1.1;
+        ctx.beginPath();
+        ctx.moveTo(x, getY1(b.h));
+        ctx.lineTo(x, getY1(b.l));
+        ctx.stroke();
+
+        const yO = getY1(b.o), yC = getY1(b.c);
+        const top = Math.min(yO, yC);
+        const h = Math.max(1.5, Math.abs(yC - yO));
+        ctx.fillRect(x - cw / 2, top, cw, h);
+      });
+    } else {
+      ctx.beginPath();
+      bars.forEach((b, i) => {
+        const x = getX(i), y = getY1(b.c);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#FCD535';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Moving Averages (5, 10, 20, 60)
+    if (state.overlays.ma) {
+      const maConfigs = [
+        { arr: ma5, color: '#FCD535' },
+        { arr: ma10, color: '#3861FB' },
+        { arr: ma20, color: '#E040FB' },
+        { arr: ma60, color: '#00BCD4' }
+      ];
+      maConfigs.forEach(cfg => {
+        ctx.beginPath();
+        let st = false;
+        cfg.arr.forEach((v, i) => {
+          if (v === null) return;
+          const x = getX(i), y = getY1(v);
+          if (!st) { ctx.moveTo(x, y); st = true; } else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = cfg.color;
+        ctx.lineWidth = 1.15;
+        ctx.stroke();
+      });
+    }
+
+    // High / Low Period Callouts
+    ctx.font = 'bold 9.5px -apple-system, sans-serif';
+    const hiBar = bars[maxBarIdx];
+    const loBar = bars[minBarIdx];
+    const hiX = getX(maxBarIdx), hiY = getY1(hiBar.h);
+    const loX = getX(minBarIdx), loY = getY1(loBar.l);
+    ctx.fillStyle = cUp;
+    ctx.textAlign = hiX > plotW * 0.7 ? 'right' : 'left';
+    ctx.fillText(`최고 ${fmtUsd(hiBar.h, sym === 'ETH' ? 1 : 0)}`, hiX, Math.max(p1Top + 9, hiY - 4));
+    ctx.fillStyle = cDn;
+    ctx.textAlign = loX > plotW * 0.7 ? 'right' : 'left';
+    ctx.fillText(`최저 ${fmtUsd(loBar.l, sym === 'ETH' ? 1 : 0)}`, loX, Math.min(p1Top + p1H - 2, loY + 11));
+
+    // B / S Signal Pins
+    if (state.overlays.bs) {
+      for (let i = 1; i < bars.length; i++) {
+        if (rsi[i] === null || rsi[i - 1] === null) continue;
+        const x = getX(i);
+        if (rsi[i - 1] <= 32 && rsi[i] > rsi[i - 1]) {
+          const y = Math.min(p1Top + p1H - 8, getY1(bars[i].l) + 12);
+          ctx.fillStyle = cDn;
+          ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#FFF'; ctx.font = 'bold 8.5px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText('B', x, y + 3);
+        } else if (rsi[i - 1] >= 68 && rsi[i] < rsi[i - 1]) {
+          const y = Math.max(p1Top + 8, getY1(bars[i].h) - 12);
+          ctx.fillStyle = '#3861FB';
+          ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#FFF'; ctx.font = 'bold 8.5px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText('S', x, y + 3);
+        }
+      }
+    }
+
+    // My Average Price Horizontal Line
+    if (state.overlays.avg && myAvg > 0) {
+      const yAvg = getY1(myAvg);
+      ctx.strokeStyle = cUp;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(0, yAvg); ctx.lineTo(plotW, yAvg); ctx.stroke();
+      ctx.fillStyle = cUp;
+      ctx.fillRect(2, yAvg - 8, 42, 14);
+      ctx.fillStyle = '#0B0E11';
+      ctx.font = 'bold 8.5px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('매수평균', 5, yAvg + 2);
+    }
+
+    // Live Price Dashed Line + Right Axis Badge
+    const lastPrice = bars[bars.length - 1].c;
+    const yLive = getY1(lastPrice);
+    const liveColor = lastPrice >= bars[bars.length - 1].o ? cUp : cDn;
+    ctx.save();
+    ctx.setLineDash([3, 3]);
+    ctx.strokeStyle = liveColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, yLive); ctx.lineTo(plotW, yLive); ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = liveColor;
+    ctx.fillRect(plotW + 2, yLive - 8, rightMargin - 3, 16);
+    ctx.fillStyle = '#FFF';
+    ctx.font = 'bold 9.5px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    const shortP = lastPrice >= 1000 ? (lastPrice / 1000).toFixed(1) + 'k' : lastPrice.toFixed(1);
+    ctx.fillText(shortP, plotW + rightMargin / 2, yLive + 3);
+
+    // Panel 2: Volume + Volume MA(5, 20)
+    const maxVol = Math.max(...bars.map(b => b.v)) || 1;
+    const getY2 = v => p2Top + p2H - (v / maxVol) * (p2H - 4);
+    const vw = Math.max(2.5, stepX * 0.58);
+    bars.forEach((b, i) => {
+      const x = getX(i);
+      const y = getY2(b.v);
+      ctx.fillStyle = b.c >= b.o ? 'rgba(14,203,129,0.55)' : 'rgba(246,70,93,0.55)';
+      ctx.fillRect(x - vw / 2, y, vw, p2Top + p2H - y);
+    });
+    [{ arr: vMa5, color: '#FCD535' }, { arr: vMa20, color: '#E040FB' }].forEach(cfg => {
+      ctx.beginPath();
+      let st = false;
+      cfg.arr.forEach((v, i) => {
+        if (v === null) return;
+        const x = getX(i), y = getY2(v);
+        if (!st) { ctx.moveTo(x, y); st = true; } else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = cfg.color;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+    ctx.fillStyle = cText;
+    ctx.font = '8.5px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('VOL', plotW + rightMargin / 2, p2Top + p2H / 2 + 3);
+
+    // Panel 3: RSI(14) + Signal(9)
+    const getY3 = r => p3Top + p3H - (r / 100) * p3H;
+    const y70 = getY3(70), y30 = getY3(30);
+    ctx.fillStyle = 'rgba(252, 213, 53, 0.05)';
+    ctx.fillRect(0, y70, plotW, y30 - y70);
+
+    ctx.save();
+    ctx.setLineDash([2, 2]);
+    ctx.strokeStyle = cGrid;
+    [y70, y30].forEach(y => {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(plotW, y); ctx.stroke();
+    });
+    ctx.restore();
+
+    [{ arr: rsi, color: '#E040FB' }, { arr: sig, color: '#FCD535' }].forEach(cfg => {
+      ctx.beginPath();
+      let st = false;
+      cfg.arr.forEach((v, i) => {
+        if (v === null) return;
+        const x = getX(i), y = getY3(v);
+        if (!st) { ctx.moveTo(x, y); st = true; } else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = cfg.color;
+      ctx.lineWidth = 1.25;
+      ctx.stroke();
+    });
+
+    const curRsi = rsi[rsi.length - 1] || 50;
+    const yRsi = getY3(curRsi);
+    ctx.fillStyle = '#E040FB';
+    ctx.fillRect(plotW + 2, yRsi - 7, rightMargin - 3, 14);
+    ctx.fillStyle = '#FFF';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(curRsi.toFixed(1), plotW + rightMargin / 2, yRsi + 3);
+
+    // Crosshair Scrubbing HUD
+    if (state.hoverIdx >= 0 && state.hoverIdx < bars.length) {
+      const idx = state.hoverIdx;
+      const hb = bars[idx];
+      const hx = getX(idx);
+      const hy = getY1(hb.c);
+
+      ctx.save();
+      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = '#FCD535';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(hx, p1Top); ctx.lineTo(hx, p3Top + p3H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, hy); ctx.lineTo(plotW, hy); ctx.stroke();
+      ctx.restore();
+
+      const dt = new Date(hb.t);
+      const dStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:00`;
+      const rVal = rsi[idx] !== null ? rsi[idx].toFixed(1) : '--';
+      document.getElementById('hud-left').innerText = `${dStr} · 종가 ${fmtUsd(hb.c, sym === 'ETH' ? 2 : 0)} · RSI ${rVal}`;
+      document.getElementById('hud-right').innerHTML = `<button type="button" class="hud-reset-btn" onclick="resetChartHover()">해제</button>`;
+    } else {
+      document.getElementById('hud-left').innerText = '차트를 터치·드래그하여 시점별 OHLC/RSI 조회';
+      document.getElementById('hud-right').innerText = `RSI ${(curRsi).toFixed(1)}`;
+    }
+  }
+
+  function resetChartHover() {
+    state.hoverIdx = -1;
+    drawProChart();
+  }
+
+  function setupChartInteraction() {
+    const canvas = document.getElementById('pro-chart');
+    const handleMove = clientX => {
+      const rect = canvas.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const plotW = rect.width - 54;
+      const len = Math.min(46, state.klines[state.asset].length);
+      if (len <= 0) return;
+      const stepX = plotW / (len + 1.5);
+      const idx = Math.max(0, Math.min(len - 1, Math.round(x / stepX - 0.8)));
+      if (state.hoverIdx !== idx) {
+        state.hoverIdx = idx;
+        drawProChart();
+      }
+    };
+    canvas.addEventListener('touchstart', e => {
+      if (e.touches.length > 0) handleMove(e.touches[0].clientX);
+    }, { passive: true });
+    canvas.addEventListener('touchmove', e => {
+      if (e.touches.length > 0) handleMove(e.touches[0].clientX);
+    }, { passive: true });
+    canvas.addEventListener('mousemove', e => {
+      if (e.buttons === 1) handleMove(e.clientX);
+    });
+
+    if (window.ResizeObserver) {
+      new ResizeObserver(() => drawProChart()).observe(document.getElementById('canvas-wrap'));
+    }
+  }
+
+  // =========================================================
+  // 6-Tier AI DCA Strategy Engine (SS / S / A / B / C / D)
+  // =========================================================
+  function renderStrategy() {
+    const sym = state.asset;
+    const p = state.prices[sym];
+    const rsi1d = state.rsi1d[sym] || 50;
+    const rsi4h = state.rsi4h[sym] || 50;
+    const ath = state.ath[sym];
+    const dd = p.usd > 0 && ath > 0 ? Math.abs(((p.usd - ath) / ath) * 100) : 0;
+    const fng = sym === 'BTC' ? state.fngBtc.val : state.fngEth.val;
+    const kimp = p.kimp || 0;
+    const fr = state.deriv[sym].funding || 0;
+    const etfM = sym === 'BTC' ? state.inst.btcEtfFlowM : state.inst.ethEtfFlowM;
+    const instAvg = sym === 'BTC' ? state.inst.mstrAvgCost : state.inst.bmnrAvgCost;
+
+    // 1. Technical Momentum (25 pts)
+    const avgRsi = rsi1d * 0.65 + rsi4h * 0.35;
+    const sTech = Math.round(Math.max(2, Math.min(25, ((75 - avgRsi) / 50) * 25)));
+
+    // 2. ATH Drawdown & Valuation Support (20 pts)
+    const sAth = Math.round(Math.max(3, Math.min(20, (dd / 35) * 20)));
+
+    // 3. Sentiment & Kimp Supply/Demand (15 pts)
+    let sSent = Math.round(Math.max(2, Math.min(12, ((80 - fng) / 60) * 12)));
+    if (kimp < 0) sSent = Math.min(15, sSent + 3);
+    else if (kimp <= 2.5) sSent = Math.min(15, sSent + 1);
+
+    // 4. Derivatives Funding Rate Contrarian (15 pts)
+    let sDeriv = 8;
+    if (fr <= -0.01) sDeriv = 15;
+    else if (fr < 0) sDeriv = 13;
+    else if (fr <= 0.015) sDeriv = 9;
+    else if (fr >= 0.04) sDeriv = 3;
+
+    // 5. US Spot ETF Net Flow (15 pts)
+    let sEtf = 8;
+    if (etfM >= 200) sEtf = 15;
+    else if (etfM >= 50) sEtf = 12;
+    else if (etfM > 0) sEtf = 10;
+    else if (etfM <= -150) sEtf = 3;
+    else if (etfM < 0) sEtf = 5;
+
+    // 6. Cycle & Institutional Cost Basis (10 pts)
+    let sInst = 6;
+    if (p.usd > 0 && instAvg > 0 && p.usd <= instAvg * 1.03) sInst = 10;
+    else if (sym === 'BTC' && state.halving.pct < 65) sInst = 8;
+
+    const total = Math.min(100, Math.max(0, sTech + sAth + sSent + sDeriv + sEtf + sInst));
+
+    // Tier classification
+    let tier = 'B', badgeCls = 'gold', headline = '', action = '', alloc = '';
+    if (total >= 92) {
+      tier = 'SS'; badgeCls = 'green'; alloc = '투매 매집 · 30~35%';
+      headline = '역대급 과매도 투매 구간 (최우선 매집)';
+      action = '가용 현금의 30~35%를 1·2차 지정가로 적극 분할 매집하세요.';
+    } else if (total >= 82) {
+      tier = 'S'; badgeCls = 'green'; alloc = '적극 매집 · 20~25%';
+      headline = '강력한 저평가 반등 구간';
+      action = '가용 현금의 20~25% 비중으로 눌림목 분할 진입을 권장합니다.';
+    } else if (total >= 68) {
+      tier = 'A'; badgeCls = 'green'; alloc = '분할 추매 · 10~15%';
+      headline = '양호한 분할 매수 우위 구간';
+      action = '가용 현금의 10~15% 범위에서 지정가 분할 매수가 유효합니다.';
+    } else if (total >= 50) {
+      tier = 'B'; badgeCls = 'gold'; alloc = '소액 적립 · 5~10%';
+      headline = '중립적 정액 적립식(DCA) 구간';
+      action = '추격 매수는 자제하고 5~10% 소액 정액 적립만 유지하세요.';
+    } else if (total >= 35) {
+      tier = 'C'; badgeCls = 'red'; alloc = '진입 보류 · 0%';
+      headline = '단기 과열 경계 · 현금 관망';
+      action = '신규 매수를 보류하고 조정 시까지 현금을 보유하세요.';
+    } else {
+      tier = 'D'; badgeCls = 'red'; alloc = '매수 중단 · 분할익절';
+      headline = '극단적 과열 · 리스크 관리 구간';
+      action = '매수를 전면 중단하고 목표 수익 구간에서 분할 익절을 고려하세요.';
+    }
+
+    document.getElementById('strat-detail-title').innerText = `${sym} AI 분할 매수(DCA)`;
+    const allocPill = document.getElementById('strat-alloc-pill');
+    allocPill.innerText = alloc;
+    allocPill.className = 'badge-tag ' + badgeCls;
+
+    document.getElementById('strat-hero-score').innerText = total;
+    const circle = document.getElementById('dca-gauge-circle');
+    const circumference = 213.6;
+    circle.style.strokeDashoffset = circumference - (total / 100) * circumference;
+    circle.style.stroke = badgeCls === 'green' ? 'var(--green)' : badgeCls === 'gold' ? 'var(--gold)' : 'var(--red)';
+
+    const tBadge = document.getElementById('strat-tier-badge');
+    tBadge.innerText = `등급 ${tier} · ${total}점`;
+    tBadge.className = 'dca-tier-badge badge-tag ' + badgeCls;
+    document.getElementById('strat-hero-grade').innerText = headline;
+    document.getElementById('strat-action-short').innerText = action;
+
+    document.querySelectorAll('#tier-legend-grid .tier-cell').forEach(cell => {
+      cell.classList.toggle('current', cell.dataset.tier === tier);
+    });
+
+    const factors = [
+      {
+        name: '1. 멀티 타임프레임 RSI 모멘텀',
+        help: 'rsi',
+        score: sTech, max: 25,
+        desc: `일봉 RSI ${Math.round(rsi1d)} · 4시간봉 RSI ${Math.round(rsi4h)} 기준 단기 과매도 반등 여력`
+      },
+      {
+        name: '2. 고점 대비(ATH) 낙폭 & 가치 지지',
+        help: 'ath_dd',
+        score: sAth, max: 20,
+        desc: `역대 고점 대비 -${dd.toFixed(1)}% 조정 · 200일선 배수 ${state.mayer[sym].toFixed(2)}x`
+      },
+      {
+        name: '3. 시장 심리 & 김프 수급',
+        help: 'kimp',
+        score: sSent, max: 15,
+        desc: `심리지수 ${fng} (${sym === 'BTC' ? state.fngBtc.cls : state.fngEth.cls}) · 김프 ${kimp >= 0 ? '+' : ''}${kimp.toFixed(2)}%`
+      },
+      {
+        name: '4. 선물 펀딩비 역발상 수급',
+        help: 'funding',
+        score: sDeriv, max: 15,
+        desc: `8h 펀딩비 ${fr >= 0 ? '+' : ''}${fr.toFixed(4)}% (${fr < 0 ? '숏 과밀·반등 우호' : '중립/롱 우위'})`
+      },
+      {
+        name: '5. 미국 현물 ETF 기관 순유입',
+        help: 'etf_flow',
+        score: sEtf, max: 15,
+        desc: `${sym} 현물 ETF 일간 ${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M (${etfM >= 0 ? '순유입' : '순유출'})`
+      },
+      {
+        name: '6. 기관 평단가 지지 & 사이클',
+        help: 'inst_risk',
+        score: sInst, max: 10,
+        desc: `${sym === 'BTC' ? 'MSTR' : 'BMNR'} 기관 평단 ${fmtUsd(instAvg, 0)} 대비 현재가 위치`
+      }
+    ];
+
+    document.getElementById('strat-factor-list').innerHTML = factors.map(f => {
+      const pct = Math.round((f.score / f.max) * 100);
+      return `
+        <div class="factor-item">
+          <div class="factor-top">
+            <span class="factor-name">${f.name} <button type="button" class="help-btn" onclick="openHelp('${f.help}')">?</button></span>
+            <span class="factor-score">${f.score} / ${f.max}점</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+          <div class="factor-desc">${f.desc}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Limit Order Targets with KRW conversion
+    document.getElementById('limit-guide-title').innerText = `AI 지정가 분할 매수 타점 (${sym})`;
+    const dec = sym === 'ETH' ? 2 : 0;
+    const d1 = total >= 82 ? 0.012 : 0.020;
+    const d2 = total >= 82 ? 0.032 : 0.045;
+    if (p.usd > 0) {
+      const t1Usd = p.usd * (1 - d1);
+      const t2Usd = p.usd * (1 - d2);
+      const ratio = p.krw > 0 ? p.krw / p.usd : state.usdtKrw;
+      const t1Krw = t1Usd * ratio;
+      const t2Krw = t2Usd * ratio;
+      document.getElementById('limit-guide-list').innerHTML = `
+        <li>• 1차 눌림목 지정가 (-${(d1 * 100).toFixed(1)}%): <strong>${fmtUsd(t1Usd, dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t1Krw)} (1차 분할 비중 50%)</span>
+        </li>
+        <li>• 2차 지지선 지정가 (-${(d2 * 100).toFixed(1)}%): <strong>${fmtUsd(t2Usd, dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t2Krw)} (2차 분할 비중 50%)</span>
+        </li>
+      `;
+    }
+  }
+
+  // =========================================================
+  // Intelligence Tab Renderer (ETF, Deriv, Halving, Inst, News)
+  // =========================================================
+  function renderIntel() {
+    const sym = state.asset;
+    const inst = state.inst;
+
+    // 1. ETF Net Flow
+    document.getElementById('etf-date-badge').innerText = inst.etfDate || '--';
+    const bVal = document.getElementById('etf-btc-val');
+    bVal.innerText = `${inst.btcEtfFlowM >= 0 ? '+' : ''}$${inst.btcEtfFlowM.toFixed(1)}M`;
+    bVal.style.color = inst.btcEtfFlowM >= 0 ? 'var(--green)' : 'var(--red)';
+    document.getElementById('etf-btc-sub').innerText = inst.btcEtfFlowM >= 0 ? '순유입 (기관 매수 우위)' : '순유출 (차익 실현 출회)';
+
+    const eVal = document.getElementById('etf-eth-val');
+    eVal.innerText = `${inst.ethEtfFlowM >= 0 ? '+' : ''}$${inst.ethEtfFlowM.toFixed(1)}M`;
+    eVal.style.color = inst.ethEtfFlowM >= 0 ? 'var(--green)' : 'var(--red)';
+    document.getElementById('etf-eth-sub').innerText = inst.ethEtfFlowM >= 0 ? '순유입 (기관 매수 우위)' : '순유출 (단기 매도 우위)';
+    document.getElementById('etf-summary-note').innerText = inst.etfNote || '미국 현물 ETF 일간 자금 유출입 현황';
+
+    // 2. Derivatives & On-Chain
+    document.getElementById('deriv-card-title').innerText = `${sym} 파생상품 수급 & 온체인`;
+    const fr = state.deriv[sym].funding;
+    const oi = state.deriv[sym].oi;
+    const regimeBadge = document.getElementById('deriv-regime-badge');
+    if (fr < 0) {
+      regimeBadge.innerText = '숏 과밀 · 반등 우호';
+      regimeBadge.className = 'badge-tag green';
+    } else if (fr >= 0.04) {
+      regimeBadge.innerText = '롱 레버리지 과열';
+      regimeBadge.className = 'badge-tag red';
+    } else {
+      regimeBadge.innerText = '파생 수급 균형';
+      regimeBadge.className = 'badge-tag gold';
+    }
+
+    const tile4Label = sym === 'BTC' ? 'Mayer 배수 (200일선)' : 'ETH/BTC 상대강도';
+    const tile4Val = sym === 'BTC'
+      ? `${state.mayer.BTC.toFixed(2)}x`
+      : `${state.ethBtc.ratio.toFixed(5)}`;
+    const tile4Foot = sym === 'BTC'
+      ? (state.mayer.BTC < 1.0 ? '200일선 하회 저평가' : '200일선 상회 추세')
+      : `24h 변동 ${state.ethBtc.chg >= 0 ? '+' : ''}${state.ethBtc.chg.toFixed(2)}%`;
+
+    document.getElementById('deriv-grid').innerHTML = `
+      <div class="sub-tile">
+        <div class="sub-tile-top"><span>8h 선물 펀딩비</span><span>Binance</span></div>
+        <div class="sub-tile-val" style="color:${fr < 0 ? 'var(--green)' : fr >= 0.04 ? 'var(--red)' : 'var(--text)'}">${fr >= 0 ? '+' : ''}${fr.toFixed(4)}%</div>
+        <div class="sub-tile-foot">${fr < 0 ? '숏 스퀴즈 잠재 압력' : '정상 범위'}</div>
+      </div>
+      <div class="sub-tile">
+        <div class="sub-tile-top"><span>선물 미결제약정 (OI)</span><span>USDT</span></div>
+        <div class="sub-tile-val">${fmtCompactUsd(oi)}</div>
+        <div class="sub-tile-foot">실시간 파생 포지션 총액</div>
+      </div>
+      <div class="sub-tile">
+        <div class="sub-tile-top"><span>BTC 멤풀 수수료</span><span>온체인</span></div>
+        <div class="sub-tile-val">${state.mempoolFee > 0 ? state.mempoolFee + ' sat/vB' : '--'}</div>
+        <div class="sub-tile-foot">${state.mempoolFee >= 25 ? '온체인 혼잡·활성 높음' : '네트워크 원활'}</div>
+      </div>
+      <div class="sub-tile">
+        <div class="sub-tile-top"><span>${tile4Label}</span><span>상대가치</span></div>
+        <div class="sub-tile-val">${tile4Val}</div>
+        <div class="sub-tile-foot">${tile4Foot}</div>
+      </div>
+    `;
+
+    // 3. Bitcoin Halving
+    document.getElementById('halving-card-wrap').style.display = sym === 'BTC' ? 'block' : 'none';
+    if (state.halving.height > 0) {
+      document.getElementById('halving-dday-pill').innerText = `D-${state.halving.dday}일`;
+      document.getElementById('halving-cur-block').innerText = state.halving.height.toLocaleString();
+      document.getElementById('halving-rem-block').innerText = state.halving.rem.toLocaleString();
+      document.getElementById('halving-est-date').innerText = state.halving.estDate;
+      document.getElementById('halving-bar').style.width = `${state.halving.pct.toFixed(1)}%`;
+      document.getElementById('halving-pct').innerText = `진행률 ${state.halving.pct.toFixed(1)}%`;
+    }
+
+    // 4. Institutional Monitor
+    document.getElementById('inst-card-title').innerText = sym === 'BTC'
+      ? 'BTC 기관 부채·청산 모니터 (Strategy)'
+      : 'ETH 기관 부채·청산 모니터 (Bitmine)';
+    const syncBadge = document.getElementById('inst-sync-badge');
+    syncBadge.innerText = inst.isManual ? '수동 보정 적용중' : `SEC 공시 · ${sym === 'BTC' ? inst.mstrFilingDate : inst.bmnrFilingDate}`;
+
+    document.getElementById('inst-box-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
+    document.getElementById('inst-box-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
+
+    const btcP = state.prices.BTC.usd || 80000;
+    const mstrValB = (inst.mstrBtc * btcP) / 1e9;
+    const mstrCostB = (inst.mstrBtc * inst.mstrAvgCost) / 1e9;
+    const mstrPnlPct = mstrCostB > 0 ? ((mstrValB - mstrCostB) / mstrCostB) * 100 : 0;
+    const mstrNetDebtB = Math.max(0.01, inst.mstrDebtB - inst.mstrCashB);
+    const mstrCov = mstrValB / mstrNetDebtB;
+
+    document.getElementById('mstr-holdings').innerText = `${inst.mstrBtc.toLocaleString()} BTC ($${inst.mstrAvgCost.toLocaleString()})`;
+    document.getElementById('mstr-val-pnl').innerText = `$${mstrValB.toFixed(1)}B (${mstrPnlPct >= 0 ? '+' : ''}${mstrPnlPct.toFixed(1)}%)`;
+    document.getElementById('mstr-net-debt').innerText = `$${(inst.mstrDebtB - inst.mstrCashB).toFixed(2)}B`;
+    const mCovEl = document.getElementById('mstr-coverage');
+    mCovEl.innerText = `${mstrCov.toFixed(1)}x`;
+    mCovEl.style.color = mstrCov >= 2.5 ? 'var(--green)' : mstrCov >= 1.5 ? 'var(--gold)' : 'var(--red)';
+    document.getElementById('mstr-risk-badge').innerText = mstrCov >= 2.5 ? '재무 안전' : '변동성 주의';
+    document.getElementById('mstr-sec-link').href = inst.mstrSecUrl || 'https://www.sec.gov/edgar/browse/?CIK=0001050446';
+
+    const ethP = state.prices.ETH.usd || 2500;
+    const bmnrValB = (inst.bmnrEth * ethP) / 1e9;
+    const bmnrCostB = (inst.bmnrEth * inst.bmnrAvgCost) / 1e9;
+    const bmnrPnlPct = bmnrCostB > 0 ? ((bmnrValB - bmnrCostB) / bmnrCostB) * 100 : 0;
+    document.getElementById('bmnr-holdings').innerText = `${inst.bmnrEth.toLocaleString()} ETH ($${inst.bmnrAvgCost.toLocaleString()})`;
+    document.getElementById('bmnr-val-pnl').innerText = `$${bmnrValB.toFixed(2)}B (${bmnrPnlPct >= 0 ? '+' : ''}${bmnrPnlPct.toFixed(1)}%)`;
+    document.getElementById('bmnr-net-debt').innerText = `$${inst.bmnrDebtB.toFixed(2)}B / $${inst.bmnrCashB.toFixed(2)}B`;
+    document.getElementById('bmnr-coverage').innerText = inst.bmnrCashB >= inst.bmnrDebtB ? '순현금 초과유동성' : `${(bmnrValB / Math.max(0.01, inst.bmnrDebtB)).toFixed(1)}x 커버`;
+    document.getElementById('bmnr-sec-link').href = inst.bmnrSecUrl || 'https://www.sec.gov/edgar/browse/?CIK=0001829311';
+  }
+
+  // =========================================================
+  // 1st-Tier News Monitor, Translation & Period Briefing
+  // =========================================================
+  function decodeEntities(str) {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = (str || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return txt.value;
+  }
+
+  async function translateKo(text) {
+    if (!text) return '';
+    if (/[가-힣]/.test(text)) return text;
+    let cache = {};
+    try { cache = JSON.parse(localStorage.getItem(LS_KEYS.TR_CACHE) || '{}'); } catch (e) {}
+    const key = text.slice(0, 140);
+    if (cache[key]) return cache[key];
+
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ko&dt=t&q=${encodeURIComponent(text.slice(0, 260))}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const translated = (data[0] || []).map(x => x[0]).join('');
+      if (translated) {
+        cache[key] = translated;
+        const keys = Object.keys(cache);
+        if (keys.length > 150) delete cache[keys[0]];
+        localStorage.setItem(LS_KEYS.TR_CACHE, JSON.stringify(cache));
+        return translated;
+      }
+    } catch (e) {}
+    return text;
+  }
+
+  function classifyNews(rawTitle, rawDesc) {
+    const full = `${rawTitle} ${rawDesc}`.toLowerCase();
+    if (/hack|exploit|bankrupt|sec sue|lawsuit|outflow|liquidat|crash|drop|ban|delay|warning|sell-off/.test(full)) {
+      return {
+        tag: '리스크', cls: 'red', rCls: 'bear',
+        reason: '본문 내 자금 유출·규제 압박·청산 또는 단기 하방 변동성 요인이 감지되었습니다.'
       };
     }
-    renderAll();
-  } catch (e) {}
-}
-
-async function fetchAutoInstData() {
-  const saved = localStorage.getItem('cp_inst_cfg_v4');
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (parsed.isManual) {
-        Object.assign(STATE.inst, parsed);
-        populateInstInputs();
-        renderInstAndEtf();
-        return;
-      }
-    } catch (e) {}
-  }
-  try {
-    const res = await fetch('./inst_data.json?t=' + Date.now());
-    if (res.ok) {
-      const j = await res.json();
-      Object.assign(STATE.inst, j, { isManual: false });
+    if (/inflow|approve|adopt|buy|acquir|surge|rally|etf|institutional|treasury|upgrade|record high/.test(full)) {
+      return {
+        tag: '호재', cls: 'green', rCls: 'bull',
+        reason: '본문 내 기관 현물 매수·ETF 순유입·네트워크 채택 확대 등 수급 긍정 요인이 확인되었습니다.'
+      };
     }
-  } catch (e) {}
-  populateInstInputs();
-  renderInstAndEtf();
-}
-
-/* News Fetch, Importance Ranking & Korean Auto-Translation */
-const TIER1_FEEDS = [
-  { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
-  { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
-  { name: 'Decrypt', url: 'https://decrypt.co/feed' },
-  { name: 'The Block', url: 'https://www.theblock.co/rss.xml' },
-  { name: '블록미디어', url: 'https://www.blockmedia.co.kr/feed' }
-];
-
-async function translateToKo(text) {
-  if (!text || /[가-힣]/.test(text)) return text;
-  const cache = JSON.parse(localStorage.getItem('cp_tr_cache_v4') || '{}');
-  if (cache[text]) return cache[text];
-  try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ko&dt=t&q=${encodeURIComponent(text)}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const tr = (data[0] || []).map(seg => seg[0]).join('');
-    if (tr) {
-      cache[text] = tr;
-      const keys = Object.keys(cache);
-      if (keys.length > 180) delete cache[keys[0]];
-      localStorage.setItem('cp_tr_cache_v4', JSON.stringify(cache));
-      return tr;
+    if (/fed|fomc|cpi|inflation|rate|treasury yield|dollar|macro|powell|tariff/.test(full)) {
+      return {
+        tag: '거시', cls: 'gold', rCls: '',
+        reason: '연준 금리·물가·달러 유동성 등 암호화폐 시장 전반의 방향성을 좌우하는 거시경제 이슈입니다.'
+      };
     }
-  } catch (e) {}
-  return text;
-}
-
-function classifyNews(title, desc) {
-  const txt = `${title} ${desc}`.toLowerCase();
-  if (/etf inflow|approval|adopt|surge|rally|buy|accumulate|bull|rate cut|기관|순유입|승인|매집|상승/.test(txt)) {
-    return { tag: '호재', cls: 'green', reason: '기관 수급 유입 또는 규제·거시 환경 개선으로 매수 심리에 우호적 요인' };
+    return {
+      tag: '동향', cls: '', rCls: '',
+      reason: '주요 크립토 시장 및 1군 기관·프로토콜의 구조적 흐름을 파악하기 위한 핵심 브리핑입니다.'
+    };
   }
-  if (/hack|exploit|outflow|sec sue|ban|liquidat|crash|bankrupt|sell-off|해킹|순유출|청산|소송|급락|파산/.test(txt)) {
-    return { tag: '악재', cls: 'red', reason: '단기 수급 이탈, 규제 압박 또는 레버리지 청산 경계감이 부각되는 리스크 요인' };
-  }
-  return { tag: '거시·동향', cls: 'gold', reason: '거시경제 지표·정책 및 시장 구조 변화를 점검해야 하는 주요 참고 동향' };
-}
 
-function scoreNewsImportance(item) {
-  const txt = `${item.title} ${item.desc}`.toLowerCase();
-  let s = 10;
-  if (/etf|blackrock|fidelity|sec|fed|fomc|cpi|rate|strategy|microstrategy|bitmine|halving|연준|금리|반감기/.test(txt)) s += 35;
-  if (/bitcoin|btc|ethereum|eth|비트코인|이더리움/.test(txt)) s += 15;
-  const ageHrs = Math.max(0.5, (Date.now() - item.ts) / 3600000);
-  s += Math.max(0, 25 - ageHrs * 0.4);
-  return s;
-}
+  async function fetchNewsFeeds() {
+    const statusEl = document.getElementById('news-tr-status');
+    statusEl.innerText = '수집·번역중';
+    const feeds = [
+      { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+      { name: 'Cointelegraph', url: 'https://cointelegraph.com/rss' },
+      { name: 'Decrypt', url: 'https://decrypt.co/feed' },
+      { name: 'The Block', url: 'https://www.theblock.co/rss.xml' }
+    ];
 
-async function fetchNews() {
-  const statusEl = document.getElementById('news-tr-status');
-  statusEl.textContent = '1군 매체 수집중';
-  let collected = [];
+    let archive = [];
+    try { archive = JSON.parse(localStorage.getItem(LS_KEYS.NEWS_ARCHIVE) || '[]'); } catch (e) {}
 
-  await Promise.all(TIER1_FEEDS.map(async (feed) => {
-    try {
-      const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
-      const res = await fetch(api);
-      const j = await res.json();
-      if (j.status === 'ok' && Array.isArray(j.items)) {
-        j.items.slice(0, 8).forEach(it => {
-          const cleanTitle = (it.title || '').replace(/<[^>]+>/g, '').trim();
-          const cleanDesc = (it.description || '').replace(/<[^>]+>/g, '').trim().slice(0, 180);
-          const ts = it.pubDate ? new Date(it.pubDate.replace(' ', 'T') + 'Z').getTime() : Date.now();
-          if (cleanTitle) {
-            collected.push({
-              id: it.link || cleanTitle,
-              source: feed.name,
-              title: cleanTitle,
-              desc: cleanDesc,
-              link: it.link || '#',
-              ts: isNaN(ts) ? Date.now() : ts
-            });
-          }
+    const results = await Promise.allSettled(
+      feeds.map(f =>
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}`)
+          .then(r => r.json())
+          .then(j => ({ source: f.name, items: j.items || [] }))
+      )
+    );
+
+    const collected = [];
+    results.forEach(r => {
+      if (r.status !== 'fulfilled') return;
+      const src = r.value.source;
+      r.value.items.slice(0, 12).forEach(it => {
+        const titleEn = decodeEntities(it.title);
+        const descEn = decodeEntities(it.description || it.content || '').slice(0, 180);
+        const pubMs = it.pubDate ? new Date(it.pubDate.replace(' ', 'T') + 'Z').getTime() : Date.now();
+        const isEth = /ethereum|eth\b|vitalik|bitmine|etha|feth|staking|layer 2/i.test(`${titleEn} ${descEn}`);
+        const isBtc = /bitcoin|btc\b|strategy|mstr|halving|ibit|fbtc|satoshi|miner/i.test(`${titleEn} ${descEn}`);
+        const impact = /etf|sec|fed|cpi|rate|strategy|bitmine|liquidat|blackrock|billion|inflow|outflow/i.test(titleEn) ? 30 : 10;
+        const ageH = Math.max(0.5, (Date.now() - pubMs) / 3600000);
+        const score = impact + Math.max(0, 48 - ageH);
+
+        collected.push({
+          id: it.link || titleEn,
+          source: src,
+          link: it.link,
+          pubMs: isFinite(pubMs) ? pubMs : Date.now(),
+          titleEn,
+          descEn,
+          isBtc: isBtc || !isEth,
+          isEth: isEth || !isBtc,
+          score
         });
+      });
+    });
+
+    // Merge with 7-day archive
+    const map = new Map();
+    [...archive, ...collected].forEach(item => {
+      if (Date.now() - item.pubMs <= 7 * 86400000) {
+        map.set(item.id, { ...(map.get(item.id) || {}), ...item });
       }
+    });
+    const merged = Array.from(map.values()).sort((a, b) => b.score - a.score);
+
+    // Translate top 16 items
+    for (let i = 0; i < Math.min(16, merged.length); i++) {
+      const it = merged[i];
+      if (!it.titleKo) it.titleKo = await translateKo(it.titleEn);
+      if (!it.descKo && it.descEn) it.descKo = await translateKo(it.descEn.slice(0, 130));
+    }
+
+    state.newsItems = merged;
+    try {
+      localStorage.setItem(LS_KEYS.NEWS_ARCHIVE, JSON.stringify(merged.slice(0, 60)));
     } catch (e) {}
-  }));
 
-  // Merge with 7-day local archive
-  let archive = [];
-  try { archive = JSON.parse(localStorage.getItem('cp_news_archive_v4') || '[]'); } catch (e) {}
-  const map = new Map();
-  [...archive, ...collected].forEach(it => {
-    if (Date.now() - it.ts <= 7 * 86400000) map.set(it.id, it);
-  });
-  const merged = Array.from(map.values()).sort((a, b) => scoreNewsImportance(b) - scoreNewsImportance(a));
-  localStorage.setItem('cp_news_archive_v4', JSON.stringify(merged.slice(0, 80)));
-
-  // Translate top 16 items
-  for (let i = 0; i < Math.min(16, merged.length); i++) {
-    merged[i].koTitle = await translateToKo(merged[i].title);
-    const meta = classifyNews(merged[i].title, merged[i].desc);
-    merged[i].tag = meta.tag;
-    merged[i].cls = meta.cls;
-    merged[i].reason = meta.reason;
+    statusEl.innerText = '1군 매체 · 번역완료';
+    renderNewsSection();
   }
 
-  STATE.newsAll = merged;
-  statusEl.textContent = '번역·검증 완료';
-  renderNews();
-}
+  function renderNewsSection() {
+    const sym = state.asset;
+    document.getElementById('news-card-title').innerText = `${sym} 1군 매체 뉴스 모니터`;
+    const now = Date.now();
+    const maxAgeMap = {
+      live: 12 * 3600000,
+      '24h': 24 * 3600000,
+      '3d': 3 * 86400000,
+      '7d': 7 * 86400000
+    };
+    const maxAge = maxAgeMap[state.newsWindow] || 24 * 3600000;
 
-function setNewsWindow(win) {
-  STATE.newsWin = win;
-  document.querySelectorAll('.nw-btn').forEach(b => b.classList.toggle('active', b.dataset.win === win));
-  renderNews();
-}
+    let filtered = state.newsItems.filter(it => (sym === 'BTC' ? it.isBtc : it.isEth));
+    const inWindow = filtered.filter(it => now - it.pubMs <= maxAge);
+    if (inWindow.length > 0) filtered = inWindow;
+    const list = filtered.slice(0, 8);
 
-function renderNews() {
-  const listEl = document.getElementById('news-list');
-  const barEl = document.getElementById('news-sentiment-bar');
-  const briefPanel = document.getElementById('period-briefing-panel');
-  if (!STATE.newsAll.length) return;
+    const bar = document.getElementById('news-sentiment-bar');
+    const listEl = document.getElementById('news-list');
+    const briefPanel = document.getElementById('period-briefing-panel');
 
-  const now = Date.now();
-  const maxAge = STATE.newsWin === 'live' ? 12 * 3600000 : STATE.newsWin === '24h' ? 86400000 : STATE.newsWin === '3d' ? 3 * 86400000 : 7 * 86400000;
-  const kw = STATE.asset === 'BTC' ? /btc|bitcoin|strategy|mstr|etf|fed|sec|비트코인|반감기/i : /eth|ethereum|bitmine|bmnr|staking|etf|이더리움/i;
+    if (list.length === 0) {
+      bar.style.display = 'none';
+      briefPanel.style.display = 'none';
+      listEl.innerHTML = `<div style="font-size:12px; color:var(--text-sub); padding:8px 0;">수집된 뉴스가 없습니다. 잠시 후 새로고침해 주세요.</div>`;
+      return;
+    }
 
-  let filtered = STATE.newsAll.filter(n => (now - n.ts) <= maxAge);
-  const assetMatched = filtered.filter(n => kw.test(`${n.title} ${n.desc}`));
-  if (assetMatched.length >= 3) filtered = assetMatched;
-  const top10 = filtered.slice(0, 10);
+    let bullCnt = 0, bearCnt = 0, macroCnt = 0;
+    const enriched = list.map(it => {
+      const clsInfo = classifyNews(it.titleEn, it.descEn);
+      if (clsInfo.tag === '호재') bullCnt++;
+      else if (clsInfo.tag === '리스크') bearCnt++;
+      else if (clsInfo.tag === '거시') macroCnt++;
+      return { ...it, clsInfo };
+    });
 
-  let pos = 0, neg = 0, neu = 0;
-  top10.forEach(n => {
-    if (n.cls === 'green') pos++;
-    else if (n.cls === 'red') neg++;
-    else neu++;
-  });
+    bar.style.display = 'flex';
+    document.getElementById('news-total-label').innerText = `핵심 기사 ${enriched.length}건`;
+    document.getElementById('news-count-pills').innerHTML = `
+      <span class="badge-tag green">호재 ${bullCnt}</span>
+      <span class="badge-tag red">리스크 ${bearCnt}</span>
+      <span class="badge-tag gold">거시 ${macroCnt}</span>
+    `;
 
-  barEl.style.display = 'flex';
-  document.getElementById('news-total-label').textContent = `표시 ${top10.length}건 (중요도순)`;
-  document.getElementById('news-count-pills').innerHTML = `
-    <span class="badge-tag green">호재 ${pos}</span>
-    <span class="badge-tag red">악재 ${neg}</span>
-    <span class="badge-tag gold">거시 ${neu}</span>
-  `;
-
-  listEl.innerHTML = top10.map(n => {
-    const dt = new Date(n.ts);
-    const timeStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
-    const title = n.koTitle || n.title;
-    const tag = n.tag || '거시·동향';
-    const cls = n.cls || 'gold';
-    const reason = n.reason || '시장 핵심 수급 및 정책 관련 주요 1군 매체 보도';
-    return `
-      <div class="news-item">
-        <div class="news-meta">
-          <span class="badge-tag ${cls}">${tag}</span>
-          <strong>${n.source}</strong>
-          <span>· ${timeStr}</span>
+    listEl.innerHTML = enriched.map(it => {
+      const diffM = Math.max(1, Math.round((now - it.pubMs) / 60000));
+      const timeTxt = diffM < 60 ? `${diffM}분 전` : diffM < 1440 ? `${Math.floor(diffM / 60)}시간 전` : `${Math.floor(diffM / 1440)}일 전`;
+      const title = it.titleKo || it.titleEn;
+      const bodySum = it.descKo || it.descEn || '';
+      return `
+        <div class="news-item">
+          <div class="news-meta">
+            <span class="badge-tag ${it.clsInfo.cls}">${it.clsInfo.tag}</span>
+            <strong>${it.source}</strong>
+            <span>· ${timeTxt}</span>
+          </div>
+          <a class="news-title" href="${it.link}" target="_blank" rel="noopener">${title} ↗</a>
+          ${bodySum ? `<div class="news-body-sum">${bodySum}</div>` : ''}
+          <div class="news-reason ${it.clsInfo.rCls}">${it.clsInfo.reason}</div>
         </div>
-        <a class="news-title" href="${n.link}" target="_blank" rel="noopener">${title} ↗</a>
-        <div class="news-reason">💡 ${reason}</div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
 
-  // Period Briefing Summary
-  if (top10.length > 0) {
+    const winNames = { live: '현시점 속보', '24h': '최근 24시간', '3d': '최근 3일간', '7d': '일주일(7일)' };
+    document.getElementById('briefing-panel-title').innerText = `${winNames[state.newsWindow]} 핵심 이슈 요약 정리`;
     briefPanel.style.display = 'block';
-    const winLabel = { live: '현시점 속보', '24h': '최근 24시간', '3d': '최근 3일간', '7d': '최근 일주일(7일)' }[STATE.newsWin];
-    document.getElementById('briefing-panel-title').textContent = `${winLabel} 핵심 이슈 요약 정리`;
-    document.getElementById('briefing-list').innerHTML = top10.slice(0, 4).map(n => `
-      <div class="briefing-item">
-        • <strong>[${n.tag || '동향'}]</strong> ${n.koTitle || n.title}
-        <a class="briefing-src" href="${n.link}" target="_blank" rel="noopener">(${n.source} ↗)</a>
-      </div>
-    `).join('');
-  }
-}
-
-/* Rendering Functions */
-function getFngLabel(v) {
-  if (v <= 24) return '극단적 공포 (Extreme Fear)';
-  if (v <= 44) return '공포 (Fear)';
-  if (v <= 55) return '중립 (Neutral)';
-  if (v <= 74) return '탐욕 (Greed)';
-  return '극단적 탐욕 (Extreme Greed)';
-}
-function getFngColor(v) {
-  if (v <= 25) return 'var(--red)';
-  if (v <= 45) return 'var(--gold)';
-  if (v <= 55) return 'var(--text)';
-  return 'var(--green)';
-}
-
-function getCurrentRsi1d(asset) {
-  const arr = STATE.daily200[asset];
-  if (!arr || arr.length < 20) return 50;
-  const r = calcWilderRSI(arr.map(x => x.c), 14);
-  return r[r.length - 1] || 50;
-}
-
-function renderTicker() {
-  const a = STATE.asset;
-  const p = STATE.prices[a];
-  const dec = a === 'BTC' ? 0 : 2;
-  document.getElementById('ticker-usd').textContent = fmtUsd(p.usd, dec);
-
-  const chgEl = document.getElementById('ticker-chg');
-  chgEl.textContent = `${p.chg >= 0 ? '+' : ''}${p.chg.toFixed(2)}%`;
-  chgEl.className = `chg-pill ${p.chg >= 0 ? 'up' : 'dn'}`;
-
-  document.getElementById('ticker-krw').textContent = fmtKrw(p.krw);
-  const kimpEl = document.getElementById('ticker-kimp');
-  kimpEl.textContent = `김프 ${p.kimp >= 0 ? '+' : ''}${p.kimp.toFixed(2)}%`;
-  kimpEl.style.color = p.kimp > 4 ? 'var(--red)' : p.kimp < 0 ? 'var(--green)' : 'var(--text)';
-
-  document.getElementById('ticker-high').textContent = fmtUsd(p.high, dec);
-  document.getElementById('ticker-low').textContent = fmtUsd(p.low, dec);
-  document.getElementById('ticker-vol').textContent = p.vol ? `$${(p.vol / 1e9).toFixed(2)}B` : '--';
-
-  const athDd = getAthDrawdown(a);
-  document.getElementById('ticker-ath-dd').textContent = `${athDd.toFixed(1)}%`;
-  document.getElementById('chip-ath-val').textContent = `${athDd.toFixed(1)}%`;
-
-  const rsi1d = getCurrentRsi1d(a);
-  const rsiBadge = document.getElementById('ticker-rsi-badge');
-  rsiBadge.textContent = `RSI ${Math.round(rsi1d)}`;
-  rsiBadge.className = `badge-tag ${rsi1d <= 32 ? 'green' : rsi1d >= 68 ? 'red' : ''}`;
-
-  const fundEl = document.getElementById('chip-funding');
-  fundEl.textContent = `${p.funding >= 0 ? '+' : ''}${p.funding.toFixed(4)}%`;
-  fundEl.style.color = p.funding < 0 ? 'var(--green)' : p.funding > 0.03 ? 'var(--red)' : 'var(--text)';
-
-  if (a === 'BTC') {
-    const closes = STATE.daily200.BTC.map(x => x.c);
-    const sma200 = closes.length >= 200 ? closes.slice(-200).reduce((s, v) => s + v, 0) / 200 : p.usd;
-    const mayer = sma200 > 0 ? (p.usd / sma200) : 1;
-    document.getElementById('chip-rel-label').innerHTML = `Mayer 배수: <strong id="chip-rel-val">${mayer.toFixed(2)}x</strong>`;
-  } else {
-    document.getElementById('chip-rel-label').innerHTML = `ETH/BTC: <strong id="chip-rel-val">${STATE.ethBtcRatio.toFixed(5)}</strong>`;
+    document.getElementById('briefing-list').innerHTML = enriched.slice(0, 4).map(it => {
+      const title = it.titleKo || it.titleEn;
+      return `
+        <div class="briefing-item">
+          • [${it.clsInfo.tag}] ${title}
+          <a class="briefing-src" href="${it.link}" target="_blank" rel="noopener">(출처: ${it.source} ↗)</a>
+        </div>
+      `;
+    }).join('');
   }
 
-  // Top Alert Banner Check
-  if (!STATE.alertDismissed && p.usd > 0) {
-    const banner = document.getElementById('top-alert-banner');
-    const txt = document.getElementById('top-alert-text');
-    if (rsi1d <= 30) {
-      banner.style.display = 'flex';
-      banner.classList.remove('warn');
-      txt.textContent = `매수 알림: ${a} 일봉 RSI ${Math.round(rsi1d)} 과매도 진입 (분할 매집 구간)`;
-    } else if (rsi1d >= 75) {
-      banner.style.display = 'flex';
-      banner.classList.add('warn');
-      txt.textContent = `과열 경고: ${a} 일봉 RSI ${Math.round(rsi1d)} 과매수 구간 (추격 매수 주의)`;
-    }
-  }
-}
+  // =========================================================
+  // My Position, Target Price / RSI Alert Banner & Calibration
+  // =========================================================
+  function loadSavedSettings() {
+    try {
+      const pos = JSON.parse(localStorage.getItem(LS_KEYS.POS) || 'null');
+      if (pos) state.myPos = { BTC: { avg: 0, qty: 0, ...pos.BTC }, ETH: { avg: 0, qty: 0, ...pos.ETH } };
+    } catch (e) {}
+    try {
+      const al = JSON.parse(localStorage.getItem(LS_KEYS.ALERTS) || 'null');
+      if (al) state.alerts = { BTC: 0, ETH: 0, rsiEnabled: true, ...al };
+    } catch (e) {}
 
-function dismissAlert() {
-  STATE.alertDismissed = true;
-  document.getElementById('top-alert-banner').style.display = 'none';
-}
+    document.getElementById('input-avg-btc').value = state.myPos.BTC.avg || '';
+    document.getElementById('input-qty-btc').value = state.myPos.BTC.qty || '';
+    document.getElementById('input-avg-eth').value = state.myPos.ETH.avg || '';
+    document.getElementById('input-qty-eth').value = state.myPos.ETH.qty || '';
 
-function renderFng() {
-  const isBtc = STATE.asset === 'BTC';
-  const val = isBtc ? STATE.fng.btcVal : STATE.fng.ethVal;
-  const cls = isBtc ? STATE.fng.btcClass : STATE.fng.ethClass;
-  const arr = isBtc ? STATE.fng.btc7d : STATE.fng.eth7d;
-
-  const valEl = document.getElementById('active-fng-val');
-  const clsEl = document.getElementById('active-fng-class');
-  valEl.textContent = val;
-  valEl.style.color = getFngColor(val);
-  clsEl.textContent = cls;
-  clsEl.style.color = getFngColor(val);
-
-  document.getElementById('active-fng-7d').innerHTML = arr.map(d => `
-    <div class="fng-day">
-      <span>${d.d}</span>
-      <strong style="color:${getFngColor(d.v)}">${d.v}</strong>
-    </div>
-  `).join('');
-}
-
-/* 6-Tier AI DCA Engine (SS ~ D) + ATH Drawdown */
-function renderStrategy() {
-  const a = STATE.asset;
-  const p = STATE.prices[a].usd || 0;
-  const rsi1d = getCurrentRsi1d(a);
-  const rsi4h = STATE.rsi4h[a] || 50;
-  const athDd = getAthDrawdown(a);
-  const fngVal = a === 'BTC' ? STATE.fng.btcVal : STATE.fng.ethVal;
-  const kimp = STATE.prices[a].kimp || 0;
-  const funding = STATE.prices[a].funding || 0;
-  const etfFlow = a === 'BTC' ? STATE.inst.btcEtfFlowM : STATE.inst.ethEtfFlowM;
-
-  // 1. Technical Momentum (25 pts)
-  let sTech = 12;
-  if (rsi1d <= 28) sTech = 25;
-  else if (rsi1d <= 35) sTech = 21;
-  else if (rsi1d <= 45) sTech = 16;
-  else if (rsi1d <= 60) sTech = 11;
-  else if (rsi1d <= 70) sTech = 6;
-  else sTech = 2;
-  if (rsi4h <= 32) sTech = Math.min(25, sTech + 3);
-
-  // 2. ATH Drawdown Valuation (15 pts)
-  let sAth = 5;
-  if (athDd <= -45) sAth = 15;
-  else if (athDd <= -35) sAth = 13;
-  else if (athDd <= -25) sAth = 11;
-  else if (athDd <= -15) sAth = 8;
-  else if (athDd <= -5) sAth = 5;
-  else sAth = 2;
-
-  // 3. Sentiment & Kimchi Premium (15 pts)
-  let sSent = 7;
-  if (fngVal <= 20) sSent = 12;
-  else if (fngVal <= 35) sSent = 10;
-  else if (fngVal <= 55) sSent = 7;
-  else if (fngVal <= 72) sSent = 4;
-  else sSent = 1;
-  if (kimp <= 0.5) sSent = Math.min(15, sSent + 3);
-  else if (kimp >= 4.5) sSent = Math.max(0, sSent - 3);
-
-  // 4. Derivatives Funding & Relative Strength (15 pts)
-  let sDeriv = 8;
-  if (funding <= -0.005) sDeriv = 15;
-  else if (funding <= 0.01) sDeriv = 11;
-  else if (funding <= 0.03) sDeriv = 7;
-  else sDeriv = 3;
-
-  // 5. Spot ETF Net Flow & Institutional Health (15 pts)
-  let sInst = 9;
-  if (etfFlow >= 200) sInst += 4;
-  else if (etfFlow > 0) sInst += 2;
-  else if (etfFlow < -150) sInst -= 3;
-  sInst = Math.max(2, Math.min(15, sInst));
-
-  // 6. Cycle Position: Halving / Network (15 pts)
-  let sCycle = 11;
-  if (a === 'BTC') {
-    sCycle = STATE.halving.dday <= 550 ? 13 : 11;
-  } else {
-    sCycle = STATE.ethBtcChg >= 0 ? 13 : 10;
+    document.getElementById('input-target-btc').value = state.alerts.BTC || '';
+    document.getElementById('input-target-eth').value = state.alerts.ETH || '';
+    document.getElementById('chk-rsi-alert').checked = !!state.alerts.rsiEnabled;
   }
 
-  const total = Math.round(sTech + sAth + sSent + sDeriv + sInst + sCycle);
-
-  // 6-Tier Grade Mapping (SS ~ D)
-  let tier = 'B', tierName = 'B등급 · 중립·소액 적립식', actionTxt = '대기 현금의 5~10% 소액 정기 적립 권장', pillCls = 'gold';
-  if (total >= 92) {
-    tier = 'SS'; tierName = 'SS등급 · 역사적 바닥권 투매';
-    actionTxt = '대기 현금의 30~35% 적극 분할 매수 (최우선 매집 구간)'; pillCls = 'green';
-  } else if (total >= 82) {
-    tier = 'S'; tierName = 'S등급 · 저평가 적극 매집';
-    actionTxt = '대기 현금의 20~25% 분할 매집 (추가 하락 여력 75% 보존)'; pillCls = 'green';
-  } else if (total >= 68) {
-    tier = 'A'; tierName = 'A등급 · 우호적 분할 추매';
-    actionTxt = '대기 현금의 10~15% 눌림목 지정가 분할 진입'; pillCls = 'green';
-  } else if (total >= 50) {
-    tier = 'B'; tierName = 'B등급 · 중립·소액 적립식';
-    actionTxt = '대기 현금의 5~10% 보수적 적립 (급등 추격 자제)'; pillCls = 'gold';
-  } else if (total >= 35) {
-    tier = 'C'; tierName = 'C등급 · 단기 과열·추격 자제';
-    actionTxt = '신규 매수 보류 및 기존 보유 물량 관망'; pillCls = 'red';
-  } else {
-    tier = 'D'; tierName = 'D등급 · 극단적 탐욕·리스크 관리';
-    actionTxt = '매수 전면 중단 · 일부 수익 실현 및 현금 비중 확대'; pillCls = 'red';
+  function saveMyAvgPrices() {
+    state.myPos.BTC.avg = parseFloat(document.getElementById('input-avg-btc').value) || 0;
+    state.myPos.BTC.qty = parseFloat(document.getElementById('input-qty-btc').value) || 0;
+    state.myPos.ETH.avg = parseFloat(document.getElementById('input-avg-eth').value) || 0;
+    state.myPos.ETH.qty = parseFloat(document.getElementById('input-qty-eth').value) || 0;
+    localStorage.setItem(LS_KEYS.POS, JSON.stringify(state.myPos));
+    renderPositionPnL();
+    drawProChart();
+    showToast('매수평균가 및 보유수량이 저장되었습니다');
   }
 
-  document.getElementById('strat-hero-score').textContent = total;
-  const circle = document.getElementById('dca-gauge-circle');
-  const offset = 213.6 - (213.6 * total) / 100;
-  circle.style.strokeDashoffset = offset;
-  circle.style.stroke = pillCls === 'green' ? 'var(--green)' : pillCls === 'red' ? 'var(--red)' : 'var(--gold)';
+  function renderPositionPnL() {
+    const sym = state.asset;
+    document.getElementById('pos-card-title').innerText = `${sym} 내 매수평균가 & 보유수량`;
+    document.getElementById('pos-group-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
+    document.getElementById('pos-group-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
+    document.getElementById('my-pnl-label').innerText = `${sym} 평단 대비 현재 손익`;
 
-  const tierBadge = document.getElementById('strat-tier-badge');
-  tierBadge.textContent = `${tier} 등급`;
-  tierBadge.className = `dca-tier-badge badge-tag ${pillCls}`;
-  document.getElementById('strat-alloc-pill').textContent = `${tier}등급 · ${total}점`;
-  document.getElementById('strat-alloc-pill').className = `badge-tag ${pillCls}`;
-  document.getElementById('strat-hero-grade').textContent = tierName;
-  document.getElementById('strat-action-short').textContent = actionTxt;
+    const pos = state.myPos[sym];
+    const cur = state.prices[sym].usd;
+    const pnlEl = document.getElementById('my-pnl-val');
+    const evalRow = document.getElementById('my-eval-row');
+    const evalEl = document.getElementById('my-eval-val');
 
-  document.querySelectorAll('.tier-cell').forEach(c => c.classList.toggle('current', c.dataset.tier === tier));
+    if (pos.avg > 0 && cur > 0) {
+      const pct = ((cur - pos.avg) / pos.avg) * 100;
+      const diff = cur - pos.avg;
+      pnlEl.innerText = `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}% (${diff >= 0 ? '+' : ''}${fmtUsd(diff, sym === 'ETH' ? 2 : 0)})`;
+      pnlEl.style.color = pct >= 0 ? 'var(--green)' : 'var(--red)';
 
-  const factors = [
-    { name: '1. 기술적 모멘텀 (1D/4H RSI)', score: sTech, max: 25, help: 'rsi', desc: `일봉 RSI ${Math.round(rsi1d)} · 4시간봉 RSI ${Math.round(rsi4h)}` },
-    { name: '2. 고점 대비 하락률 (ATH)', score: sAth, max: 15, help: 'ath_dd', desc: `역대 최고가 대비 ${athDd.toFixed(1)}% 조정 위치` },
-    { name: '3. 시장 심리 & 김치 프리미엄', score: sSent, max: 15, help: 'fng', desc: `심리지수 ${fngVal}점 · 국내 김프 ${kimp >= 0 ? '+' : ''}${kimp.toFixed(2)}%` },
-    { name: '4. 선물 펀딩비 & 상대강도', score: sDeriv, max: 15, help: 'funding', desc: `8h 펀딩비 ${funding >= 0 ? '+' : ''}${funding.toFixed(4)}%` },
-    { name: '5. 현물 ETF 수급 & 기관 건전성', score: sInst, max: 15, help: 'etf_flow', desc: `현물 ETF ${etfFlow >= 0 ? '+' : ''}$${etfFlow.toFixed(1)}M · 기관 부채 안전` },
-    { name: a === 'BTC' ? '6. 비트코인 반감기 사이클' : '6. ETH/BTC 순환매 모멘텀', score: sCycle, max: 15, help: 'halving', desc: a === 'BTC' ? `5차 반감기 D-${STATE.halving.dday || '--'}일 진행` : `ETH/BTC 24h 변화율 ${STATE.ethBtcChg >= 0 ? '+' : ''}${STATE.ethBtcChg.toFixed(2)}%` }
-  ];
-
-  document.getElementById('strat-factor-list').innerHTML = factors.map(f => `
-    <div class="factor-item">
-      <div class="factor-top">
-        <span class="factor-name">${f.name} <button type="button" class="help-btn" onclick="openHelp('${f.help}')">?</button></span>
-        <span class="factor-score">${f.score} / ${f.max}점</span>
-      </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${(f.score / f.max) * 100}%"></div></div>
-      <div class="factor-desc">${f.desc}</div>
-    </div>
-  `).join('');
-
-  if (p > 0) {
-    const dec = a === 'BTC' ? 0 : 2;
-    const p1 = p * 0.985;
-    const p2 = p * 0.955;
-    const p3 = p * 0.915;
-    document.getElementById('limit-guide-list').innerHTML = `
-      <li>• <strong>1차 눌림목 지정가 (-1.5%):</strong> ${fmtUsd(p1, dec)} (단기 지지선 방어)</li>
-      <li>• <strong>2차 핵심 지지 지정가 (-4.5%):</strong> ${fmtUsd(p2, dec)} (볼린저 하단 추매)</li>
-      <li>• <strong>3차 투매 대비 그물망 (-8.5%):</strong> ${fmtUsd(p3, dec)} (급락 꼬리 포착)</li>
-    `;
-  }
-}
-
-function renderInstAndEtf() {
-  const inst = STATE.inst;
-  document.getElementById('etf-date-badge').textContent = inst.etfDate || '최신 집계';
-
-  const bFlow = Number(inst.btcEtfFlowM || 0);
-  const eFlow = Number(inst.ethEtfFlowM || 0);
-  const bEl = document.getElementById('etf-btc-val');
-  bEl.textContent = `${bFlow >= 0 ? '+' : '-'}$${Math.abs(bFlow).toFixed(1)}M`;
-  bEl.style.color = bFlow >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('etf-btc-sub').textContent = bFlow >= 0 ? '순유입 (기관 매수 우위)' : '순유출 (단기 매도 압력)';
-
-  const eEl = document.getElementById('etf-eth-val');
-  eEl.textContent = `${eFlow >= 0 ? '+' : '-'}$${Math.abs(eFlow).toFixed(1)}M`;
-  eEl.style.color = eFlow >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('etf-eth-sub').textContent = eFlow >= 0 ? '순유입 (기관 매수 우위)' : '순유출 (단기 매도 압력)';
-  document.getElementById('etf-summary-note').textContent = inst.etfNote || '미국 현물 ETF 일간 자금 유출입 동향';
-
-  // Derivatives & Onchain Grid
-  const a = STATE.asset;
-  const p = STATE.prices[a];
-  const athDd = getAthDrawdown(a);
-  document.getElementById('deriv-regime-badge').textContent = p.funding < 0 ? '숏 과밀·반등 우위' : '중립·정상 수급';
-  document.getElementById('deriv-grid').innerHTML = `
-    <div class="sub-tile">
-      <div class="sub-tile-top"><span class="sub-tile-label">8h 선물 펀딩비 <button type="button" class="help-btn" onclick="openHelp('funding')">?</button></span></div>
-      <div class="sub-tile-val" style="color:${p.funding < 0 ? 'var(--green)' : 'var(--text)'}">${p.funding >= 0 ? '+' : ''}${p.funding.toFixed(4)}%</div>
-      <div class="sub-tile-foot">${p.funding < 0 ? '숏 스퀴즈 잠재 구간' : '레버리지 균형 상태'}</div>
-    </div>
-    <div class="sub-tile">
-      <div class="sub-tile-top"><span class="sub-tile-label">선물 미결제약정 (OI)</span></div>
-      <div class="sub-tile-val">$${(p.oi / 1e9).toFixed(2)}B</div>
-      <div class="sub-tile-foot">바이낸스 무기한 선물 기준</div>
-    </div>
-    <div class="sub-tile">
-      <div class="sub-tile-top"><span class="sub-tile-label">고점 대비 (ATH) <button type="button" class="help-btn" onclick="openHelp('ath_dd')">?</button></span></div>
-      <div class="sub-tile-val" style="color:var(--red)">${athDd.toFixed(1)}%</div>
-      <div class="sub-tile-foot">최고가 ${fmtUsd(STATE.athRef[a], a === 'BTC' ? 0 : 2)} 기준</div>
-    </div>
-    <div class="sub-tile">
-      <div class="sub-tile-top"><span class="sub-tile-label">${a === 'BTC' ? 'BTC 멤풀 수수료' : 'ETH/BTC 상대강도'}</span></div>
-      <div class="sub-tile-val">${a === 'BTC' ? `${STATE.mempoolFee} sat/vB` : STATE.ethBtcRatio.toFixed(5)}</div>
-      <div class="sub-tile-foot">${a === 'BTC' ? '온체인 네트워크 혼잡도' : `24h 변동 ${STATE.ethBtcChg >= 0 ? '+' : ''}${STATE.ethBtcChg.toFixed(2)}%`}</div>
-    </div>
-  `;
-
-  // Halving
-  if (STATE.halving.height > 0) {
-    document.getElementById('halving-cur-block').textContent = STATE.halving.height.toLocaleString();
-    document.getElementById('halving-rem-block').textContent = STATE.halving.rem.toLocaleString();
-    document.getElementById('halving-est-date').textContent = STATE.halving.estDate;
-    document.getElementById('halving-dday-pill').textContent = `D-${STATE.halving.dday}일`;
-    document.getElementById('halving-bar').style.width = `${STATE.halving.pct.toFixed(1)}%`;
-    document.getElementById('halving-pct').textContent = `진행률 ${STATE.halving.pct.toFixed(1)}%`;
-  }
-
-  // MSTR & BMNR
-  const btcP = STATE.prices.BTC.usd || 90000;
-  const mValB = (inst.mstrBtc * btcP) / 1e9;
-  const mCostB = (inst.mstrBtc * inst.mstrAvgCost) / 1e9;
-  const mPnlPct = mCostB > 0 ? ((mValB - mCostB) / mCostB) * 100 : 0;
-  const mNetDebt = Math.max(0.1, inst.mstrDebtB - inst.mstrCashB);
-  const mCov = mValB / mNetDebt;
-
-  document.getElementById('mstr-holdings').textContent = `${Number(inst.mstrBtc).toLocaleString()} BTC ($${Number(inst.mstrAvgCost).toLocaleString()})`;
-  document.getElementById('mstr-val-pnl').textContent = `$${mValB.toFixed(1)}B (${mPnlPct >= 0 ? '+' : ''}${mPnlPct.toFixed(1)}%)`;
-  document.getElementById('mstr-net-debt').textContent = `$${mNetDebt.toFixed(2)}B`;
-  document.getElementById('mstr-coverage').textContent = `${mCov.toFixed(1)}x`;
-  document.getElementById('mstr-sec-link').href = inst.mstrSecUrl || 'https://www.sec.gov/edgar/browse/?CIK=0001050446';
-
-  const ethP = STATE.prices.ETH.usd || 3000;
-  const bValB = (inst.bmnrEth * ethP) / 1e9;
-  const bCostB = (inst.bmnrEth * inst.bmnrAvgCost) / 1e9;
-  const bPnlPct = bCostB > 0 ? ((bValB - bCostB) / bCostB) * 100 : 0;
-  document.getElementById('bmnr-holdings').textContent = `${Number(inst.bmnrEth).toLocaleString()} ETH ($${Number(inst.bmnrAvgCost).toLocaleString()})`;
-  document.getElementById('bmnr-val-pnl').textContent = `$${bValB.toFixed(1)}B (${bPnlPct >= 0 ? '+' : ''}${bPnlPct.toFixed(1)}%)`;
-  document.getElementById('bmnr-net-debt').textContent = `$${Number(inst.bmnrDebtB).toFixed(2)}B / $${Number(inst.bmnrCashB).toFixed(2)}B`;
-  document.getElementById('bmnr-coverage').textContent = inst.bmnrCashB >= inst.bmnrDebtB ? '초과 유동성 (청산 무관)' : `${(bValB / Math.max(0.1, inst.bmnrDebtB)).toFixed(1)}x 커버`;
-  document.getElementById('bmnr-sec-link').href = inst.bmnrSecUrl || 'https://www.sec.gov/edgar/browse/?CIK=0001829311';
-
-  const syncDate = a === 'BTC' ? inst.mstrFilingDate : inst.bmnrFilingDate;
-  document.getElementById('inst-sync-badge').textContent = inst.isManual ? '수동 보정 적용중' : `SEC 공시 · ${syncDate || '최신'}`;
-}
-
-/* Position & Calibration */
-function loadMyAvgPrices() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('cp_avg_prices') || '{}');
-    if (saved.BTC) STATE.avgPrices.BTC = Number(saved.BTC);
-    if (saved.ETH) STATE.avgPrices.ETH = Number(saved.ETH);
-  } catch (e) {}
-  document.getElementById('input-avg-btc').value = STATE.avgPrices.BTC || '';
-  document.getElementById('input-avg-eth').value = STATE.avgPrices.ETH || '';
-}
-
-function saveMyAvgPrices() {
-  STATE.avgPrices.BTC = Number(document.getElementById('input-avg-btc').value) || 0;
-  STATE.avgPrices.ETH = Number(document.getElementById('input-avg-eth').value) || 0;
-  localStorage.setItem('cp_avg_prices', JSON.stringify(STATE.avgPrices));
-  renderPositionPnl();
-  drawProChart();
-  showToast('매수평균가 저장 및 차트 기준선 반영');
-}
-
-function renderPositionPnl() {
-  const a = STATE.asset;
-  const avg = STATE.avgPrices[a];
-  const cur = STATE.prices[a].usd;
-  const el = document.getElementById('my-pnl-val');
-  if (!avg || !cur) {
-    el.textContent = '평단가 미설정';
-    el.style.color = 'var(--text-sub)';
-    return;
-  }
-  const pct = ((cur - avg) / avg) * 100;
-  el.textContent = `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}% (${fmtUsd(avg, a === 'BTC' ? 0 : 2)} 기준)`;
-  el.style.color = pct >= 0 ? 'var(--green)' : 'var(--red)';
-}
-
-function populateInstInputs() {
-  const i = STATE.inst;
-  document.getElementById('input-mstr-btc').value = i.mstrBtc;
-  document.getElementById('input-mstr-avg').value = i.mstrAvgCost;
-  document.getElementById('input-mstr-debt').value = i.mstrDebtB;
-  document.getElementById('input-mstr-cash').value = i.mstrCashB;
-  document.getElementById('input-etf-btc').value = i.btcEtfFlowM;
-
-  document.getElementById('input-bmnr-eth').value = i.bmnrEth;
-  document.getElementById('input-bmnr-avg').value = i.bmnrAvgCost;
-  document.getElementById('input-bmnr-debt').value = i.bmnrDebtB;
-  document.getElementById('input-bmnr-cash').value = i.bmnrCashB;
-  document.getElementById('input-etf-eth').value = i.ethEtfFlowM;
-}
-
-function saveManualInstData() {
-  STATE.inst.mstrBtc = Number(document.getElementById('input-mstr-btc').value) || STATE.inst.mstrBtc;
-  STATE.inst.mstrAvgCost = Number(document.getElementById('input-mstr-avg').value) || STATE.inst.mstrAvgCost;
-  STATE.inst.mstrDebtB = Number(document.getElementById('input-mstr-debt').value) || STATE.inst.mstrDebtB;
-  STATE.inst.mstrCashB = Number(document.getElementById('input-mstr-cash').value) || STATE.inst.mstrCashB;
-  STATE.inst.btcEtfFlowM = Number(document.getElementById('input-etf-btc').value);
-
-  STATE.inst.bmnrEth = Number(document.getElementById('input-bmnr-eth').value) || STATE.inst.bmnrEth;
-  STATE.inst.bmnrAvgCost = Number(document.getElementById('input-bmnr-avg').value) || STATE.inst.bmnrAvgCost;
-  STATE.inst.bmnrDebtB = Number(document.getElementById('input-bmnr-debt').value) || STATE.inst.bmnrDebtB;
-  STATE.inst.bmnrCashB = Number(document.getElementById('input-bmnr-cash').value) || STATE.inst.bmnrCashB;
-  STATE.inst.ethEtfFlowM = Number(document.getElementById('input-etf-eth').value);
-  STATE.inst.isManual = true;
-
-  localStorage.setItem('cp_inst_cfg_v4', JSON.stringify(STATE.inst));
-  renderAll();
-  showToast('기관·ETF 수급 데이터 수동 반영 완료');
-}
-
-function resetToAutoInstData() {
-  localStorage.removeItem('cp_inst_cfg_v4');
-  STATE.inst.isManual = false;
-  fetchAutoInstData();
-  showToast('GitHub Actions 자동 공시 동기화 복원');
-}
-
-/* 3-Panel Synchronized Interactive Pro Canvas Chart */
-function drawProChart() {
-  const canvas = document.getElementById('pro-chart');
-  if (!canvas) return;
-  const fullData = STATE.klines[STATE.asset];
-  if (!fullData || fullData.length < 20) return;
-
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  const W = rect.width;
-  const H = rect.height;
-  if (W <= 0 || H <= 0) return;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const cGrid = isDark ? '#1E2329' : '#E8ECF2';
-  const cText = isDark ? '#848E9C' : '#707A8A';
-  const cUp = '#0ECB81';
-  const cDn = '#F6465D';
-  const cGold = '#FCD535';
-
-  const closesAll = fullData.map(d => d.c);
-  const volsAll = fullData.map(d => d.v);
-  const ma5All = calcSMA(closesAll, 5);
-  const ma10All = calcSMA(closesAll, 10);
-  const ma20All = calcSMA(closesAll, 20);
-  const ma60All = calcSMA(closesAll, 60);
-  const bbAll = calcBB(closesAll, 20, 2);
-  const vMa5All = calcSMA(volsAll, 5);
-  const rsiAll = calcWilderRSI(closesAll, 14);
-  const rsiSigAll = calcSMA(rsiAll, 9);
-
-  const viewCount = 48;
-  const startIdx = Math.max(0, fullData.length - viewCount);
-  const data = fullData.slice(startIdx);
-  const ma5 = ma5All.slice(startIdx);
-  const ma10 = ma10All.slice(startIdx);
-  const ma20 = ma20All.slice(startIdx);
-  const ma60 = ma60All.slice(startIdx);
-  const bb = bbAll.slice(startIdx);
-  const vMa5 = vMa5All.slice(startIdx);
-  const rsi = rsiAll.slice(startIdx);
-  const rsiSig = rsiSigAll.slice(startIdx);
-
-  const rightPad = 56;
-  const plotW = W - rightPad;
-  const stepX = (plotW * 0.92) / data.length;
-
-  const pTop = 14, pH = H * 0.56;
-  const vTop = pTop + pH + 8, vH = H * 0.16;
-  const rTop = vTop + vH + 8, rH = H - rTop - 16;
-
-  // Price Range
-  let minP = Infinity, maxP = -Infinity;
-  data.forEach((d, i) => {
-    minP = Math.min(minP, d.l);
-    maxP = Math.max(maxP, d.h);
-    if (STATE.overlays.bb && bb[i].dn !== null) {
-      minP = Math.min(minP, bb[i].dn);
-      maxP = Math.max(maxP, bb[i].up);
-    }
-  });
-  const avgLine = STATE.avgPrices[STATE.asset];
-  if (STATE.overlays.avg && avgLine > 0 && avgLine > minP * 0.7 && avgLine < maxP * 1.3) {
-    minP = Math.min(minP, avgLine);
-    maxP = Math.max(maxP, avgLine);
-  }
-  const padP = (maxP - minP) * 0.1 || 1;
-  minP -= padP; maxP += padP;
-  const yOfP = (val) => pTop + pH - ((val - minP) / (maxP - minP)) * pH;
-
-  // Grid & Right Axis
-  ctx.strokeStyle = cGrid;
-  ctx.lineWidth = 1;
-  for (let g = 0; g <= 3; g++) {
-    const gy = pTop + (pH / 3) * g;
-    ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(plotW, gy); ctx.stroke();
-    const gVal = maxP - ((maxP - minP) / 3) * g;
-    ctx.fillStyle = cText;
-    ctx.font = '10px -apple-system, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(gVal >= 1000 ? gVal.toFixed(0) : gVal.toFixed(1), plotW + 4, gy + 3);
-  }
-
-  // Bollinger Bands
-  if (STATE.overlays.bb) {
-    ctx.beginPath();
-    let started = false;
-    bb.forEach((b, i) => {
-      if (b.up === null) return;
-      const x = i * stepX + stepX / 2;
-      if (!started) { ctx.moveTo(x, yOfP(b.up)); started = true; }
-      else ctx.lineTo(x, yOfP(b.up));
-    });
-    for (let i = bb.length - 1; i >= 0; i--) {
-      if (bb[i].dn === null) continue;
-      ctx.lineTo(i * stepX + stepX / 2, yOfP(bb[i].dn));
-    }
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(56, 97, 251, 0.08)';
-    ctx.fill();
-  }
-
-  // Moving Averages
-  const drawLineArr = (arr, color) => {
-    ctx.beginPath();
-    let st = false;
-    arr.forEach((v, i) => {
-      if (v === null) return;
-      const x = i * stepX + stepX / 2;
-      const y = yOfP(v);
-      if (!st) { ctx.moveTo(x, y); st = true; } else ctx.lineTo(x, y);
-    });
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-  };
-  if (STATE.overlays.ma) {
-    drawLineArr(ma5, '#FCD535');
-    drawLineArr(ma10, '#3861FB');
-    drawLineArr(ma20, '#E040FB');
-    drawLineArr(ma60, '#00BCD4');
-  }
-
-  // Candles or Line
-  let hiIdx = 0, loIdx = 0;
-  data.forEach((d, i) => {
-    if (d.h > data[hiIdx].h) hiIdx = i;
-    if (d.l < data[loIdx].l) loIdx = i;
-  });
-
-  if (STATE.ctype === 'candle') {
-    const cw = Math.max(2.5, stepX * 0.62);
-    data.forEach((d, i) => {
-      const x = i * stepX + stepX / 2;
-      const up = d.c >= d.o;
-      ctx.strokeStyle = up ? cUp : cDn;
-      ctx.fillStyle = up ? cUp : cDn;
-      ctx.beginPath(); ctx.moveTo(x, yOfP(d.h)); ctx.lineTo(x, yOfP(d.l)); ctx.stroke();
-      const topY = yOfP(Math.max(d.o, d.c));
-      const botY = yOfP(Math.min(d.o, d.c));
-      ctx.fillRect(x - cw / 2, topY, cw, Math.max(1.5, botY - topY));
-    });
-  } else {
-    ctx.beginPath();
-    data.forEach((d, i) => {
-      const x = i * stepX + stepX / 2;
-      const y = yOfP(d.c);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    });
-    ctx.strokeStyle = cGold;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-  // High/Low Callouts
-  ctx.font = 'bold 9.5px -apple-system, sans-serif';
-  ctx.fillStyle = cUp;
-  ctx.textAlign = 'center';
-  ctx.fillText(`최고 ${data[hiIdx].h >= 1000 ? Math.round(data[hiIdx].h).toLocaleString() : data[hiIdx].h.toFixed(1)}`, hiIdx * stepX + stepX / 2, Math.max(10, yOfP(data[hiIdx].h) - 3));
-  ctx.fillStyle = cDn;
-  ctx.fillText(`최저 ${data[loIdx].l >= 1000 ? Math.round(data[loIdx].l).toLocaleString() : data[loIdx].l.toFixed(1)}`, loIdx * stepX + stepX / 2, Math.min(pTop + pH - 2, yOfP(data[loIdx].l) + 10));
-
-  // B/S Signal Pins
-  if (STATE.overlays.bs) {
-    for (let i = 1; i < data.length; i++) {
-      const x = i * stepX + stepX / 2;
-      if (rsi[i - 1] <= 32 && rsi[i] > rsi[i - 1]) {
-        const y = Math.min(pTop + pH - 8, yOfP(data[i].l) + 12);
-        ctx.fillStyle = cUp;
-        ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#0B0E11'; ctx.font = 'bold 8.5px sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText('B', x, y + 3);
-      } else if (rsi[i - 1] >= 68 && rsi[i] < rsi[i - 1]) {
-        const y = Math.max(pTop + 8, yOfP(data[i].h) - 12);
-        ctx.fillStyle = '#3861FB';
-        ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 8.5px sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText('S', x, y + 3);
+      if (pos.qty > 0) {
+        evalRow.style.display = 'flex';
+        const totalEval = cur * pos.qty;
+        const totalPnl = (cur - pos.avg) * pos.qty;
+        evalEl.innerText = `${fmtUsd(totalEval, 0)} (${totalPnl >= 0 ? '+' : ''}${fmtUsd(totalPnl, 0)})`;
+        evalEl.style.color = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+      } else {
+        evalRow.style.display = 'none';
       }
+    } else {
+      pnlEl.innerText = '미설정';
+      pnlEl.style.color = 'var(--text-sub)';
+      evalRow.style.display = 'none';
     }
   }
 
-  // Average Buy Price Line
-  if (STATE.overlays.avg && avgLine > 0 && avgLine >= minP && avgLine <= maxP) {
-    const ay = yOfP(avgLine);
-    ctx.strokeStyle = cUp;
-    ctx.setLineDash([4, 3]);
-    ctx.beginPath(); ctx.moveTo(0, ay); ctx.lineTo(plotW, ay); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = cUp;
-    ctx.fillRect(2, ay - 8, 44, 15);
-    ctx.fillStyle = '#0B0E11'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText('매수평균', 5, ay + 3);
+  function saveAlertSettings() {
+    state.alerts.BTC = parseFloat(document.getElementById('input-target-btc').value) || 0;
+    state.alerts.ETH = parseFloat(document.getElementById('input-target-eth').value) || 0;
+    state.alerts.rsiEnabled = document.getElementById('chk-rsi-alert').checked;
+    state.dismissedAlerts = {};
+    localStorage.setItem(LS_KEYS.ALERTS, JSON.stringify(state.alerts));
+    checkAlerts();
+    showToast('알림 설정이 저장되었습니다');
   }
 
-  // Live Price Tag
-  const lastC = data[data.length - 1].c;
-  const ly = yOfP(lastC);
-  ctx.strokeStyle = cGold;
-  ctx.setLineDash([2, 2]);
-  ctx.beginPath(); ctx.moveTo(0, ly); ctx.lineTo(plotW, ly); ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = cGold;
-  ctx.fillRect(plotW + 2, ly - 8, rightPad - 4, 16);
-  ctx.fillStyle = '#0B0E11'; ctx.font = 'bold 9.5px sans-serif'; ctx.textAlign = 'left';
-  ctx.fillText(lastC >= 1000 ? Math.round(lastC).toLocaleString() : lastC.toFixed(1), plotW + 4, ly + 3);
-
-  // Panel 2: Volume + Vol MA5
-  const maxV = Math.max(...data.map(d => d.v)) || 1;
-  data.forEach((d, i) => {
-    const x = i * stepX + stepX / 2;
-    const vh = (d.v / maxV) * vH;
-    ctx.fillStyle = d.c >= d.o ? 'rgba(14, 203, 129, 0.45)' : 'rgba(246, 70, 93, 0.45)';
-    ctx.fillRect(x - Math.max(2, stepX * 0.3), vTop + vH - vh, Math.max(2, stepX * 0.6), vh);
-  });
-  ctx.beginPath();
-  vMa5.forEach((v, i) => {
-    if (v === null) return;
-    const x = i * stepX + stepX / 2;
-    const y = vTop + vH - (v / maxV) * vH;
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = cGold; ctx.lineWidth = 1; ctx.stroke();
-
-  // Panel 3: RSI(14) + Signal(9)
-  const yOfR = (val) => rTop + rH - (val / 100) * rH;
-  ctx.fillStyle = 'rgba(132, 142, 156, 0.08)';
-  ctx.fillRect(0, yOfR(70), plotW, yOfR(30) - yOfR(70));
-  [30, 70].forEach(lvl => {
-    ctx.strokeStyle = cGrid; ctx.beginPath(); ctx.moveTo(0, yOfR(lvl)); ctx.lineTo(plotW, yOfR(lvl)); ctx.stroke();
-  });
-
-  ctx.beginPath();
-  rsi.forEach((v, i) => {
-    const x = i * stepX + stepX / 2;
-    if (i === 0) ctx.moveTo(x, yOfR(v)); else ctx.lineTo(x, yOfR(v));
-  });
-  ctx.strokeStyle = '#E040FB'; ctx.lineWidth = 1.4; ctx.stroke();
-
-  ctx.beginPath();
-  rsiSig.forEach((v, i) => {
-    if (v === null) return;
-    const x = i * stepX + stepX / 2;
-    if (i === 0) ctx.moveTo(x, yOfR(v)); else ctx.lineTo(x, yOfR(v));
-  });
-  ctx.strokeStyle = cGold; ctx.lineWidth = 1.1; ctx.stroke();
-
-  const curRsi = rsi[rsi.length - 1] || 50;
-  ctx.fillStyle = '#E040FB'; ctx.font = 'bold 9.5px sans-serif'; ctx.textAlign = 'left';
-  ctx.fillText(`RSI ${curRsi.toFixed(0)}`, plotW + 4, yOfR(curRsi) + 3);
-
-  // Touch Crosshair
-  if (STATE.crosshairIdx >= 0 && STATE.crosshairIdx < data.length) {
-    const idx = STATE.crosshairIdx;
-    const cx = idx * stepX + stepX / 2;
-    const cy = yOfP(data[idx].c);
-    ctx.strokeStyle = cText;
-    ctx.setLineDash([3, 3]);
-    ctx.beginPath(); ctx.moveTo(cx, pTop); ctx.lineTo(cx, rTop + rH); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(plotW, cy); ctx.stroke();
-    ctx.setLineDash([]);
-
-    const dt = new Date(data[idx].t);
-    const dStr = `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:00`;
-    document.getElementById('chart-hud').innerHTML = `
-      <span><strong>${dStr}</strong> · 종가 ${fmtUsd(data[idx].c, STATE.asset === 'BTC' ? 0 : 2)}</span>
-      <span>RSI <strong>${rsi[idx].toFixed(1)}</strong></span>
-    `;
+  function dismissAlert() {
+    const banner = document.getElementById('top-alert-banner');
+    const key = banner.dataset.alertKey;
+    if (key) state.dismissedAlerts[key] = true;
+    banner.style.display = 'none';
   }
-}
 
-function bindChartTouch() {
-  const canvas = document.getElementById('pro-chart');
-  const handleMove = (clientX) => {
-    const rect = canvas.getBoundingClientRect();
-    const plotW = rect.width - 56;
-    const relX = Math.max(0, Math.min(plotW * 0.92, clientX - rect.left));
-    const fullData = STATE.klines[STATE.asset];
-    const viewCount = Math.min(48, fullData.length);
-    if (viewCount <= 0) return;
-    const idx = Math.min(viewCount - 1, Math.floor((relX / (plotW * 0.92)) * viewCount));
-    STATE.crosshairIdx = idx;
+  function checkAlerts() {
+    const sym = state.asset;
+    document.getElementById('alert-card-title').innerText = `${sym} 매수 목표가 · RSI 알림`;
+    document.getElementById('alert-group-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
+    document.getElementById('alert-group-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
+
+    const cur = state.prices[sym].usd;
+    const target = state.alerts[sym];
+    const rsi = Math.round(state.rsi1d[sym] || 50);
+
+    const statusTag = document.getElementById('alert-status-tag');
+    statusTag.innerText = target > 0 ? `목표 ${fmtUsd(target, 0)}` : (state.alerts.rsiEnabled ? 'RSI 감시중' : '비활성');
+
+    const banner = document.getElementById('top-alert-banner');
+    const textEl = document.getElementById('top-alert-text');
+
+    let alertKey = '', msg = '', cls = '';
+    if (target > 0 && cur > 0 && cur <= target) {
+      alertKey = `target_${sym}_${target}`;
+      msg = `🎯 목표가 도달: ${sym} 현재가 ${fmtUsd(cur, sym === 'ETH' ? 2 : 0)} (목표 ${fmtUsd(target, 0)} 이하)`;
+      cls = 'gold';
+    } else if (state.alerts.rsiEnabled && rsi <= 30) {
+      alertKey = `rsi_low_${sym}`;
+      msg = `🟢 매수 신호: ${sym} 일봉 RSI ${rsi} 과매도 구간 진입`;
+      cls = '';
+    } else if (state.alerts.rsiEnabled && rsi >= 75) {
+      alertKey = `rsi_high_${sym}`;
+      msg = `🔴 과열 경고: ${sym} 일봉 RSI ${rsi} 단기 과매수 구간`;
+      cls = 'warn';
+    }
+
+    if (alertKey && !state.dismissedAlerts[alertKey]) {
+      banner.dataset.alertKey = alertKey;
+      banner.className = 'alert-banner ' + cls;
+      textEl.innerText = msg;
+      banner.style.display = 'flex';
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+
+  function syncInstInputs() {
+    const sym = state.asset;
+    document.getElementById('inst-edit-title').innerText = sym === 'BTC'
+      ? 'Strategy (MSTR) & ETF 수급 보정'
+      : 'Bitmine (BMNR) & ETF 수급 보정';
+    document.getElementById('inst-form-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
+    document.getElementById('inst-form-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
+
+    const inst = state.inst;
+    document.getElementById('input-mstr-btc').value = inst.mstrBtc;
+    document.getElementById('input-mstr-avg').value = inst.mstrAvgCost;
+    document.getElementById('input-mstr-debt').value = inst.mstrDebtB;
+    document.getElementById('input-mstr-cash').value = inst.mstrCashB;
+    document.getElementById('input-etf-btc').value = inst.btcEtfFlowM;
+
+    document.getElementById('input-bmnr-eth').value = inst.bmnrEth;
+    document.getElementById('input-bmnr-avg').value = inst.bmnrAvgCost;
+    document.getElementById('input-bmnr-debt').value = inst.bmnrDebtB;
+    document.getElementById('input-bmnr-cash').value = inst.bmnrCashB;
+    document.getElementById('input-etf-eth').value = inst.ethEtfFlowM;
+  }
+
+  function saveManualInstData() {
+    const updated = {
+      ...state.inst,
+      mstrBtc: parseFloat(document.getElementById('input-mstr-btc').value) || state.inst.mstrBtc,
+      mstrAvgCost: parseFloat(document.getElementById('input-mstr-avg').value) || state.inst.mstrAvgCost,
+      mstrDebtB: parseFloat(document.getElementById('input-mstr-debt').value) || state.inst.mstrDebtB,
+      mstrCashB: parseFloat(document.getElementById('input-mstr-cash').value) || state.inst.mstrCashB,
+      btcEtfFlowM: parseFloat(document.getElementById('input-etf-btc').value) || 0,
+      bmnrEth: parseFloat(document.getElementById('input-bmnr-eth').value) || state.inst.bmnrEth,
+      bmnrAvgCost: parseFloat(document.getElementById('input-bmnr-avg').value) || state.inst.bmnrAvgCost,
+      bmnrDebtB: parseFloat(document.getElementById('input-bmnr-debt').value) || state.inst.bmnrDebtB,
+      bmnrCashB: parseFloat(document.getElementById('input-bmnr-cash').value) || state.inst.bmnrCashB,
+      ethEtfFlowM: parseFloat(document.getElementById('input-etf-eth').value) || 0,
+      isManual: true
+    };
+    state.inst = updated;
+    localStorage.setItem(LS_KEYS.INST_MANUAL, JSON.stringify(updated));
+    renderIntel();
+    renderStrategy();
+    showToast('기관·ETF 수급 수치가 반영되었습니다');
+  }
+
+  function resetToAutoInstData() {
+    localStorage.removeItem(LS_KEYS.INST_MANUAL);
+    fetchAutoInstData();
+    showToast('SEC 자동 공시 데이터로 복원되었습니다');
+  }
+
+  function updateSyncTime() {
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    document.getElementById('last-sync-time').innerText = `실시간 동기화: ${hh}:${mm}:${ss} (환율 ₩${Math.round(state.usdtKrw).toLocaleString()})`;
+  }
+
+  function renderAll() {
+    renderTicker();
     drawProChart();
-  };
-  canvas.addEventListener('touchstart', (e) => { if (e.touches[0]) handleMove(e.touches[0].clientX); }, { passive: true });
-  canvas.addEventListener('touchmove', (e) => { if (e.touches[0]) handleMove(e.touches[0].clientX); }, { passive: true });
-  canvas.addEventListener('mousemove', (e) => handleMove(e.clientX));
-  canvas.addEventListener('mouseleave', () => {
-    STATE.crosshairIdx = -1;
-    document.getElementById('chart-hud').innerHTML = `<span>차트를 터치·드래그하여 시점별 가격/RSI 조회</span><span id="hud-right">RSI(14) · Signal(9)</span>`;
-    drawProChart();
-  });
-}
+    renderSentiment();
+    renderStrategy();
+    renderIntel();
+    renderNewsSection();
+    renderPositionPnL();
+    syncInstInputs();
+    checkAlerts();
+  }
 
-function updateSyncTime() {
-  const now = new Date();
-  document.getElementById('last-sync-time').textContent =
-    `실시간 WebSocket 연결됨 · 마지막 동기화 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-}
+  async function manualRefresh(silent = false) {
+    if (!silent) showToast('실시간 시세·지표 동기화 중...');
+    await Promise.all([
+      fetchMarketPrices(),
+      fetchKlinesForActive(),
+      fetchDailyAnd4hMetrics(),
+      fetchDerivativesAndOnchain()
+    ]);
+    if (!silent) showToast('최신 데이터 동기화 완료');
+  }
 
-function renderAll() {
-  renderTicker();
-  renderFng();
-  renderStrategy();
-  renderInstAndEtf();
-  renderPositionPnl();
-  renderNews();
-}
+  // =========================================================
+  // App Initialization
+  // =========================================================
+  (async function initApp() {
+    const savedTheme = localStorage.getItem(LS_KEYS.THEME);
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
 
-function manualRefresh() {
-  showToast('실시간 시세 및 온체인·공시 데이터 갱신 중...');
-  fetchTickerAndUpbit();
-  fetchDerivativesAndOnchain();
-  fetchAutoInstData();
-  fetchKlines(STATE.asset, STATE.tf);
-}
+    loadSavedSettings();
+    setupChartInteraction();
 
-function initApp() {
-  const savedTheme = localStorage.getItem('cp_theme');
-  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+    await Promise.all([
+      fetchMarketPrices(),
+      fetchKlinesForActive(),
+      fetchDailyAnd4hMetrics(),
+      fetchFnGBTC(),
+      fetchAutoInstData()
+    ]);
+    fetchDerivativesAndOnchain();
+    fetchNewsFeeds();
+    connectWebSocket();
 
-  loadMyAvgPrices();
-  bindChartTouch();
-  window.addEventListener('resize', drawProChart);
-
-  fetchTickerAndUpbit();
-  connectBinanceWS();
-  fetchBaselineKlines();
-  fetchKlines('BTC', '1d');
-  fetchBtcFng();
-  fetchDerivativesAndOnchain();
-  fetchAutoInstData();
-  fetchNews();
-
-  setInterval(fetchTickerAndUpbit, 30000);
-  setInterval(fetchDerivativesAndOnchain, 60000);
-}
-
-initApp();
+    setInterval(fetchMarketPrices, 30000);
+    setInterval(fetchDerivativesAndOnchain, 60000);
+    setInterval(fetchKlinesForActive, 180000);
+    setInterval(fetchNewsFeeds, 600000);
+  })();
 </script>
 </body>
 </html>
+
+
+
+
