@@ -19,26 +19,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Fetch and Parse SEC EDGAR Filings
+      - name: Fetch and Parse SEC & ETF Data
         run: |
           cat << 'EOF' > fetch_sec.py
-          import json, os, re, urllib.request
+          import json, os, re, urllib.request, xml.etree.ElementTree as ET
           from datetime import datetime, timezone, timedelta
 
-          HEADERS = {'User-Agent': 'CryptoPulsePro/3.2 (contact@github.com)'}
+          HEADERS = {'User-Agent': 'CryptoPulsePro/3.4 (contact@github.com)'}
 
           def get_json(url):
               req = urllib.request.Request(url, headers=HEADERS)
               with urllib.request.urlopen(req, timeout=15) as r:
                   return json.loads(r.read().decode('utf-8'))
 
-          def get_text(url):
+          def get_raw(url):
               req = urllib.request.Request(url, headers=HEADERS)
               with urllib.request.urlopen(req, timeout=15) as r:
-                  raw = r.read().decode('utf-8', errors='ignore')
-                  return re.sub(r'<[^>]+>', ' ', raw)
+                  return r.read().decode('utf-8', errors='ignore')
 
-          # 기존 inst_data.json 로드 (파싱 실패 시 안전 폴백용)
           data = {
               'mstrBtc': 850364,
               'mstrAvgCost': 75450,
@@ -51,7 +49,11 @@ jobs:
               'bmnrDebtB': 0.3,
               'bmnrCashB': 0.48,
               'bmnrFilingDate': '2026-11-09',
-              'bmnrSecUrl': 'https://www.sec.gov/edgar/browse/?CIK=0001829311'
+              'bmnrSecUrl': 'https://www.sec.gov/edgar/browse/?CIK=0001829311',
+              'btcEtfFlowM': 245.0,
+              'ethEtfFlowM': 68.5,
+              'etfDate': '2026-11-14',
+              'etfNote': 'IBIT·FBTC 중심 현물 ETF 순유입 우위'
           }
           if os.path.exists('inst_data.json'):
               try:
@@ -72,7 +74,7 @@ jobs:
                       url = f"https://www.sec.gov/Archives/edgar/data/1050446/{acc}/{doc}"
                       data['mstrFilingDate'] = fdate
                       data['mstrSecUrl'] = url
-                      txt = re.sub(r'\s+', ' ', get_text(url))
+                      txt = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', get_raw(url)))
                       m_btc = re.search(r'(?:aggregate\s+bitcoin\s+holdings|held\s+an\s+aggregate\s+of)\s*([\d,]{6,9})\s*bitcoin', txt, re.I)
                       if m_btc:
                           val = int(m_btc.group(1).replace(',', ''))
@@ -102,9 +104,9 @@ jobs:
                       url = f"https://www.sec.gov/Archives/edgar/data/1829311/{acc}/{doc}"
                       data['bmnrFilingDate'] = fdate
                       data['bmnrSecUrl'] = url
-                      txt = re.sub(r'\s+', ' ', get_text(url))
-                      m_eth_m = re.search(r'ETH\s+Holdings\s+Reach\s+(\d+\.\d+)\s*Million', txt, re.I)
+                      txt = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', get_raw(url)))
                       m_eth_exact = re.search(r'([\d,]{7,9})\s*ETH', txt, re.I)
+                      m_eth_m = re.search(r'ETH\s+Holdings\s+Reach\s+(\d+\.\d+)\s*Million', txt, re.I)
                       if m_eth_exact:
                           eval_num = int(m_eth_exact.group(1).replace(',', ''))
                           if 4000000 < eval_num < 15000000:
@@ -115,7 +117,35 @@ jobs:
           except Exception as e:
               print("BMNR parse warning:", e)
 
+          # 3. 1군 RSS에서 미국 현물 ETF 일별 순유입/유출 헤드라인 자동 탐지
+          try:
+              rss_xml = get_raw('https://cointelegraph.com/rss')
+              root = ET.fromstring(rss_xml)
+              for item in root.findall('.//item')[:25]:
+                  title = item.findtext('title') or ''
+                  if re.search(r'bitcoin\s+etf', title, re.I) and re.search(r'inflow|outflow', title, re.I):
+                      m_amt = re.search(r'\$(\d+(?:\.\d+)?)\s*(M|million|B|billion)', title, re.I)
+                      if m_amt:
+                          num = float(m_amt.group(1))
+                          if m_amt.group(2).lower().startswith('b'):
+                              num *= 1000
+                          sign = -1 if re.search(r'outflow', title, re.I) else 1
+                          data['btcEtfFlowM'] = round(sign * num, 1)
+                          data['etfNote'] = title[:70]
+                          break
+                  if re.search(r'ether(?:eum)?\s+etf', title, re.I) and re.search(r'inflow|outflow', title, re.I):
+                      m_amt = re.search(r'\$(\d+(?:\.\d+)?)\s*(M|million|B|billion)', title, re.I)
+                      if m_amt:
+                          num = float(m_amt.group(1))
+                          if m_amt.group(2).lower().startswith('b'):
+                              num *= 1000
+                          sign = -1 if re.search(r'outflow', title, re.I) else 1
+                          data['ethEtfFlowM'] = round(sign * num, 1)
+          except Exception as e:
+              print("ETF RSS parse warning:", e)
+
           kst = timezone(timedelta(hours=9))
+          data['etfDate'] = datetime.now(kst).strftime('%Y-%m-%d')
           data['updatedAt'] = datetime.now(kst).strftime('%Y-%m-%d %H:%M KST')
 
           with open('inst_data.json', 'w', encoding='utf-8') as f:
@@ -129,5 +159,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add inst_data.json
-          git diff --staged --quiet || git commit -m "chore: parse live SEC EDGAR filings"
+          git diff --staged --quiet || git commit -m "chore: update SEC & ETF data"
           git push
