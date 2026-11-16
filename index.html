@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Crypto Pulse">
-<title>Crypto Pulse Pro v3.2</title>
+<title>Crypto Pulse Pro v3.3</title>
 <style>
 :root {
   --bg: #0B0E11;
@@ -48,6 +48,45 @@ body {
 }
 svg.ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; flex-shrink: 0; }
 
+/* 동그라미 물음표 (?) 도움말 마크 */
+.q-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid var(--sub); color: var(--sub); background: transparent;
+  font-size: 9.5px; font-weight: 800; line-height: 1; padding: 0; margin-left: 4px;
+  cursor: pointer; vertical-align: middle; flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.q-btn:active, .q-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(252,213,53,0.12); }
+.inline-lbl { display: inline-flex; align-items: center; }
+
+/* 도움말 바텀 시트 모달 */
+.help-backdrop {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); z-index: 90;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+.help-backdrop.show { opacity: 1; pointer-events: auto; }
+.help-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+  background: var(--surface); border-top: 1px solid var(--gold);
+  border-radius: 18px 18px 0 0; padding: 18px 18px calc(24px + env(safe-area-inset-bottom));
+  transform: translateY(105%); transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 -8px 28px rgba(0,0,0,0.45);
+}
+.help-sheet.show { transform: translateY(0); }
+.help-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.help-title { font-size: 16px; font-weight: 800; color: var(--gold); display: flex; align-items: center; gap: 6px; }
+.help-close {
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  border-radius: 8px; padding: 4px 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.help-desc { font-size: 13.5px; line-height: 1.55; color: var(--text); margin-bottom: 10px; }
+.help-tip {
+  background: var(--surface-2); border-left: 3px solid var(--green);
+  border-radius: 8px; padding: 10px 12px; font-size: 12.5px; line-height: 1.5; color: var(--sub);
+}
+.help-tip strong { color: var(--green); }
+
 /* Top Header */
 .topbar {
   position: sticky; top: 0; z-index: 30;
@@ -60,7 +99,8 @@ svg.ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-wi
   padding: 6px 12px; border-radius: 7px; cursor: pointer; display: flex; align-items: center; gap: 5px;
 }
 .sym-btn.active { background: var(--surface-2); color: var(--gold); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
-.top-actions { display: flex; align-items: center; gap: 8px; }
+.top-actions { display: flex; align-items: center; gap: 6px; }
+.rsi-wrap { display: inline-flex; align-items: center; }
 .rsi-pill { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: var(--surface-2); color: var(--sub); border: 1px solid var(--border); }
 .rsi-pill.buy { background: var(--green-bg); color: var(--green); border-color: rgba(14,203,129,0.4); }
 .rsi-pill.sell { background: var(--red-bg); color: var(--red); border-color: rgba(246,70,93,0.4); }
@@ -75,22 +115,22 @@ svg.ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-wi
   padding: 12px 14px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 10px; align-items: center;
 }
 .hero-price { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; }
-.hero-sub { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.hero-sub { display: flex; align-items: center; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
 .chg-badge { font-size: 12px; font-weight: 700; padding: 2px 6px; border-radius: 5px; }
 .up { color: var(--green); background: var(--green-bg); }
 .dn { color: var(--red); background: var(--red-bg); }
-.krw-line { font-size: 11.5px; color: var(--sub); margin-top: 5px; display: flex; gap: 6px; flex-wrap: wrap; }
-.kimp-tag { font-weight: 700; color: var(--gold); }
+.krw-line { font-size: 11.5px; color: var(--sub); margin-top: 5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.kimp-tag { font-weight: 700; color: var(--gold); display: inline-flex; align-items: center; }
 .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 8px; font-size: 11px; border-left: 1px solid var(--border); padding-left: 10px; }
-.stat-lbl { color: var(--sub); font-size: 10px; }
+.stat-lbl { color: var(--sub); font-size: 10px; display: flex; align-items: center; }
 .stat-val { font-weight: 700; margin-top: 1px; }
 
 /* Sections & Cards */
 .sec { display: none; padding: 12px 14px; }
 .sec.active { display: block; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
-.card-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.card-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.card-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 6px; }
+.card-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
 .badge { font-size: 10.5px; font-weight: 700; padding: 3px 7px; border-radius: 6px; background: var(--surface-2); color: var(--sub); border: 1px solid var(--border); }
 .badge.green { background: var(--green-bg); color: var(--green); border-color: rgba(14,203,129,0.35); }
 .badge.red { background: var(--red-bg); color: var(--red); border-color: rgba(246,70,93,0.35); }
@@ -104,13 +144,15 @@ svg.ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-wi
   font-size: 11.5px; font-weight: 700; padding: 5px 10px; border-radius: 7px; cursor: pointer;
 }
 .tf-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(252,213,53,0.1); }
-.chip-row { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 6px; scrollbar-width: none; }
+.chip-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 6px; scrollbar-width: none; }
 .chip-row::-webkit-scrollbar { display: none; }
 .ind-chip {
-  font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 20px; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 600; padding: 4px 8px 4px 10px; border-radius: 20px; white-space: nowrap;
   border: 1px solid var(--border); background: var(--surface-2); color: var(--sub); cursor: pointer;
 }
 .ind-chip.on { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.ind-chip.on .q-btn { border-color: var(--green); color: var(--green); }
 .hud-bar {
   font-size: 11px; color: var(--sub); background: var(--surface-2); border-radius: 7px;
   padding: 5px 8px; margin-bottom: 6px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px;
@@ -121,9 +163,9 @@ canvas { width: 100%; height: 100%; display: block; }
 /* Macro & Derivatives Grid */
 .macro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .macro-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
-.macro-k { font-size: 11px; color: var(--sub); display: flex; justify-content: space-between; }
+.macro-k { font-size: 11px; color: var(--sub); display: flex; justify-content: space-between; align-items: center; }
 .macro-v { font-size: 16px; font-weight: 800; margin: 4px 0 2px; }
-.macro-s { font-size: 10.5px; color: var(--sub); }
+.macro-s { font-size: 10.5px; color: var(--sub); display: flex; align-items: center; }
 
 /* Halving Progress */
 .prog-bg { width: 100%; height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin: 8px 0; }
@@ -133,9 +175,9 @@ canvas { width: 100%; height: 100%; display: block; }
 .inst-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 11px; padding: 11px; margin-bottom: 9px; }
 .inst-box:last-child { margin-bottom: 0; }
 .inst-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.inst-name { font-weight: 800; font-size: 13.5px; }
+.inst-name { font-weight: 800; font-size: 13.5px; display: flex; align-items: center; }
 .inst-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px; }
-.inst-k { color: var(--sub); font-size: 10px; }
+.inst-k { color: var(--sub); font-size: 10px; display: flex; align-items: center; }
 .inst-v { font-weight: 700; margin-top: 2px; }
 .sec-link { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gold); text-decoration: none; margin-top: 7px; font-weight: 600; }
 
@@ -160,7 +202,7 @@ canvas { width: 100%; height: 100%; display: block; }
 
 /* Forms & Position */
 .inp-group { margin-bottom: 10px; }
-.inp-lbl { display: block; font-size: 11.5px; color: var(--sub); margin-bottom: 4px; font-weight: 600; }
+.inp-lbl { display: flex; align-items: center; font-size: 11.5px; color: var(--sub); margin-bottom: 4px; font-weight: 600; }
 .inp {
   width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
   border-radius: 9px; padding: 10px 12px; font-size: 14px; font-weight: 700; outline: none;
@@ -208,7 +250,10 @@ canvas { width: 100%; height: 100%; display: block; }
     <button class="sym-btn" id="btn-eth" onclick="switchSymbol('ETH')">ETH / USDT</button>
   </div>
   <div class="top-actions">
-    <span class="rsi-pill" id="top-rsi-badge">RSI --</span>
+    <div class="rsi-wrap">
+      <span class="rsi-pill" id="top-rsi-badge">RSI --</span>
+      <button class="q-btn" onclick="openHelp('rsi', event)" aria-label="RSI 설명">?</button>
+    </div>
     <button class="icon-btn" onclick="toggleTheme()" aria-label="테마 전환" title="라이트/다크 전환">
       <svg class="ico" id="theme-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>
     </button>
@@ -224,18 +269,25 @@ canvas { width: 100%; height: 100%; display: block; }
     <div class="hero-price" id="hero-price">$--</div>
     <div class="hero-sub">
       <span class="chg-badge up" id="hero-chg">+0.00%</span>
-      <span class="badge" id="hero-funding">펀딩비 --%</span>
+      <span class="badge" id="hero-funding">펀딩 --%</span>
+      <button class="q-btn" onclick="openHelp('funding', event)">?</button>
     </div>
     <div class="krw-line">
       <span id="hero-krw">₩--</span>
-      <span class="kimp-tag" id="hero-kimp">김프 --%</span>
+      <span class="kimp-tag">
+        <span id="hero-kimp">김프 --%</span>
+        <button class="q-btn" onclick="openHelp('kimp', event)">?</button>
+      </span>
     </div>
   </div>
   <div class="hero-stats">
     <div><div class="stat-lbl">24h 최고</div><div class="stat-val" id="stat-high">--</div></div>
     <div><div class="stat-lbl">24h 최저</div><div class="stat-val" id="stat-low">--</div></div>
     <div><div class="stat-lbl">24h 거래대금</div><div class="stat-val" id="stat-vol">--</div></div>
-    <div><div class="stat-lbl">ETH/BTC 비율</div><div class="stat-val" id="stat-ethbtc">--</div></div>
+    <div>
+      <div class="stat-lbl">ETH/BTC <button class="q-btn" onclick="openHelp('ethbtc', event)">?</button></div>
+      <div class="stat-val" id="stat-ethbtc">--</div>
+    </div>
   </div>
 </section>
 
@@ -252,10 +304,22 @@ canvas { width: 100%; height: 100%; display: block; }
       <span style="font-size:10.5px; color:var(--sub);" id="ws-status">실시간 스트리밍</span>
     </div>
     <div class="chip-row">
-      <button class="ind-chip on" id="chip-ma" onclick="toggleInd('ma')">MA 5·10·20·60</button>
-      <button class="ind-chip on" id="chip-bb" onclick="toggleInd('bb')">볼린저밴드</button>
-      <button class="ind-chip on" id="chip-bs" onclick="toggleInd('bs')">B/S 타점핀</button>
-      <button class="ind-chip on" id="chip-avg" onclick="toggleInd('avg')">매수평균선</button>
+      <div class="ind-chip on" id="chip-ma" onclick="toggleInd('ma')">
+        <span>MA 5·10·20·60</span>
+        <button class="q-btn" onclick="openHelp('ma', event)">?</button>
+      </div>
+      <div class="ind-chip on" id="chip-bb" onclick="toggleInd('bb')">
+        <span>볼린저밴드</span>
+        <button class="q-btn" onclick="openHelp('bb', event)">?</button>
+      </div>
+      <div class="ind-chip on" id="chip-bs" onclick="toggleInd('bs')">
+        <span>B/S 타점핀</span>
+        <button class="q-btn" onclick="openHelp('bs', event)">?</button>
+      </div>
+      <div class="ind-chip on" id="chip-avg" onclick="toggleInd('avg')">
+        <span>매수평균선</span>
+        <button class="q-btn" onclick="openHelp('avgline', event)">?</button>
+      </div>
     </div>
     <div class="hud-bar" id="chart-hud">
       <span>차트를 터치·드래그하여 시점별 상세 수치 조회</span>
@@ -269,12 +333,18 @@ canvas { width: 100%; height: 100%; display: block; }
   <!-- 하단 요약 심리 & 매크로 스냅샷 -->
   <div class="macro-grid">
     <div class="macro-box">
-      <div class="macro-k"><span>BTC 공포·탐욕</span><span id="snap-fng-lbl">--</span></div>
+      <div class="macro-k">
+        <span class="inline-lbl">BTC 공포·탐욕 <button class="q-btn" onclick="openHelp('fng_btc', event)">?</button></span>
+        <span id="snap-fng-lbl">--</span>
+      </div>
       <div class="macro-v" id="snap-fng-val">--</div>
       <div class="macro-s" id="snap-fng-7d">7일 추세 로딩 중</div>
     </div>
     <div class="macro-box">
-      <div class="macro-k"><span>ETH 심리 (RSI)</span><span id="snap-eth-lbl">--</span></div>
+      <div class="macro-k">
+        <span class="inline-lbl">ETH 심리 (RSI) <button class="q-btn" onclick="openHelp('fng_eth', event)">?</button></span>
+        <span id="snap-eth-lbl">--</span>
+      </div>
       <div class="macro-v" id="snap-eth-val">--</div>
       <div class="macro-s">Wilder RMA(14) 기준</div>
     </div>
@@ -288,28 +358,29 @@ canvas { width: 100%; height: 100%; display: block; }
     <div class="card-hd">
       <div class="card-title">
         <svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-        파생상품 수급 & 온체인 활성도
+        파생상품 수급 & 온체인
+        <button class="q-btn" onclick="openHelp('deriv_overview', event)">?</button>
       </div>
       <span class="badge gold" id="deriv-signal-badge">분석 중</span>
     </div>
     <div class="macro-grid">
       <div class="macro-box">
-        <div class="macro-k"><span>BTC 선물 펀딩비</span><span>8h 기준</span></div>
+        <div class="macro-k"><span class="inline-lbl">BTC 펀딩비 <button class="q-btn" onclick="openHelp('funding', event)">?</button></span><span>8h</span></div>
         <div class="macro-v" id="intel-btc-fr">--%</div>
-        <div class="macro-s" id="intel-btc-oi">미결제약정: --</div>
+        <div class="macro-s"><span id="intel-btc-oi">미결제약정: --</span> <button class="q-btn" onclick="openHelp('oi', event)">?</button></div>
       </div>
       <div class="macro-box">
-        <div class="macro-k"><span>ETH 선물 펀딩비</span><span>8h 기준</span></div>
+        <div class="macro-k"><span class="inline-lbl">ETH 펀딩비 <button class="q-btn" onclick="openHelp('funding', event)">?</button></span><span>8h</span></div>
         <div class="macro-v" id="intel-eth-fr">--%</div>
-        <div class="macro-s" id="intel-eth-oi">미결제약정: --</div>
+        <div class="macro-s"><span id="intel-eth-oi">미결제약정: --</span> <button class="q-btn" onclick="openHelp('oi', event)">?</button></div>
       </div>
       <div class="macro-box">
-        <div class="macro-k"><span>BTC 네트워크 수수료</span><span>Mempool</span></div>
+        <div class="macro-k"><span class="inline-lbl">멤풀 수수료 <button class="q-btn" onclick="openHelp('mempool', event)">?</button></span><span>BTC</span></div>
         <div class="macro-v" id="intel-fee">-- sat/vB</div>
         <div class="macro-s" id="intel-fee-desc">온체인 트랜잭션 수요</div>
       </div>
       <div class="macro-box">
-        <div class="macro-k"><span>ETH / BTC 비율</span><span>순환매 지표</span></div>
+        <div class="macro-k"><span class="inline-lbl">ETH / BTC <button class="q-btn" onclick="openHelp('ethbtc', event)">?</button></span><span>상대강도</span></div>
         <div class="macro-v" id="intel-ethbtc">--</div>
         <div class="macro-s" id="intel-ethbtc-chg">24h 변화: --%</div>
       </div>
@@ -322,6 +393,7 @@ canvas { width: 100%; height: 100%; display: block; }
       <div class="card-title">
         <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         비트코인 5차 반감기 현황
+        <button class="q-btn" onclick="openHelp('halving', event)">?</button>
       </div>
       <span class="badge green" id="halving-dday">D---일</span>
     </div>
@@ -341,7 +413,8 @@ canvas { width: 100%; height: 100%; display: block; }
     <div class="card-hd">
       <div class="card-title">
         <svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
-        기관 부채·청산 리스크 모니터
+        기관 부채·청산 리스크
+        <button class="q-btn" onclick="openHelp('inst_risk', event)">?</button>
       </div>
       <span class="badge green" id="sec-sync-badge">SEC 공시 동기화</span>
     </div>
@@ -349,13 +422,13 @@ canvas { width: 100%; height: 100%; display: block; }
     <!-- Strategy (MSTR) -->
     <div class="inst-box">
       <div class="inst-top">
-        <span class="inst-name">Strategy (MSTR)</span>
+        <span class="inst-name">Strategy (MSTR) <button class="q-btn" onclick="openHelp('mstr', event)">?</button></span>
         <span class="badge green" id="mstr-risk">안전 (여유)</span>
       </div>
       <div class="inst-grid">
         <div><div class="inst-k">BTC 평가액</div><div class="inst-v" id="mstr-val">$--B</div></div>
-        <div><div class="inst-k">부채 커버리지</div><div class="inst-v" id="mstr-cov">--x</div></div>
-        <div><div class="inst-k">미실현 손익</div><div class="inst-v" id="mstr-pnl">--%</div></div>
+        <div><div class="inst-k">부채 커버리지 <button class="q-btn" onclick="openHelp('coverage', event)">?</button></div><div class="inst-v" id="mstr-cov">--x</div></div>
+        <div><div class="inst-k">미실현 손익 <button class="q-btn" onclick="openHelp('upnl', event)">?</button></div><div class="inst-v" id="mstr-pnl">--%</div></div>
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
         <span style="font-size:10.5px; color:var(--sub);" id="mstr-meta">보유 850,364 BTC · 공시 --</span>
@@ -366,13 +439,13 @@ canvas { width: 100%; height: 100%; display: block; }
     <!-- Bitmine Immersion (BMNR) -->
     <div class="inst-box">
       <div class="inst-top">
-        <span class="inst-name">Bitmine Immersion (BMNR)</span>
+        <span class="inst-name">Bitmine Immersion (BMNR) <button class="q-btn" onclick="openHelp('bmnr', event)">?</button></span>
         <span class="badge green" id="bmnr-risk">안전 (무담보 우위)</span>
       </div>
       <div class="inst-grid">
         <div><div class="inst-k">ETH 평가액</div><div class="inst-v" id="bmnr-val">$--B</div></div>
-        <div><div class="inst-k">부채 커버리지</div><div class="inst-v" id="bmnr-cov">--x</div></div>
-        <div><div class="inst-k">미실현 손익</div><div class="inst-v" id="bmnr-pnl">--%</div></div>
+        <div><div class="inst-k">부채 커버리지 <button class="q-btn" onclick="openHelp('coverage', event)">?</button></div><div class="inst-v" id="bmnr-cov">--x</div></div>
+        <div><div class="inst-k">미실현 손익 <button class="q-btn" onclick="openHelp('upnl', event)">?</button></div><div class="inst-v" id="bmnr-pnl">--%</div></div>
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
         <span style="font-size:10.5px; color:var(--sub);" id="bmnr-meta">보유 6,070,092 ETH · 공시 --</span>
@@ -386,9 +459,10 @@ canvas { width: 100%; height: 100%; display: block; }
     <div class="card-hd">
       <div class="card-title">
         <svg class="ico" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
-        1군 매체 중요도순 속보 (자동번역)
+        1군 매체 중요도순 속보
+        <button class="q-btn" onclick="openHelp('news_score', event)">?</button>
       </div>
-      <span class="badge">엄선 피드</span>
+      <span class="badge">자동번역</span>
     </div>
     <div id="news-list" style="font-size:12px; color:var(--sub);">주요 외신 및 국내 속보 수집·번역 중...</div>
   </div>
@@ -400,7 +474,8 @@ canvas { width: 100%; height: 100%; display: block; }
     <div class="card-hd">
       <div class="card-title">
         <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-        <span id="strat-sym-title">BTC</span> 멀티팩터 AI 분할 매수 전략
+        <span id="strat-sym-title">BTC</span> AI 분할 매수(DCA)
+        <button class="q-btn" onclick="openHelp('dca_score', event)">?</button>
       </div>
       <span class="badge gold" id="strat-grade">산출 중</span>
     </div>
@@ -416,11 +491,26 @@ canvas { width: 100%; height: 100%; display: block; }
     </div>
 
     <div style="margin-top:8px;">
-      <div class="factor-row"><span>① 기술적 모멘텀 (RSI · 볼린저 이격)</span><strong id="f-tech">-- / 30점</strong></div>
-      <div class="factor-row"><span>② 시장 심리 & 김치 프리미엄</span><strong id="f-sent">-- / 20점</strong></div>
-      <div class="factor-row"><span>③ 파생상품 수급 (선물 펀딩비 역발상)</span><strong id="f-deriv">-- / 15점</strong></div>
-      <div class="factor-row"><span>④ 기관 재무 건전성 (MSTR · BMNR)</span><strong id="f-inst">-- / 20점</strong></div>
-      <div class="factor-row"><span>⑤ 5차 반감기 사이클 위치</span><strong id="f-halv">-- / 15점</strong></div>
+      <div class="factor-row">
+        <span class="inline-lbl">① 기술적 모멘텀 (RSI·볼린저) <button class="q-btn" onclick="openHelp('f_tech', event)">?</button></span>
+        <strong id="f-tech">-- / 30점</strong>
+      </div>
+      <div class="factor-row">
+        <span class="inline-lbl">② 시장 심리 & 김치 프리미엄 <button class="q-btn" onclick="openHelp('f_sent', event)">?</button></span>
+        <strong id="f-sent">-- / 20점</strong>
+      </div>
+      <div class="factor-row">
+        <span class="inline-lbl">③ 파생 수급 (펀딩비 역발상) <button class="q-btn" onclick="openHelp('f_deriv', event)">?</button></span>
+        <strong id="f-deriv">-- / 15점</strong>
+      </div>
+      <div class="factor-row">
+        <span class="inline-lbl">④ 기관 재무 건전성 (MSTR·BMNR) <button class="q-btn" onclick="openHelp('f_inst', event)">?</button></span>
+        <strong id="f-inst">-- / 20점</strong>
+      </div>
+      <div class="factor-row">
+        <span class="inline-lbl">⑤ 5차 반감기 사이클 위치 <button class="q-btn" onclick="openHelp('f_halv', event)">?</button></span>
+        <strong id="f-halv">-- / 15점</strong>
+      </div>
     </div>
 
     <div class="dca-box" id="strat-plan">
@@ -435,9 +525,10 @@ canvas { width: 100%; height: 100%; display: block; }
     <div class="card-hd">
       <div class="card-title">
         <svg class="ico" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-        내 매수평균가 설정 (로컬 저장)
+        내 매수평균가 설정
+        <button class="q-btn" onclick="openHelp('avgline', event)">?</button>
       </div>
-      <span class="badge">차트 연동</span>
+      <span class="badge">로컬 저장</span>
     </div>
     <div class="inp-group">
       <label class="inp-lbl">비트코인 (BTC) 매수평균가 (USD $)</label>
@@ -453,7 +544,10 @@ canvas { width: 100%; height: 100%; display: block; }
 
   <div class="card">
     <div class="card-hd">
-      <div class="card-title">기관 공시 데이터 관리</div>
+      <div class="card-title">
+        기관 공시 데이터 관리
+        <button class="q-btn" onclick="openHelp('sec_sync', event)">?</button>
+      </div>
       <span class="badge green">자동화 연동됨</span>
     </div>
     <p style="font-size:11.5px; color:var(--sub); margin-top:0; line-height:1.45;">
@@ -490,9 +584,175 @@ canvas { width: 100%; height: 100%; display: block; }
   </button>
 </nav>
 
+<!-- 도움말 바텀 시트 모달 -->
+<div class="help-backdrop" id="help-backdrop" onclick="closeHelp()"></div>
+<div class="help-sheet" id="help-sheet">
+  <div class="help-hd">
+    <div class="help-title" id="help-title">지표 설명</div>
+    <button class="help-close" onclick="closeHelp()">닫기</button>
+  </div>
+  <div class="help-desc" id="help-desc"></div>
+  <div class="help-tip" id="help-tip"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+/* 전체 지표 및 용어 사전 */
+const HELP_DICT = {
+  rsi: {
+    title: 'RSI (상대강도지수, 14)',
+    desc: '최근 14개 캔들 동안 상승 압력과 하락 압력의 상대적인 강도를 0~100 사이의 수치로 나타낸 모멘텀 지표입니다. Wilder의 RMA(누적가중이동평균) 공식을 사용합니다.',
+    tip: '<strong>실전 해석:</strong> <strong>30 이하</strong>는 단기 과매도(저평가·반등 유력) 구간이며, <strong>70 이상</strong>은 단기 과매수(과열·조정 주의) 구간입니다. 하단 패널의 주황색 Signal(9) 선을 상향 돌파할 때 반등 신뢰도가 높아집니다.'
+  },
+  funding: {
+    title: '선물 펀딩비 (Funding Rate, 8h)',
+    desc: '바이낸스 무기한 선물 시장에서 롱(매수) 포지션과 숏(매도) 포지션 투자자 간에 8시간마다 주고받는 이자 비율입니다.',
+    tip: '<strong>실전 해석:</strong> <strong>마이너스(-) 진입</strong>은 하락에 베팅한 숏 포지션이 과밀하다는 뜻으로, 반등 시 숏 스퀴즈(급등)가 나올 확률이 높아져 역발상 매수 근거가 됩니다. 반대로 <strong>+0.04% 이상</strong>은 롱 과열 경고 신호입니다.'
+  },
+  kimp: {
+    title: '김치 프리미엄 (김프)',
+    desc: '업비트 원화(KRW) 시세와 바이낸스 달러(USD) 시세를 실시간 환율(KRW-USDT)로 환산해 비교한 국내외 가격 격차(%)입니다.',
+    tip: '<strong>실전 해석:</strong> <strong>0% 이하(역프) 또는 +1~2% 내외</strong>는 국내 수급이 차분한 안정적인 매수 구간입니다. 반면 <strong>+5% 이상 급등</strong> 시 국내 개인 추격 매수 과열을 의미하므로 신규 매수를 자제하는 것이 유리합니다.'
+  },
+  ethbtc: {
+    title: 'ETH / BTC 비율 (상대강도)',
+    desc: '이더리움 1개의 가치를 비트코인 단위로 환산한 비율로, 비트코인 대비 이더리움의 상대적 강세·약세와 알트코인 순환매 흐름을 보여줍니다.',
+    tip: '<strong>실전 해석:</strong> 비율이 장기간 하락해 역사적 저점 부근에서 반등하기 시작하면 비트코인에서 이더리움으로 기관·고래 수급이 이동하는 순환매 신호로 해석할 수 있습니다.'
+  },
+  ma: {
+    title: '이동평균선 (MA 5 · 10 · 20 · 60)',
+    desc: '최근 5·10·20·60개 봉의 종가 평균을 이은 추세선입니다. 단기(5·10)부터 중기(20·60)까지의 평균 매수 단가와 추세 방향을 나타냅니다.',
+    tip: '<strong>실전 해석:</strong> 단기선(노랑 MA5)이 중기선(초록 MA20)을 아래에서 위로 뚫으면 상승 전환(골든크로스), 가격이 20일선·60일선 위에서 지지를 받으면 상승 추세 유지로 봅니다.'
+  },
+  bb: {
+    title: '볼린저밴드 (Bollinger Bands 20, 2)',
+    desc: '20일 이동평균선을 중심으로 표준편차(±2배)를 더해 가격의 정상 변동 범위를 띠(밴드) 형태로 시각화한 변동성 지표입니다.',
+    tip: '<strong>실전 해석:</strong> 통계적으로 가격의 약 95%가 밴드 안에서 움직입니다. 캔들이 <strong>하단 밴드를 이탈하거나 터치한 뒤 안쪽으로 복귀</strong>할 때 단기 반등 타점이 자주 형성됩니다.'
+  },
+  bs: {
+    title: 'B / S 자동 타점핀',
+    desc: 'RSI(14) 과매수·과매도 반전 조건을 알고리즘이 실시간 스캔하여 차트 위에 매수(Buy)·매도(Sell) 후보 지점을 핀으로 표시한 보조 신호입니다.',
+    tip: '<strong>실전 해석:</strong> <strong>빨간색 B 핀</strong>은 RSI 32 이하 과매도 구간 진입 후 꺾여 올라갈 때 찍히며, <strong>파란색 S 핀</strong>은 RSI 68 이상 과열 후 하락 반전할 때 찍힙니다.'
+  },
+  avgline: {
+    title: '내 매수평균선',
+    desc: '[내 평단] 탭에 입력한 본인의 평균 매수단가(USD)를 차트 위에 초록색 수평 실선으로 표시해 현재가와의 괴리를 한눈에 보여주는 기준선입니다.',
+    tip: '<strong>실전 해석:</strong> 현재가가 매수평균선 아래에 있을 때 분할 추매(물타기)를 실행하면 평균 단가가 낮아지며 초록색 선의 위치가 실시간으로 하향 조정됩니다.'
+  },
+  fng_btc: {
+    title: 'BTC 공포·탐욕 지수 (Fear & Greed)',
+    desc: '변동성, 거래량, 소셜 미디어 심리, 도미넌스 등을 종합해 암호화폐 시장의 투자 심리를 0(극단적 공포)에서 100(극단적 탐욕)까지 수치화한 지표입니다.',
+    tip: '<strong>실전 해석:</strong> <strong>25 이하(극단적 공포)</strong>는 투매가 과도하게 나온 구간으로 중장기 분할 매수 적기인 경우가 많고, <strong>75 이상(극단적 탐욕)</strong>은 차익 실현을 고민할 구간입니다.'
+  },
+  fng_eth: {
+    title: 'ETH 심리 지수 (Wilder RSI 모델)',
+    desc: '이더리움의 일봉 가격 모멘텀을 Wilder의 14일 RSI 알고리즘으로 연산해 공포·탐욕 지수와 동일한 0~100 스케일로 변환한 자체 심리 지표입니다.',
+    tip: '<strong>실전 해석:</strong> 비트코인 심리와 별개로 이더리움 단독 과매도(30 이하) 여부를 포착해 ETH 비중 확대 타이밍을 가늠하는 데 활용합니다.'
+  },
+  deriv_overview: {
+    title: '파생상품 수급 & 온체인 모니터',
+    desc: '현물 차트만으로는 보이지 않는 선물 시장의 레버리지 쏠림 현상과 비트코인 블록체인 네트워크의 실제 송금 수요를 입체적으로 추적합니다.',
+    tip: '<strong>실전 해석:</strong> 현물 가격이 하락하더라도 선물 펀딩비가 마이너스로 전환되고 온체인 수수료가 유지되면 세력의 저점 매집 가능성이 높습니다.'
+  },
+  oi: {
+    title: '미결제약정 (Open Interest, OI)',
+    desc: '선물 시장에서 아직 청산되지 않고 열려 있는 롱·숏 계약의 총규모입니다. 시장에 유입된 레버리지 자금의 크기를 뜻합니다.',
+    tip: '<strong>실전 해석:</strong> 가격 하락과 함께 미결제약정이 급감하면 과도한 롱 레버리지 청산(악성 매물 소화)이 마무리되고 있다는 긍정적 신호로 해석합니다.'
+  },
+  mempool: {
+    title: 'BTC 멤풀 수수료 (sat/vB)',
+    desc: '비트코인 네트워크에서 트랜잭션이 블록에 우선 포함되기 위해 지불하는 바이트당 사토시(sat/vB) 수수료로, 온체인 혼잡도와 실수요를 보여줍니다.',
+    tip: '<strong>실전 해석:</strong> 수수료가 <strong>25 sat/vB 이상</strong>으로 높아지면 온체인 자금 이동과 네트워크 활성도가 매우 활발한 국면이며, 한 자릿수는 한산한 횡보기를 의미합니다.'
+  },
+  halving: {
+    title: '비트코인 5차 반감기 (블록 1,050,000)',
+    desc: '약 210,000블록(약 4년)마다 비트코인 채굴 보상이 절반으로 줄어드는 공급 축소 이벤트입니다. 5차 반감기는 블록 높이 1,050,000에서 발생합니다.',
+    tip: '<strong>실전 해석:</strong> 역사적으로 반감기 전후의 공급 감소는 중장기 희소성을 높여 강세 사이클의 핵심 동력으로 작용해 왔습니다.'
+  },
+  inst_risk: {
+    title: '기관 부채·청산 리스크 모니터',
+    desc: '미국 증권거래위원회(SEC) Form 8-K 공시에 보고된 주요 크립토 트레저리 상장사의 보유 코인 수량과 부채 규모에 실시간 시세를 곱해 재무 건전성을 진단합니다.',
+    tip: '<strong>실전 해석:</strong> 대형 보유 기업의 부채 커버리지가 악화되면 시장에 강제 매도(투매) 우려가 번질 수 있으므로 하방 리스크 점검용으로 활용합니다.'
+  },
+  mstr: {
+    title: 'Strategy (구 MicroStrategy, MSTR)',
+    desc: '전 세계 상장사 중 가장 많은 비트코인을 보유한 기업입니다. 전환사채 발행과 유상증자 등을 통해 BTC를 장기 축적하고 있습니다.',
+    tip: '<strong>실전 해석:</strong> 부채 대부분이 무담보 전환사채 구조라 단기 시세 하락만으로 즉시 강제 청산되지는 않으나, 커버리지 배수가 2배 아래로 떨어지면 시장 심리가 위축될 수 있습니다.'
+  },
+  bmnr: {
+    title: 'Bitmine Immersion (BMNR)',
+    desc: '이더리움(ETH)을 핵심 트레저리 준비자산으로 대규모 축적·스테이킹 운용하는 미국 상장 기업입니다.',
+    tip: '<strong>실전 해석:</strong> 담보 대출 비중이 낮고 현금성 유보금을 함께 보유하고 있는지 확인하여 이더리움 시장의 잠재 매도 압력을 가늠합니다.'
+  },
+  coverage: {
+    title: '부채 커버리지 배수 (Debt Coverage)',
+    desc: '기관이 보유한 암호화폐의 실시간 달러 평가액을 총부채 금액으로 나눈 배수입니다. (예: 8.0x는 부채보다 보유 코인 가치가 8배 많다는 뜻)',
+    tip: '<strong>실전 해석:</strong> <strong>3.0x 이상</strong>이면 재무적으로 매우 여유로운 안전 구간이며, <strong>2.0x 미만</strong>으로 내려가면 유동성 경계 단계로 봅니다.'
+  },
+  upnl: {
+    title: '기관 미실현 손익 (%)',
+    desc: '해당 기업이 공시한 평균 매수단가 대비 현재 실시간 시세의 평가 수익률(%)입니다.',
+    tip: '<strong>실전 해석:</strong> 기관 평단가 부근이나 마이너스 구간에서는 기관의 추가 저가 매집(물타기) 공시가 나올 가능성이 높아 강력한 심리적 지지선 역할을 합니다.'
+  },
+  news_score: {
+    title: '1군 매체 중요도순 속보 알고리즘',
+    desc: 'CoinDesk, Cointelegraph, Decrypt, 블록미디어 등 검증된 1군 전문 매체의 뉴스만 수집해 시장 파급력(ETF·SEC·연준·청산 키워드 + 최신성) 점수로 정렬한 피드입니다.',
+    tip: '<strong>실전 해석:</strong> 상단에 노출된 기사일수록 당일 시세 변동성을 유발할 가능성이 높은 핵심 재료이므로 헤드라인의 [호재/리스크] 배지를 우선 확인하세요.'
+  },
+  dca_score: {
+    title: 'AI 분할 매수(DCA) 종합 점수',
+    desc: '기술적 지표, 시장 심리, 김치 프리미엄, 선물 펀딩비, 기관 건전성, 반감기 사이클 등 5대 핵심 영역을 100점 만점으로 가중 합산한 매수 매력도 점수입니다.',
+    tip: '<strong>실전 해석:</strong> <strong>72점 이상</strong>은 공포·과매도가 겹친 적극 분할 매수 구간, <strong>52~71점</strong>은 소액 적립식(DCA) 구간, <strong>51점 이하</strong>는 단기 과열로 추격 매수를 자제하는 구간입니다.'
+  },
+  f_tech: {
+    title: '① 기술적 모멘텀 (배점 30점)',
+    desc: '현재 차트의 Wilder RSI(14) 과매도 수준과 볼린저밴드 하단 이격도를 계산해 반등 여력을 점수화합니다.',
+    tip: '<strong>산출 기준:</strong> RSI가 30 이하로 낮을수록 높은 점수(최대 28점)를 부여하고, 68 이상 과열 시 4점으로 낮아집니다.'
+  },
+  f_sent: {
+    title: '② 시장 심리 & 김프 (배점 20점)',
+    desc: 'BTC 공포·탐욕 지수(또는 ETH RSI 심리 지수)가 공포 구간에 머물러 있는지 평가합니다.',
+    tip: '<strong>산출 기준:</strong> 시장 심리가 25 이하 극단적 공포일 때 역발상 매수 점수가 극대화됩니다.'
+  },
+  f_deriv: {
+    title: '③ 파생상품 수급 펀딩비 (배점 15점)',
+    desc: '바이낸스 무기한 선물의 8시간 펀딩비가 마이너스(숏 과밀)인지 플러스(롱 과열)인지 평가합니다.',
+    tip: '<strong>산출 기준:</strong> 펀딩비가 음수(-)일 때 숏 스퀴즈 반등 가능성을 반영해 높은 점수를 부여합니다.'
+  },
+  f_inst: {
+    title: '④ 기관 재무 건전성 (배점 20점)',
+    desc: 'Strategy(MSTR)와 Bitmine(BMNR)의 실시간 부채 커버리지 여유율을 점검해 기관 발 투매 리스크가 없는지 평가합니다.',
+    tip: '<strong>산출 기준:</strong> 부채 커버리지가 4.0배 이상 안정적일 때 만점에 가까운 안정 점수를 부여합니다.'
+  },
+  f_halv: {
+    title: '⑤ 5차 반감기 사이클 위치 (배점 15점)',
+    desc: '현재 비트코인 블록 높이가 5차 반감기(1,050,000 블록) 사이클 중 축적기에 해당하는지 반영합니다.',
+    tip: '<strong>산출 기준:</strong> 반감기 도래 전 공급 축소 기대감이 쌓이는 구간에 우호적 가중치를 부여합니다.'
+  },
+  sec_sync: {
+    title: 'SEC EDGAR 자동 공시 동기화',
+    desc: 'GitHub Actions 서버가 매일 자동으로 미국 증권거래위원회(SEC) 공시 서버에서 MSTR과 BMNR의 최신 Form 8-K 보고서를 조회해 앱에 반영하는 파이프라인입니다.',
+    tip: '<strong>활용 팁:</strong> 수동 보정 입력 후에도 [SEC 자동 동기화 복원] 버튼을 누르면 언제든 공식 공시 데이터로 되돌아갑니다.'
+  }
+};
+
+function openHelp(key, ev) {
+  if (ev) ev.stopPropagation();
+  const info = HELP_DICT[key];
+  if (!info) return;
+  document.getElementById('help-title').textContent = info.title;
+  document.getElementById('help-desc').textContent = info.desc;
+  document.getElementById('help-tip').innerHTML = info.tip;
+  document.getElementById('help-backdrop').classList.add('show');
+  document.getElementById('help-sheet').classList.add('show');
+}
+
+function closeHelp() {
+  document.getElementById('help-backdrop').classList.remove('show');
+  document.getElementById('help-sheet').classList.remove('show');
+}
+
 const state = {
   sym: 'BTC',
   tf: '1d',
@@ -651,11 +911,11 @@ function updateDerivUI() {
   eEl.textContent = (eFr >= 0 ? '+' : '') + eFr.toFixed(4) + '%';
   eEl.style.color = eFr < 0 ? 'var(--green)' : (eFr > 0.04 ? 'var(--red)' : 'var(--text)');
 
-  document.getElementById('intel-btc-oi').textContent = '미결제약정: ' + Math.round(state.deriv.BTC.oi).toLocaleString() + ' BTC';
-  document.getElementById('intel-eth-oi').textContent = '미결제약정: ' + Math.round(state.deriv.ETH.oi).toLocaleString() + ' ETH';
+  document.getElementById('intel-btc-oi').textContent = 'OI: ' + Math.round(state.deriv.BTC.oi).toLocaleString() + ' BTC';
+  document.getElementById('intel-eth-oi').textContent = 'OI: ' + Math.round(state.deriv.ETH.oi).toLocaleString() + ' ETH';
 
   document.getElementById('intel-fee').textContent = state.mempoolFee + ' sat/vB';
-  document.getElementById('intel-fee-desc').textContent = state.mempoolFee >= 25 ? '온체인 혼잡 (수요 활발)' : '온체인 쾌적 (저수수료 구간)';
+  document.getElementById('intel-fee-desc').textContent = state.mempoolFee >= 25 ? '온체인 혼잡 (수요 활발)' : '온체인 쾌적 (저수수료)';
 
   document.getElementById('intel-ethbtc').textContent = state.ethBtc.price.toFixed(5);
   document.getElementById('intel-ethbtc-chg').textContent = '24h 변화: ' + (state.ethBtc.chg >= 0 ? '+' : '') + state.ethBtc.chg.toFixed(2) + '%';
@@ -665,7 +925,7 @@ function updateDerivUI() {
     sigBadge.textContent = '숏 과밀 · 반등 우호';
     sigBadge.className = 'badge green';
   } else if (bFr > 0.04 || eFr > 0.04) {
-    sigBadge.textContent = '롱 레버리지 과열 경고';
+    sigBadge.textContent = '롱 레버리지 과열';
     sigBadge.className = 'badge red';
   } else {
     sigBadge.textContent = '파생 수급 중립';
@@ -809,7 +1069,6 @@ function drawProChart() {
   const rsi14 = calcWilderRSI(closes, 14);
   const rsiSig = calcSMA(rsi14.map(v => v ?? 50), 9);
 
-  // 볼린저 밴드 (20, 2)
   const bbUp = [], bbDn = [];
   closes.forEach((_, i) => {
     if (i < 19) { bbUp.push(null); bbDn.push(null); return; }
@@ -824,15 +1083,13 @@ function drawProChart() {
   const startIdx = state.klines.length - viewCount;
   const viewData = state.klines.slice(startIdx);
 
-  // 상단 RSI 배지 업데이트
   const curRsi = rsi14[rsi14.length - 1] || 50;
   const pill = document.getElementById('top-rsi-badge');
   pill.textContent = 'RSI ' + Math.round(curRsi);
   pill.className = 'rsi-pill ' + (curRsi <= 32 ? 'buy' : (curRsi >= 68 ? 'sell' : ''));
 
-  // 레이아웃 분할: 메인(58%), 거래량(20%), RSI(22%)
   const padR = 54;
-  const plotW = (W - padR) * 0.90; // 우측 10% 미래 여백
+  const plotW = (W - padR) * 0.90;
   const stepX = plotW / (viewCount - 1);
 
   const pTop = 14, pH = H * 0.54;
@@ -841,7 +1098,6 @@ function drawProChart() {
 
   ctx.clearRect(0, 0, W, H);
 
-  // 가격 범위 계산
   let minP = Infinity, maxP = -Infinity;
   for (let i = startIdx; i < state.klines.length; i++) {
     minP = Math.min(minP, state.klines[i].l);
@@ -856,7 +1112,6 @@ function drawProChart() {
   minP -= padP; maxP += padP;
   const yOfP = p => pTop + pH - ((p - minP) / (maxP - minP)) * pH;
 
-  // 그리드 & 우측 가격 축
   ctx.strokeStyle = gridCol; ctx.lineWidth = 1;
   ctx.fillStyle = txtCol; ctx.font = '10px -apple-system, sans-serif'; ctx.textAlign = 'left';
   for (let g = 0; g <= 3; g++) {
@@ -866,7 +1121,6 @@ function drawProChart() {
     ctx.fillText(val >= 1000 ? '$' + (val / 1000).toFixed(1) + 'k' : '$' + val.toFixed(0), W - padR + 5, y + 3);
   }
 
-  // 볼린저 밴드 음영
   if (state.ind.bb) {
     ctx.beginPath();
     viewData.forEach((_, idx) => {
@@ -883,7 +1137,6 @@ function drawProChart() {
     ctx.fill();
   }
 
-  // 이동평균선 그리기 헬퍼
   const drawLine = (arr, color, width = 1.2) => {
     ctx.beginPath();
     let started = false;
@@ -903,7 +1156,6 @@ function drawProChart() {
     drawLine(ma60, '#9B51E0', 1.3);
   }
 
-  // 캔들스틱 렌더링
   const candleW = Math.max(3, stepX * 0.58);
   viewData.forEach((k, idx) => {
     const x = idx * stepX;
@@ -915,7 +1167,6 @@ function drawProChart() {
     const h = Math.max(1.5, Math.abs(yOfP(k.o) - yOfP(k.c)));
     ctx.fillRect(x - candleW / 2, top, candleW, h);
 
-    // B/S 타점핀
     const i = startIdx + idx;
     if (state.ind.bs && i > 15) {
       const rPrev = rsi14[i - 1], rCurr = rsi14[i];
@@ -933,7 +1184,6 @@ function drawProChart() {
     }
   });
 
-  // 내 매수평균선
   if (state.ind.avg && avgP > 0 && avgP >= minP && avgP <= maxP) {
     const ay = yOfP(avgP);
     ctx.strokeStyle = '#0ECB81'; ctx.lineWidth = 1.2;
@@ -943,7 +1193,6 @@ function drawProChart() {
     ctx.fillText('매수평균', 5, ay + 2.5);
   }
 
-  // 현재가 점선 및 우측 배지
   const lastC = closes[closes.length - 1];
   const ly = yOfP(lastC);
   ctx.setLineDash([3, 3]); ctx.strokeStyle = '#FCD535'; ctx.lineWidth = 1;
@@ -953,7 +1202,6 @@ function drawProChart() {
   ctx.fillStyle = '#0B0E11'; ctx.font = 'bold 9.5px sans-serif'; ctx.textAlign = 'left';
   ctx.fillText(lastC >= 1000 ? (lastC / 1000).toFixed(1) + 'k' : lastC.toFixed(1), W - padR + 5, ly + 3);
 
-  // 거래량 패널
   const maxV = Math.max(...viewData.map(k => k.v)) || 1;
   viewData.forEach((k, idx) => {
     const x = idx * stepX;
@@ -973,7 +1221,6 @@ function drawProChart() {
   drawSubLine(vma5, vTop, vH, 0, maxV, '#F0B90B');
   drawSubLine(vma20, vTop, vH, 0, maxV, '#0ECB81');
 
-  // RSI(14) + Signal(9) 패널
   ctx.fillStyle = 'rgba(132,142,156,0.08)';
   ctx.fillRect(0, rTop + rH * 0.3, W - padR, rH * 0.4);
   drawSubLine(rsi14, rTop, rH, 0, 100, '#9B51E0');
@@ -981,7 +1228,6 @@ function drawProChart() {
   ctx.fillStyle = txtCol; ctx.font = '9.5px sans-serif'; ctx.textAlign = 'left';
   ctx.fillText('RSI ' + Math.round(curRsi), W - padR + 5, rTop + rH * 0.55);
 
-  // 터치 크로스헤어
   if (state.crossIdx >= 0 && state.crossIdx < viewCount) {
     const cx = state.crossIdx * stepX;
     const gi = startIdx + state.crossIdx;
@@ -999,7 +1245,6 @@ function drawProChart() {
   }
 }
 
-/* 캔버스 터치 크로스헤어 이벤트 */
 (function bindCrosshair() {
   const canvas = document.getElementById('pro-canvas');
   const handleTouch = (e) => {
@@ -1083,7 +1328,6 @@ function updateInstUI() {
   const ethP = state.prices.ETH || 2500;
   const i = state.inst;
 
-  // MSTR
   const mValB = (i.mstrBtc * btcP) / 1e9;
   const mCov = i.mstrDebtB > 0 ? mValB / i.mstrDebtB : 99;
   const mPnl = ((btcP - i.mstrAvgCost) / i.mstrAvgCost) * 100;
@@ -1098,7 +1342,6 @@ function updateInstUI() {
   if (mCov < 2.2) { mRisk.textContent = '주의 (커버리지 축소)'; mRisk.className = 'badge red'; }
   else { mRisk.textContent = '안전 (여유)'; mRisk.className = 'badge green'; }
 
-  // BMNR
   const bValB = (i.bmnrEth * ethP) / 1e9;
   const bCov = i.bmnrDebtB > 0 ? bValB / i.bmnrDebtB : 99;
   const bPnl = ((ethP - i.bmnrAvgCost) / i.bmnrAvgCost) * 100;
@@ -1113,7 +1356,6 @@ function updateInstUI() {
   if (bCov < 2.5) { bRisk.textContent = '주의 (변동성 확대)'; bRisk.className = 'badge red'; }
   else { bRisk.textContent = '안전 (무담보 우위)'; bRisk.className = 'badge green'; }
 
-  // 입력폼 동기화
   document.getElementById('cfg-mstr-btc').value = i.mstrBtc;
   document.getElementById('cfg-mstr-debt').value = i.mstrDebtB;
   document.getElementById('cfg-bmnr-eth').value = i.bmnrEth;
@@ -1184,7 +1426,7 @@ async function fetchTier1News() {
   document.getElementById('news-list').innerHTML = rendered.join('');
 }
 
-/* 6대 멀티팩터 AI 분할 매수(DCA) 전략 엔진 */
+/* AI 분할 매수(DCA) 전략 엔진 */
 function updateStrategy() {
   const s = state.sym;
   const p = state.prices[s] || 0;
@@ -1194,23 +1436,14 @@ function updateStrategy() {
   const rsiArr = calcWilderRSI(closes, 14);
   const rsi = rsiArr[rsiArr.length - 1] || 50;
 
-  // 1. 기술적 모멘텀 (30점)
   let techScore = rsi <= 30 ? 28 : rsi <= 40 ? 23 : rsi <= 55 ? 16 : rsi <= 68 ? 10 : 4;
-
-  // 2. 시장 심리 & 김프 (20점)
   const fng = s === 'BTC' ? state.fngBtc : state.fngEth;
   let sentScore = fng <= 25 ? 18 : fng <= 45 ? 14 : fng <= 60 ? 10 : 5;
-
-  // 3. 파생상품 수급 펀딩비 역발상 (15점)
   const fr = state.deriv[s].fr;
   let derivScore = fr < 0 ? 14 : fr <= 0.015 ? 10 : fr <= 0.035 ? 6 : 2;
-
-  // 4. 기관 건전성 (20점)
   const btcP = state.prices.BTC || 75000;
   const mCov = ((state.inst.mstrBtc * btcP) / 1e9) / (state.inst.mstrDebtB || 1);
   let instScore = mCov >= 4 ? 18 : mCov >= 2.5 ? 14 : 8;
-
-  // 5. 반감기 사이클 (15점)
   let halvScore = state.halvingPct < 65 ? 13 : 10;
 
   const total = Math.min(100, techScore + sentScore + derivScore + instScore + halvScore);
