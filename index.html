@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Crypto Pulse">
-<title>Crypto Pulse Pro v3.3</title>
+<title>Crypto Pulse Pro v3.4</title>
 <style>
 :root {
   --bg: #0B0E11;
@@ -59,6 +59,21 @@ svg.ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-wi
 }
 .q-btn:active, .q-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(252,213,53,0.12); }
 .inline-lbl { display: inline-flex; align-items: center; }
+
+/* 목표가·RSI 도달 상단 강조 알림 배너 */
+.alert-banner {
+  display: none;
+  background: linear-gradient(90deg, rgba(14,203,129,0.22), rgba(252,213,53,0.22));
+  border-bottom: 1px solid var(--green);
+  padding: 9px 14px;
+  font-size: 12px; font-weight: 700; color: var(--text);
+  justify-content: space-between; align-items: center; gap: 8px;
+}
+.alert-banner.show { display: flex; }
+.alert-dismiss {
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+}
 
 /* 도움말 바텀 시트 모달 */
 .help-backdrop {
@@ -208,6 +223,8 @@ canvas { width: 100%; height: 100%; display: block; }
   border-radius: 9px; padding: 10px 12px; font-size: 14px; font-weight: 700; outline: none;
 }
 .inp:focus { border-color: var(--gold); }
+.chk-row { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 8px 0; color: var(--text); cursor: pointer; }
+.chk-row input { width: 16px; height: 16px; accent-color: var(--gold); }
 .btn-primary {
   width: 100%; border: none; border-radius: 10px; padding: 11px; font-size: 13.5px; font-weight: 800;
   background: var(--gold); color: #0B0E11; cursor: pointer; margin-top: 4px;
@@ -242,6 +259,12 @@ canvas { width: 100%; height: 100%; display: block; }
 </style>
 </head>
 <body>
+
+<!-- 목표가·RSI 도달 강조 알림 배너 -->
+<div class="alert-banner" id="alert-banner">
+  <span id="alert-text">매수 시그널 도달</span>
+  <button class="alert-dismiss" onclick="dismissAlert()">확인</button>
+</div>
 
 <!-- 상단 고정 헤더 -->
 <header class="topbar">
@@ -351,8 +374,33 @@ canvas { width: 100%; height: 100%; display: block; }
   </div>
 </main>
 
-<!-- TAB 2: 인텔리전스 (파생·온체인 / 반감기 / 기관 SEC / 번역 뉴스) -->
+<!-- TAB 2: 인텔리전스 (현물 ETF 수급 / 파생·온체인 / 반감기 / 기관 SEC / 번역 뉴스) -->
 <section id="sec-intel" class="sec">
+  <!-- 미국 현물 ETF 일별 순유입(Net Flow) 모니터 -->
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        미국 현물 ETF 순유입 (Net Flow)
+        <button class="q-btn" onclick="openHelp('etf_flow', event)">?</button>
+      </div>
+      <span class="badge gold" id="etf-date-badge">일별 수급</span>
+    </div>
+    <div class="macro-grid">
+      <div class="macro-box">
+        <div class="macro-k"><span class="inline-lbl">BTC 현물 ETF <button class="q-btn" onclick="openHelp('etf_btc', event)">?</button></span><span>IBIT·FBTC</span></div>
+        <div class="macro-v" id="intel-btc-etf">+$--M</div>
+        <div class="macro-s" id="intel-btc-etf-st">기관 현물 순유입</div>
+      </div>
+      <div class="macro-box">
+        <div class="macro-k"><span class="inline-lbl">ETH 현물 ETF <button class="q-btn" onclick="openHelp('etf_eth', event)">?</button></span><span>ETHA·FETH</span></div>
+        <div class="macro-v" id="intel-eth-etf">+$--M</div>
+        <div class="macro-s" id="intel-eth-etf-st">기관 현물 순유입</div>
+      </div>
+    </div>
+    <div style="font-size:11px; color:var(--sub); margin-top:8px;" id="intel-etf-note">주요 운용사 일별 순유출입 집계</div>
+  </div>
+
   <!-- 파생상품 과열도 & 온체인 수급 모니터 -->
   <div class="card">
     <div class="card-hd">
@@ -367,12 +415,12 @@ canvas { width: 100%; height: 100%; display: block; }
       <div class="macro-box">
         <div class="macro-k"><span class="inline-lbl">BTC 펀딩비 <button class="q-btn" onclick="openHelp('funding', event)">?</button></span><span>8h</span></div>
         <div class="macro-v" id="intel-btc-fr">--%</div>
-        <div class="macro-s"><span id="intel-btc-oi">미결제약정: --</span> <button class="q-btn" onclick="openHelp('oi', event)">?</button></div>
+        <div class="macro-s"><span id="intel-btc-oi">OI: --</span> <button class="q-btn" onclick="openHelp('oi', event)">?</button></div>
       </div>
       <div class="macro-box">
         <div class="macro-k"><span class="inline-lbl">ETH 펀딩비 <button class="q-btn" onclick="openHelp('funding', event)">?</button></span><span>8h</span></div>
         <div class="macro-v" id="intel-eth-fr">--%</div>
-        <div class="macro-s"><span id="intel-eth-oi">미결제약정: --</span> <button class="q-btn" onclick="openHelp('oi', event)">?</button></div>
+        <div class="macro-s"><span id="intel-eth-oi">OI: --</span> <button class="q-btn" onclick="openHelp('oi', event)">?</button></div>
       </div>
       <div class="macro-box">
         <div class="macro-k"><span class="inline-lbl">멤풀 수수료 <button class="q-btn" onclick="openHelp('mempool', event)">?</button></span><span>BTC</span></div>
@@ -493,23 +541,23 @@ canvas { width: 100%; height: 100%; display: block; }
     <div style="margin-top:8px;">
       <div class="factor-row">
         <span class="inline-lbl">① 기술적 모멘텀 (RSI·볼린저) <button class="q-btn" onclick="openHelp('f_tech', event)">?</button></span>
-        <strong id="f-tech">-- / 30점</strong>
+        <strong id="f-tech">-- / 25점</strong>
       </div>
       <div class="factor-row">
         <span class="inline-lbl">② 시장 심리 & 김치 프리미엄 <button class="q-btn" onclick="openHelp('f_sent', event)">?</button></span>
         <strong id="f-sent">-- / 20점</strong>
       </div>
       <div class="factor-row">
-        <span class="inline-lbl">③ 파생 수급 (펀딩비 역발상) <button class="q-btn" onclick="openHelp('f_deriv', event)">?</button></span>
+        <span class="inline-lbl">③ 미국 현물 ETF 순유입 수급 <button class="q-btn" onclick="openHelp('f_etf', event)">?</button></span>
+        <strong id="f-etf">-- / 15점</strong>
+      </div>
+      <div class="factor-row">
+        <span class="inline-lbl">④ 파생 수급 (펀딩비 역발상) <button class="q-btn" onclick="openHelp('f_deriv', event)">?</button></span>
         <strong id="f-deriv">-- / 15점</strong>
       </div>
       <div class="factor-row">
-        <span class="inline-lbl">④ 기관 재무 건전성 (MSTR·BMNR) <button class="q-btn" onclick="openHelp('f_inst', event)">?</button></span>
-        <strong id="f-inst">-- / 20점</strong>
-      </div>
-      <div class="factor-row">
-        <span class="inline-lbl">⑤ 5차 반감기 사이클 위치 <button class="q-btn" onclick="openHelp('f_halv', event)">?</button></span>
-        <strong id="f-halv">-- / 15점</strong>
+        <span class="inline-lbl">⑤ 기관 건전성 & 반감기 사이클 <button class="q-btn" onclick="openHelp('f_inst', event)">?</button></span>
+        <strong id="f-inst">-- / 25점</strong>
       </div>
     </div>
 
@@ -519,7 +567,7 @@ canvas { width: 100%; height: 100%; display: block; }
   </div>
 </section>
 
-<!-- TAB 4: 내 평단 & 기관 수동 보정 -->
+<!-- TAB 4: 내 평단 · 목표가 알림 & 기관 수동 보정 -->
 <section id="sec-position" class="sec">
   <div class="card">
     <div class="card-hd">
@@ -530,37 +578,69 @@ canvas { width: 100%; height: 100%; display: block; }
       </div>
       <span class="badge">로컬 저장</span>
     </div>
-    <div class="inp-group">
-      <label class="inp-lbl">비트코인 (BTC) 매수평균가 (USD $)</label>
-      <input type="number" class="inp" id="inp-avg-btc" placeholder="예: 72000">
+    <div class="macro-grid">
+      <div class="inp-group">
+        <label class="inp-lbl">BTC 평단가 ($)</label>
+        <input type="number" class="inp" id="inp-avg-btc" placeholder="예: 72000">
+      </div>
+      <div class="inp-group">
+        <label class="inp-lbl">ETH 평단가 ($)</label>
+        <input type="number" class="inp" id="inp-avg-eth" placeholder="예: 2450">
+      </div>
     </div>
-    <div class="inp-group">
-      <label class="inp-lbl">이더리움 (ETH) 매수평균가 (USD $)</label>
-      <input type="number" class="inp" id="inp-avg-eth" placeholder="예: 2450">
-    </div>
-    <div id="my-pnl-summary" style="font-size:12px; color:var(--sub); margin:8px 0;">평단가를 입력하면 차트에 초록색 기준선과 현재 수익률이 표시됩니다.</div>
+    <div id="my-pnl-summary" style="font-size:12px; color:var(--sub); margin:4px 0 8px;">평단가를 입력하면 차트에 초록색 기준선과 현재 수익률이 표시됩니다.</div>
     <button class="btn-primary" onclick="saveMyAvg()">내 평단가 저장</button>
   </div>
 
+  <!-- 목표가 & RSI 도달 알림 설정 -->
   <div class="card">
     <div class="card-hd">
       <div class="card-title">
-        기관 공시 데이터 관리
+        <svg class="ico" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        매수 목표가 & RSI 도달 알림
+        <button class="q-btn" onclick="openHelp('price_alert', event)">?</button>
+      </div>
+      <span class="badge gold">실시간 감시</span>
+    </div>
+    <div class="macro-grid">
+      <div class="inp-group">
+        <label class="inp-lbl">BTC 매수 목표가 ($ 이하)</label>
+        <input type="number" class="inp" id="inp-target-btc" placeholder="예: 68000">
+      </div>
+      <div class="inp-group">
+        <label class="inp-lbl">ETH 매수 목표가 ($ 이하)</label>
+        <input type="number" class="inp" id="inp-target-eth" placeholder="예: 2100">
+      </div>
+    </div>
+    <label class="chk-row">
+      <input type="checkbox" id="chk-rsi-alert" checked>
+      <span>RSI(14) 30 이하 과매도 구간 진입 시 상단 배너 알림</span>
+    </label>
+    <button class="btn-primary" onclick="saveAlertCfg()">알림 조건 저장</button>
+  </div>
+
+  <!-- 기관 & 현물 ETF 수동 보정 -->
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title">
+        기관 공시 & ETF 데이터 관리
         <button class="q-btn" onclick="openHelp('sec_sync', event)">?</button>
       </div>
       <span class="badge green">자동화 연동됨</span>
     </div>
     <p style="font-size:11.5px; color:var(--sub); margin-top:0; line-height:1.45;">
-      GitHub Actions가 매일 SEC EDGAR 공시(<code>inst_data.json</code>)를 자동 수집합니다. 필요시 수동 보정 후 언제든 자동 동기화로 복원할 수 있습니다.
+      GitHub Actions가 매일 SEC 공시와 현물 ETF 흐름(<code>inst_data.json</code>)을 자동 수집합니다. 필요시 수동 보정 후 언제든 복원할 수 있습니다.
     </p>
     <div class="macro-grid">
       <div class="inp-group"><label class="inp-lbl">MSTR 보유 BTC</label><input type="number" class="inp" id="cfg-mstr-btc"></div>
       <div class="inp-group"><label class="inp-lbl">MSTR 부채 ($B)</label><input type="number" step="0.1" class="inp" id="cfg-mstr-debt"></div>
       <div class="inp-group"><label class="inp-lbl">BMNR 보유 ETH</label><input type="number" class="inp" id="cfg-bmnr-eth"></div>
       <div class="inp-group"><label class="inp-lbl">BMNR 부채 ($B)</label><input type="number" step="0.1" class="inp" id="cfg-bmnr-debt"></div>
+      <div class="inp-group"><label class="inp-lbl">BTC ETF 순유입 ($M)</label><input type="number" step="0.1" class="inp" id="cfg-btc-etf"></div>
+      <div class="inp-group"><label class="inp-lbl">ETH ETF 순유입 ($M)</label><input type="number" step="0.1" class="inp" id="cfg-eth-etf"></div>
     </div>
     <button class="btn-primary" onclick="saveManualInst()">수동 수치 임시 반영</button>
-    <button class="btn-outline" onclick="restoreAutoInst()">SEC 자동 동기화 복원</button>
+    <button class="btn-outline" onclick="restoreAutoInst()">SEC·ETF 자동 동기화 복원</button>
   </div>
 </section>
 
@@ -598,7 +678,6 @@ canvas { width: 100%; height: 100%; display: block; }
 <div class="toast" id="toast"></div>
 
 <script>
-/* 전체 지표 및 용어 사전 */
 const HELP_DICT = {
   rsi: {
     title: 'RSI (상대강도지수, 14)',
@@ -620,6 +699,21 @@ const HELP_DICT = {
     desc: '이더리움 1개의 가치를 비트코인 단위로 환산한 비율로, 비트코인 대비 이더리움의 상대적 강세·약세와 알트코인 순환매 흐름을 보여줍니다.',
     tip: '<strong>실전 해석:</strong> 비율이 장기간 하락해 역사적 저점 부근에서 반등하기 시작하면 비트코인에서 이더리움으로 기관·고래 수급이 이동하는 순환매 신호로 해석할 수 있습니다.'
   },
+  etf_flow: {
+    title: '미국 현물 ETF 순유입 (Spot ETF Net Flow)',
+    desc: '미국 증시에 상장된 비트코인·이더리움 현물 ETF(BlackRock IBIT·ETHA, Fidelity FBTC·FETH 등)로 하루 동안 순수하게 들어오거나 빠져나간 기관 자금(백만 달러, $M)입니다.',
+    tip: '<strong>실전 해석:</strong> 현물 ETF는 운용사가 실제 코인을 시장에서 매수·수탁해야 하므로, <strong>플러스(+) 순유입이 연속될수록</strong> 강력한 현물 매수 압력으로 작용합니다.'
+  },
+  etf_btc: {
+    title: '미국 BTC 현물 ETF 일별 순유입 ($M)',
+    desc: 'IBIT(블랙록), FBTC(피델리티) 등 미국 비트코인 현물 ETF 전체의 일일 순자금 유입액입니다.',
+    tip: '<strong>실전 해석:</strong> 가격 조정일에도 ETF 순유입이 플러스를 유지하면 월가 기관들의 저가 매집(Dip Buying)이 유입되고 있음을 뜻합니다.'
+  },
+  etf_eth: {
+    title: '미국 ETH 현물 ETF 일별 순유입 ($M)',
+    desc: 'ETHA(블랙록), FETH(피델리티) 등 미국 이더리움 현물 ETF 전체의 일일 순자금 유입액입니다.',
+    tip: '<strong>실전 해석:</strong> ETH 현물 ETF 순유입이 플러스로 전환되면 이더리움의 상대적 강세(ETH/BTC 반등)를 이끄는 핵심 촉매가 됩니다.'
+  },
   ma: {
     title: '이동평균선 (MA 5 · 10 · 20 · 60)',
     desc: '최근 5·10·20·60개 봉의 종가 평균을 이은 추세선입니다. 단기(5·10)부터 중기(20·60)까지의 평균 매수 단가와 추세 방향을 나타냅니다.',
@@ -639,6 +733,11 @@ const HELP_DICT = {
     title: '내 매수평균선',
     desc: '[내 평단] 탭에 입력한 본인의 평균 매수단가(USD)를 차트 위에 초록색 수평 실선으로 표시해 현재가와의 괴리를 한눈에 보여주는 기준선입니다.',
     tip: '<strong>실전 해석:</strong> 현재가가 매수평균선 아래에 있을 때 분할 추매(물타기)를 실행하면 평균 단가가 낮아지며 초록색 선의 위치가 실시간으로 하향 조정됩니다.'
+  },
+  price_alert: {
+    title: '매수 목표가 & RSI 도달 알림 배너',
+    desc: '사용자가 지정한 희망 매수 목표가($ 이하)에 실시간 시세가 도달하거나, RSI(14)가 30 이하 과매도 구간에 진입할 때 화면 최상단에 강조 배너를 띄워주는 감시 기능입니다.',
+    tip: '<strong>활용 팁:</strong> 지지선 부근의 1차·2차 지정가 매수 가격을 목표가로 입력해 두시면 차트를 계속 들여다보지 않아도 진입 타이밍을 즉시 포착할 수 있습니다.'
   },
   fng_btc: {
     title: 'BTC 공포·탐욕 지수 (Fear & Greed)',
@@ -702,38 +801,38 @@ const HELP_DICT = {
   },
   dca_score: {
     title: 'AI 분할 매수(DCA) 종합 점수',
-    desc: '기술적 지표, 시장 심리, 김치 프리미엄, 선물 펀딩비, 기관 건전성, 반감기 사이클 등 5대 핵심 영역을 100점 만점으로 가중 합산한 매수 매력도 점수입니다.',
-    tip: '<strong>실전 해석:</strong> <strong>72점 이상</strong>은 공포·과매도가 겹친 적극 분할 매수 구간, <strong>52~71점</strong>은 소액 적립식(DCA) 구간, <strong>51점 이하</strong>는 단기 과열로 추격 매수를 자제하는 구간입니다.'
+    desc: '기술적 지표, 시장 심리, 현물 ETF 순유입, 선물 펀딩비, 기관 건전성, 반감기 사이클 등 6대 핵심 영역을 100점 만점으로 가중 합산한 매수 매력도 점수입니다.',
+    tip: '<strong>실전 해석:</strong> <strong>72점 이상</strong>은 공포·과매도와 기관 수급이 겹친 적극 분할 매수 구간, <strong>52~71점</strong>은 소액 적립식(DCA) 구간, <strong>51점 이하</strong>는 단기 과열로 추격 매수를 자제하는 구간입니다.'
   },
   f_tech: {
-    title: '① 기술적 모멘텀 (배점 30점)',
+    title: '① 기술적 모멘텀 (배점 25점)',
     desc: '현재 차트의 Wilder RSI(14) 과매도 수준과 볼린저밴드 하단 이격도를 계산해 반등 여력을 점수화합니다.',
-    tip: '<strong>산출 기준:</strong> RSI가 30 이하로 낮을수록 높은 점수(최대 28점)를 부여하고, 68 이상 과열 시 4점으로 낮아집니다.'
+    tip: '<strong>산출 기준:</strong> RSI가 30 이하로 낮을수록 높은 점수(최대 24점)를 부여하고, 68 이상 과열 시 4점으로 낮아집니다.'
   },
   f_sent: {
     title: '② 시장 심리 & 김프 (배점 20점)',
     desc: 'BTC 공포·탐욕 지수(또는 ETH RSI 심리 지수)가 공포 구간에 머물러 있는지 평가합니다.',
     tip: '<strong>산출 기준:</strong> 시장 심리가 25 이하 극단적 공포일 때 역발상 매수 점수가 극대화됩니다.'
   },
+  f_etf: {
+    title: '③ 미국 현물 ETF 순유입 수급 (배점 15점)',
+    desc: '블랙록·피델리티 등 미국 현물 ETF의 일별 자금 유입이 순매수(+)인지 순유출(-)인지 반영합니다.',
+    tip: '<strong>산출 기준:</strong> 일일 순유입이 +$200M 이상 강세일 때 만점(15점)을 부여해 기관 현물 수요를 가산합니다.'
+  },
   f_deriv: {
-    title: '③ 파생상품 수급 펀딩비 (배점 15점)',
+    title: '④ 파생상품 수급 펀딩비 (배점 15점)',
     desc: '바이낸스 무기한 선물의 8시간 펀딩비가 마이너스(숏 과밀)인지 플러스(롱 과열)인지 평가합니다.',
     tip: '<strong>산출 기준:</strong> 펀딩비가 음수(-)일 때 숏 스퀴즈 반등 가능성을 반영해 높은 점수를 부여합니다.'
   },
   f_inst: {
-    title: '④ 기관 재무 건전성 (배점 20점)',
-    desc: 'Strategy(MSTR)와 Bitmine(BMNR)의 실시간 부채 커버리지 여유율을 점검해 기관 발 투매 리스크가 없는지 평가합니다.',
-    tip: '<strong>산출 기준:</strong> 부채 커버리지가 4.0배 이상 안정적일 때 만점에 가까운 안정 점수를 부여합니다.'
-  },
-  f_halv: {
-    title: '⑤ 5차 반감기 사이클 위치 (배점 15점)',
-    desc: '현재 비트코인 블록 높이가 5차 반감기(1,050,000 블록) 사이클 중 축적기에 해당하는지 반영합니다.',
-    tip: '<strong>산출 기준:</strong> 반감기 도래 전 공급 축소 기대감이 쌓이는 구간에 우호적 가중치를 부여합니다.'
+    title: '⑤ 기관 건전성 & 반감기 (배점 25점)',
+    desc: 'Strategy·Bitmine의 실시간 부채 커버리지 안정성과 5차 반감기 사이클 위치를 합산 평가합니다.',
+    tip: '<strong>산출 기준:</strong> 기관 부채 커버리지가 4.0배 이상이고 반감기 축적기에 위치할 때 높은 안정 점수를 부여합니다.'
   },
   sec_sync: {
-    title: 'SEC EDGAR 자동 공시 동기화',
-    desc: 'GitHub Actions 서버가 매일 자동으로 미국 증권거래위원회(SEC) 공시 서버에서 MSTR과 BMNR의 최신 Form 8-K 보고서를 조회해 앱에 반영하는 파이프라인입니다.',
-    tip: '<strong>활용 팁:</strong> 수동 보정 입력 후에도 [SEC 자동 동기화 복원] 버튼을 누르면 언제든 공식 공시 데이터로 되돌아갑니다.'
+    title: 'SEC EDGAR & ETF 자동 동기화',
+    desc: 'GitHub Actions 서버가 매일 자동으로 SEC 공시 서버와 현물 ETF 데이터를 조회해 inst_data.json에 반영하는 파이프라인입니다.',
+    tip: '<strong>활용 팁:</strong> 수동 보정 입력 후에도 [SEC·ETF 자동 동기화 복원] 버튼을 누르면 언제든 자동 수집 데이터로 되돌아갑니다.'
   }
 };
 
@@ -772,16 +871,20 @@ const state = {
   mempoolFee: 0,
   fngBtc: 50,
   fngEth: 50,
+  curRsi: { BTC: 50, ETH: 50 },
   halvingPct: 50,
   halvingDays: 500,
   klines: [],
   crossIdx: -1,
   avgPrices: JSON.parse(localStorage.getItem('cp_avg_prices') || '{"BTC":0,"ETH":0}'),
+  alertCfg: JSON.parse(localStorage.getItem('cp_alert_cfg') || '{"btcTarget":0,"ethTarget":0,"rsiAlert":true}'),
+  alertDismissed: false,
   inst: {
     mstrBtc: 850364, mstrAvgCost: 75450, mstrDebtB: 6.7, mstrCashB: 5.02,
     mstrFilingDate: '2026-11-09', mstrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001050446',
     bmnrEth: 6070092, bmnrAvgCost: 2810, bmnrDebtB: 0.3, bmnrCashB: 0.48,
     bmnrFilingDate: '2026-11-09', bmnrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001829311',
+    btcEtfFlowM: 245.0, ethEtfFlowM: 68.5, etfDate: '2026-11-14', etfNote: 'IBIT·FBTC 중심 현물 ETF 순유입 우위',
     updatedAt: ''
   }
 };
@@ -794,6 +897,34 @@ function showToast(msg) {
   t.classList.add('show');
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* 목표가 & RSI 도달 알림 체크 */
+function checkAlerts() {
+  if (state.alertDismissed) return;
+  const msgs = [];
+  const cfg = state.alertCfg;
+  if (cfg.btcTarget > 0 && state.prices.BTC > 0 && state.prices.BTC <= cfg.btcTarget) {
+    msgs.push(`BTC 목표가($${cfg.btcTarget.toLocaleString()}) 도달`);
+  }
+  if (cfg.ethTarget > 0 && state.prices.ETH > 0 && state.prices.ETH <= cfg.ethTarget) {
+    msgs.push(`ETH 목표가($${cfg.ethTarget.toLocaleString()}) 도달`);
+  }
+  if (cfg.rsiAlert && state.curRsi[state.sym] <= 30) {
+    msgs.push(`${state.sym} RSI ${Math.round(state.curRsi[state.sym])} 과매도 진입`);
+  }
+  const banner = document.getElementById('alert-banner');
+  if (msgs.length > 0) {
+    document.getElementById('alert-text').textContent = '매수 알림: ' + msgs.join(' · ');
+    banner.classList.add('show');
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+function dismissAlert() {
+  state.alertDismissed = true;
+  document.getElementById('alert-banner').classList.remove('show');
 }
 
 /* 테마 & 탭 전환 */
@@ -870,6 +1001,7 @@ async function fetchInitialMarket() {
     updateHeroUI();
     updateInstUI();
     updateMyPnlUI();
+    checkAlerts();
   } catch (e) { console.error('Market fetch error:', e); }
 }
 
@@ -961,6 +1093,7 @@ function connectWS() {
     }
     updateInstUI();
     updateMyPnlUI();
+    checkAlerts();
   };
   ws.onclose = () => {
     document.getElementById('ws-status').textContent = '재연결 중...';
@@ -1084,6 +1217,9 @@ function drawProChart() {
   const viewData = state.klines.slice(startIdx);
 
   const curRsi = rsi14[rsi14.length - 1] || 50;
+  state.curRsi[state.sym] = curRsi;
+  checkAlerts();
+
   const pill = document.getElementById('top-rsi-badge');
   pill.textContent = 'RSI ' + Math.round(curRsi);
   pill.className = 'rsi-pill ' + (curRsi <= 32 ? 'buy' : (curRsi >= 68 ? 'sell' : ''));
@@ -1328,6 +1464,23 @@ function updateInstUI() {
   const ethP = state.prices.ETH || 2500;
   const i = state.inst;
 
+  // 현물 ETF UI
+  const bFlow = Number(i.btcEtfFlowM || 0);
+  const eFlow = Number(i.ethEtfFlowM || 0);
+  const bEtfEl = document.getElementById('intel-btc-etf');
+  const eEtfEl = document.getElementById('intel-eth-etf');
+  bEtfEl.textContent = (bFlow >= 0 ? '+$' : '-$') + Math.abs(bFlow).toFixed(1) + 'M';
+  bEtfEl.style.color = bFlow >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('intel-btc-etf-st').textContent = bFlow >= 0 ? '순유입 (매수 우위)' : '순유출 (차익 실현)';
+
+  eEtfEl.textContent = (eFlow >= 0 ? '+$' : '-$') + Math.abs(eFlow).toFixed(1) + 'M';
+  eEtfEl.style.color = eFlow >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('intel-eth-etf-st').textContent = eFlow >= 0 ? '순유입 (매수 우위)' : '순유출 (차익 실현)';
+
+  document.getElementById('etf-date-badge').textContent = i.etfDate || '일별 수급';
+  document.getElementById('intel-etf-note').textContent = i.etfNote || '주요 운용사 일별 순유출입 집계';
+
+  // MSTR
   const mValB = (i.mstrBtc * btcP) / 1e9;
   const mCov = i.mstrDebtB > 0 ? mValB / i.mstrDebtB : 99;
   const mPnl = ((btcP - i.mstrAvgCost) / i.mstrAvgCost) * 100;
@@ -1342,6 +1495,7 @@ function updateInstUI() {
   if (mCov < 2.2) { mRisk.textContent = '주의 (커버리지 축소)'; mRisk.className = 'badge red'; }
   else { mRisk.textContent = '안전 (여유)'; mRisk.className = 'badge green'; }
 
+  // BMNR
   const bValB = (i.bmnrEth * ethP) / 1e9;
   const bCov = i.bmnrDebtB > 0 ? bValB / i.bmnrDebtB : 99;
   const bPnl = ((ethP - i.bmnrAvgCost) / i.bmnrAvgCost) * 100;
@@ -1360,6 +1514,8 @@ function updateInstUI() {
   document.getElementById('cfg-mstr-debt').value = i.mstrDebtB;
   document.getElementById('cfg-bmnr-eth').value = i.bmnrEth;
   document.getElementById('cfg-bmnr-debt').value = i.bmnrDebtB;
+  document.getElementById('cfg-btc-etf').value = bFlow;
+  document.getElementById('cfg-eth-etf').value = eFlow;
 }
 
 /* 1군 매체 중요도순 자동번역 뉴스 */
@@ -1426,7 +1582,7 @@ async function fetchTier1News() {
   document.getElementById('news-list').innerHTML = rendered.join('');
 }
 
-/* AI 분할 매수(DCA) 전략 엔진 */
+/* AI 분할 매수(DCA) 전략 엔진 (ETF 순유입 통합) */
 function updateStrategy() {
   const s = state.sym;
   const p = state.prices[s] || 0;
@@ -1436,24 +1592,30 @@ function updateStrategy() {
   const rsiArr = calcWilderRSI(closes, 14);
   const rsi = rsiArr[rsiArr.length - 1] || 50;
 
-  let techScore = rsi <= 30 ? 28 : rsi <= 40 ? 23 : rsi <= 55 ? 16 : rsi <= 68 ? 10 : 4;
+  // 1. 기술적 모멘텀 (25점)
+  let techScore = rsi <= 30 ? 24 : rsi <= 40 ? 19 : rsi <= 55 ? 14 : rsi <= 68 ? 9 : 4;
+  // 2. 시장 심리 & 김프 (20점)
   const fng = s === 'BTC' ? state.fngBtc : state.fngEth;
   let sentScore = fng <= 25 ? 18 : fng <= 45 ? 14 : fng <= 60 ? 10 : 5;
+  // 3. 미국 현물 ETF 순유입 수급 (15점)
+  const flow = s === 'BTC' ? Number(state.inst.btcEtfFlowM || 0) : Number(state.inst.ethEtfFlowM || 0);
+  let etfScore = flow >= 200 ? 15 : flow > 0 ? 12 : flow === 0 ? 8 : 4;
+  // 4. 파생 수급 펀딩비 역발상 (15점)
   const fr = state.deriv[s].fr;
   let derivScore = fr < 0 ? 14 : fr <= 0.015 ? 10 : fr <= 0.035 ? 6 : 2;
+  // 5. 기관 건전성 & 반감기 (25점)
   const btcP = state.prices.BTC || 75000;
   const mCov = ((state.inst.mstrBtc * btcP) / 1e9) / (state.inst.mstrDebtB || 1);
-  let instScore = mCov >= 4 ? 18 : mCov >= 2.5 ? 14 : 8;
-  let halvScore = state.halvingPct < 65 ? 13 : 10;
+  let instScore = (mCov >= 4 ? 14 : mCov >= 2.5 ? 11 : 6) + (state.halvingPct < 65 ? 10 : 7);
 
-  const total = Math.min(100, techScore + sentScore + derivScore + instScore + halvScore);
+  const total = Math.min(100, techScore + sentScore + etfScore + derivScore + instScore);
 
   document.getElementById('strat-score').textContent = total;
-  document.getElementById('f-tech').textContent = `${techScore} / 30점`;
+  document.getElementById('f-tech').textContent = `${techScore} / 25점`;
   document.getElementById('f-sent').textContent = `${sentScore} / 20점`;
+  document.getElementById('f-etf').textContent = `${etfScore} / 15점`;
   document.getElementById('f-deriv').textContent = `${derivScore} / 15점`;
-  document.getElementById('f-inst').textContent = `${instScore} / 20점`;
-  document.getElementById('f-halv').textContent = `${halvScore} / 15점`;
+  document.getElementById('f-inst').textContent = `${instScore} / 25점`;
 
   const ring = document.getElementById('score-ring');
   const grade = document.getElementById('strat-grade');
@@ -1463,7 +1625,7 @@ function updateStrategy() {
   if (total >= 72) {
     ring.style.borderColor = 'var(--green)';
     grade.textContent = '적극 분할 매수'; grade.className = 'badge green';
-    head.textContent = '공포·과매도 수급 구간 (역발상 매수 우위)';
+    head.textContent = '공포·과매도 + 기관 수급 유입 구간';
     alloc.textContent = '권장 액션: 대기 현금의 30~40% 분할 진입 유효';
   } else if (total >= 52) {
     ring.style.borderColor = 'var(--gold)';
@@ -1473,7 +1635,7 @@ function updateStrategy() {
   } else {
     ring.style.borderColor = 'var(--red)';
     grade.textContent = '추격 매수 자제'; grade.className = 'badge red';
-    head.textContent = '단기 과열 또는 롱 레버리지 누적 구간';
+    head.textContent = '단기 과열 또는 현물·파생 수급 위축 구간';
     alloc.textContent = '권장 액션: 신규 추격 매수 보류 및 조정 대기';
   }
 
@@ -1483,13 +1645,16 @@ function updateStrategy() {
     `<strong>AI 지정가 분할 매수 가이드 (${s})</strong><br>` +
     `• 1차 눌림목 지정가 (-1.5%): <strong>$${t1}</strong><br>` +
     `• 2차 지지선 지정가 (-4.0%): <strong>$${t2}</strong><br>` +
-    `• 현재 선물 펀딩비: <strong>${(fr >= 0 ? '+' : '') + fr.toFixed(4)}%</strong> / RSI(14): <strong>${Math.round(rsi)}</strong>`;
+    `• 현물 ETF 순유입: <strong>${(flow >= 0 ? '+$' : '-$') + Math.abs(flow).toFixed(1)}M</strong> / RSI(14): <strong>${Math.round(rsi)}</strong>`;
 }
 
-/* 내 평단 & 기관 수동 보정 */
+/* 내 평단 · 목표가 알림 & 기관 수동 보정 */
 function initPositionInputs() {
   if (state.avgPrices.BTC) document.getElementById('inp-avg-btc').value = state.avgPrices.BTC;
   if (state.avgPrices.ETH) document.getElementById('inp-avg-eth').value = state.avgPrices.ETH;
+  if (state.alertCfg.btcTarget) document.getElementById('inp-target-btc').value = state.alertCfg.btcTarget;
+  if (state.alertCfg.ethTarget) document.getElementById('inp-target-eth').value = state.alertCfg.ethTarget;
+  document.getElementById('chk-rsi-alert').checked = !!state.alertCfg.rsiAlert;
   updateMyPnlUI();
 }
 
@@ -1516,26 +1681,39 @@ function saveMyAvg() {
   showToast('내 매수평균가가 저장되었습니다');
 }
 
+function saveAlertCfg() {
+  state.alertCfg.btcTarget = parseFloat(document.getElementById('inp-target-btc').value) || 0;
+  state.alertCfg.ethTarget = parseFloat(document.getElementById('inp-target-eth').value) || 0;
+  state.alertCfg.rsiAlert = document.getElementById('chk-rsi-alert').checked;
+  state.alertDismissed = false;
+  localStorage.setItem('cp_alert_cfg', JSON.stringify(state.alertCfg));
+  checkAlerts();
+  showToast('목표가 및 RSI 알림 조건이 저장되었습니다');
+}
+
 function saveManualInst() {
   state.inst.mstrBtc = parseFloat(document.getElementById('cfg-mstr-btc').value) || state.inst.mstrBtc;
   state.inst.mstrDebtB = parseFloat(document.getElementById('cfg-mstr-debt').value) || state.inst.mstrDebtB;
   state.inst.bmnrEth = parseFloat(document.getElementById('cfg-bmnr-eth').value) || state.inst.bmnrEth;
   state.inst.bmnrDebtB = parseFloat(document.getElementById('cfg-bmnr-debt').value) || state.inst.bmnrDebtB;
+  state.inst.btcEtfFlowM = parseFloat(document.getElementById('cfg-btc-etf').value);
+  state.inst.ethEtfFlowM = parseFloat(document.getElementById('cfg-eth-etf').value);
   localStorage.setItem('cp_inst_manual', JSON.stringify(state.inst));
   document.getElementById('sec-sync-badge').textContent = '수동 보정 모드';
   updateInstUI();
   updateStrategy();
-  showToast('기관 수치가 수동 반영되었습니다');
+  showToast('기관 및 ETF 수치가 반영되었습니다');
 }
 
 async function restoreAutoInst() {
   localStorage.removeItem('cp_inst_manual');
   await fetchAutoInstData();
   updateStrategy();
-  showToast('SEC 자동 동기화로 복원되었습니다');
+  showToast('SEC·ETF 자동 동기화로 복원되었습니다');
 }
 
 function manualRefresh() {
+  state.alertDismissed = false;
   fetchInitialMarket();
   fetchDerivativesAndOnchain();
   loadKlines();
