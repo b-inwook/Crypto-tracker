@@ -19,12 +19,115 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Update SEC JSON
-        run: python3 -c "import json;from datetime import datetime,timezone,timedelta;d={'mstrBtc':850364,'mstrAvgCost':75450,'mstrDebtB':6.7,'mstrCashB':4.92,'mstrFilingDate':'2026-11-09','bmnrEth':6070092,'bmnrAvgCost':2810,'bmnrDebtB':0.3,'bmnrCashB':0.48,'bmnrFilingDate':'2026-11-09'};open('inst_data.json','w').write(json.dumps({**d,'updatedAt':datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M KST')},indent=2))"
+      - name: Fetch and Parse SEC EDGAR Filings
+        run: |
+          cat << 'EOF' > fetch_sec.py
+          import json, os, re, urllib.request
+          from datetime import datetime, timezone, timedelta
+
+          HEADERS = {'User-Agent': 'CryptoPulsePro/3.2 (contact@github.com)'}
+
+          def get_json(url):
+              req = urllib.request.Request(url, headers=HEADERS)
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  return json.loads(r.read().decode('utf-8'))
+
+          def get_text(url):
+              req = urllib.request.Request(url, headers=HEADERS)
+              with urllib.request.urlopen(req, timeout=15) as r:
+                  raw = r.read().decode('utf-8', errors='ignore')
+                  return re.sub(r'<[^>]+>', ' ', raw)
+
+          # 기존 inst_data.json 로드 (파싱 실패 시 안전 폴백용)
+          data = {
+              'mstrBtc': 850364,
+              'mstrAvgCost': 75450,
+              'mstrDebtB': 6.7,
+              'mstrCashB': 5.02,
+              'mstrFilingDate': '2026-11-09',
+              'mstrSecUrl': 'https://www.sec.gov/edgar/browse/?CIK=0001050446',
+              'bmnrEth': 6070092,
+              'bmnrAvgCost': 2810,
+              'bmnrDebtB': 0.3,
+              'bmnrCashB': 0.48,
+              'bmnrFilingDate': '2026-11-09',
+              'bmnrSecUrl': 'https://www.sec.gov/edgar/browse/?CIK=0001829311'
+          }
+          if os.path.exists('inst_data.json'):
+              try:
+                  with open('inst_data.json', 'r', encoding='utf-8') as f:
+                      data.update(json.load(f))
+              except Exception:
+                  pass
+
+          # 1. Strategy (CIK: 0001050446) 최신 8-K 파싱
+          try:
+              sub = get_json('https://data.sec.gov/submissions/CIK0001050446.json')
+              recent = sub['filings']['recent']
+              for i, form in enumerate(recent['form']):
+                  if form == '8-K':
+                      acc = recent['accessionNumber'][i].replace('-', '')
+                      doc = recent['primaryDocument'][i]
+                      fdate = recent['filingDate'][i]
+                      url = f"https://www.sec.gov/Archives/edgar/data/1050446/{acc}/{doc}"
+                      data['mstrFilingDate'] = fdate
+                      data['mstrSecUrl'] = url
+                      txt = re.sub(r'\s+', ' ', get_text(url))
+                      m_btc = re.search(r'(?:aggregate\s+bitcoin\s+holdings|held\s+an\s+aggregate\s+of)\s*([\d,]{6,9})\s*bitcoin', txt, re.I)
+                      if m_btc:
+                          val = int(m_btc.group(1).replace(',', ''))
+                          if 500000 < val < 2000000:
+                              data['mstrBtc'] = val
+                      m_cost = re.search(r'average\s+purchase\s+price\s+of\s+(?:approximately\s+)?\$([\d,]{5,6})', txt, re.I)
+                      if m_cost:
+                          cval = int(m_cost.group(1).replace(',', ''))
+                          if 30000 < cval < 200000:
+                              data['mstrAvgCost'] = cval
+                      m_cash = re.search(r'USD\s+Reserve\s+(?:was|of)\s+\$(\d+\.\d+)\s*billion', txt, re.I)
+                      if m_cash:
+                          data['mstrCashB'] = float(m_cash.group(1))
+                      break
+          except Exception as e:
+              print("MSTR parse warning:", e)
+
+          # 2. Bitmine Immersion (CIK: 0001829311) 최신 8-K 파싱
+          try:
+              sub_b = get_json('https://data.sec.gov/submissions/CIK0001829311.json')
+              recent_b = sub_b['filings']['recent']
+              for i, form in enumerate(recent_b['form']):
+                  if form == '8-K':
+                      acc = recent_b['accessionNumber'][i].replace('-', '')
+                      doc = recent_b['primaryDocument'][i]
+                      fdate = recent_b['filingDate'][i]
+                      url = f"https://www.sec.gov/Archives/edgar/data/1829311/{acc}/{doc}"
+                      data['bmnrFilingDate'] = fdate
+                      data['bmnrSecUrl'] = url
+                      txt = re.sub(r'\s+', ' ', get_text(url))
+                      m_eth_m = re.search(r'ETH\s+Holdings\s+Reach\s+(\d+\.\d+)\s*Million', txt, re.I)
+                      m_eth_exact = re.search(r'([\d,]{7,9})\s*ETH', txt, re.I)
+                      if m_eth_exact:
+                          eval_num = int(m_eth_exact.group(1).replace(',', ''))
+                          if 4000000 < eval_num < 15000000:
+                              data['bmnrEth'] = eval_num
+                      elif m_eth_m:
+                          data['bmnrEth'] = int(float(m_eth_m.group(1)) * 1000000)
+                      break
+          except Exception as e:
+              print("BMNR parse warning:", e)
+
+          kst = timezone(timedelta(hours=9))
+          data['updatedAt'] = datetime.now(kst).strftime('%Y-%m-%d %H:%M KST')
+
+          with open('inst_data.json', 'w', encoding='utf-8') as f:
+              json.dump(data, f, indent=2, ensure_ascii=False)
+          print("Updated inst_data.json:", json.dumps(data, ensure_ascii=False))
+          EOF
+          python3 fetch_sec.py
+          rm -f fetch_sec.py
       - name: Commit JSON
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add inst_data.json
-          git diff --staged --quiet || git commit -m "chore: update SEC data"
+          git diff --staged --quiet || git commit -m "chore: parse live SEC EDGAR filings"
           git push
