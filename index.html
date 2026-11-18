@@ -7,8 +7,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Crypto Pulse" />
   <meta name="theme-color" content="#0B0E11" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230B0E11'/%3E%3Cpath d='M26 104h28l16-42 24 72 22-54 14 24h24' fill='none' stroke='%23FCD535' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='154' cy='104' r='8' fill='%230ECB81'/%3E%3C/svg%3E" />
-  <title>Crypto Pulse Pro v4.4</title>
+  <title>Crypto Pulse Pro v5.0</title>
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230B0E11'/%3E%3Crect x='14' y='14' width='152' height='152' rx='30' fill='none' stroke='%23FCD535' stroke-width='4'/%3E%3Cpath d='M36 112 L68 80 L94 98 L142 50' fill='none' stroke='%230ECB81' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='142' cy='50' r='8' fill='%23FCD535'/%3E%3C/svg%3E" />
   <style>
     :root {
       --bg: #0B0E11;
@@ -25,502 +25,1250 @@
       --red-dim: rgba(246, 70, 93, 0.14);
       --blue: #3861FB;
       --blue-dim: rgba(56, 97, 251, 0.15);
+      --purple: #B366FF;
       --nav-h: 64px;
     }
+
     [data-theme="light"] {
       --bg: #F5F7FA;
       --surface: #FFFFFF;
-      --surface-2: #F0F2F5;
+      --surface-2: #F0F3F7;
       --border: #E2E6EC;
       --text: #1E2329;
       --text-sub: #707A8A;
-      --gold: #D9A300;
-      --gold-dim: rgba(217, 163, 0, 0.12);
-      --green: #03A66D;
-      --green-dim: rgba(3, 166, 109, 0.12);
-      --red: #CF304A;
-      --red-dim: rgba(207, 48, 74, 0.12);
+      --gold: #D9A500;
+      --gold-dim: rgba(217, 165, 0, 0.14);
+      --green: #0B9E65;
+      --green-dim: rgba(11, 158, 101, 0.12);
+      --red: #E0354C;
+      --red-dim: rgba(224, 53, 76, 0.12);
       --blue: #2952E3;
       --blue-dim: rgba(41, 82, 227, 0.12);
+      --purple: #8B3DFF;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Pretendard", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
       color: var(--text);
       font-variant-numeric: tabular-nums;
-      padding-top: max(12px, env(safe-area-inset-top));
+      padding-top: max(10px, env(safe-area-inset-top));
       padding-bottom: calc(var(--nav-h) + max(18px, env(safe-area-inset-bottom)));
       line-height: 1.45;
       overflow-x: hidden;
     }
+
     .icon {
-      width: 17px; height: 17px; stroke: currentColor; fill: none;
-      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
     }
-    .container { max-width: 540px; margin: 0 auto; padding: 0 12px; }
+
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 0 12px;
+    }
 
     /* Top Alert Banner */
     .alert-banner {
-      display: none; align-items: center; justify-content: space-between; gap: 8px;
-      background: var(--green-dim); border: 1px solid var(--green); color: var(--text);
-      border-radius: 10px; padding: 9px 12px; margin-bottom: 10px; font-size: 12px; font-weight: 700;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--green-dim);
+      border: 1px solid var(--green);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 600;
     }
-    .alert-banner.warn { background: var(--red-dim); border-color: var(--red); }
-    .alert-banner.gold { background: var(--gold-dim); border-color: var(--gold); }
-    .alert-banner button {
-      background: var(--surface); color: var(--text); border: 1px solid var(--border);
-      border-radius: 6px; padding: 4px 9px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap;
+    .alert-banner.warn {
+      background: var(--red-dim);
+      border-color: var(--red);
+    }
+    .alert-banner.gold {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+    }
+    .alert-close {
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      font-size: 15px;
+      cursor: pointer;
+      padding: 0 4px;
     }
 
     /* Top App Header */
     .app-header {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 4px 2px 10px;
     }
-    .brand { display: flex; align-items: center; gap: 8px; }
-    .brand-dot {
-      width: 10px; height: 10px; border-radius: 50%; background: var(--green);
-      box-shadow: 0 0 8px var(--green);
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .brand-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
-    .brand-ver {
-      font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 5px;
-      background: var(--gold-dim); color: var(--gold);
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .header-actions { display: flex; align-items: center; gap: 6px; }
-    .asset-switch {
-      display: flex; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 9px; padding: 2px;
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+    }
+    .asset-switcher {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 2px;
     }
     .asset-btn {
-      border: none; background: transparent; color: var(--text-sub);
-      font-size: 12px; font-weight: 800; padding: 5px 11px; border-radius: 7px; cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: 0.15s;
     }
-    .asset-btn.active { background: var(--gold); color: #0B0E11; }
+    .asset-btn.active {
+      background: var(--gold);
+      color: #0B0E11;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
     .icon-btn {
-      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--surface); color: var(--text); display: flex; align-items: center; justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
     }
-
-    /* Ticker Header Card */
-    .ticker-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px; margin-bottom: 10px;
-    }
-    .ticker-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .ticker-pair { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-sub); }
-    .ticker-price { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin: 2px 0; }
-    .ticker-sub-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12px; }
-    .chg-pill { font-weight: 700; padding: 2px 6px; border-radius: 5px; }
-    .chg-pill.up { background: var(--green-dim); color: var(--green); }
-    .chg-pill.dn { background: var(--red-dim); color: var(--red); }
-    .krw-txt { color: var(--text-sub); font-weight: 600; }
-    .kimp-pill { font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 5px; background: var(--surface-2); }
-
-    .ticker-stats {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 12px;
-      text-align: right; font-size: 11px;
-    }
-    .t-stat span { display: block; color: var(--text-sub); font-size: 10px; }
-    .t-stat strong { font-weight: 700; font-size: 11.5px; }
-
-    .ticker-badges {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 10px;
-      border-top: 1px solid var(--border);
-    }
-    .mini-chip {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px;
-      background: var(--surface-2); color: var(--text);
+    .icon-btn:active {
+      transform: scale(0.95);
     }
 
-    /* Help Button (?) */
-    .help-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 15px; height: 15px; border-radius: 50%;
-      border: 1px solid var(--text-sub); background: transparent;
-      color: var(--text-sub); font-size: 10px; font-weight: 800;
-      cursor: pointer; line-height: 1; flex-shrink: 0;
-    }
-    .help-btn:active { background: var(--gold); color: #0B0E11; border-color: var(--gold); }
-
-    /* Cards & Sections */
-    .tab-section { display: none; }
-    .tab-section.active { display: block; }
+    /* Cards & Common Elements */
     .card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px; margin-bottom: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      margin-bottom: 10px;
     }
     .card-header {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      margin-bottom: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
     }
-    .card-title { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
     .badge-tag {
-      font-size: 10.5px; font-weight: 700; padding: 3px 7px; border-radius: 6px;
-      background: var(--surface-2); color: var(--text-sub); white-space: nowrap;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2.5px 7px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      color: var(--text-sub);
+      border: 1px solid var(--border);
+      white-space: nowrap;
     }
-    .badge-tag.green { background: var(--green-dim); color: var(--green); }
-    .badge-tag.red { background: var(--red-dim); color: var(--red); }
-    .badge-tag.gold { background: var(--gold-dim); color: var(--gold); }
-    .badge-tag.blue { background: var(--blue-dim); color: var(--blue); }
+    .badge-tag.green {
+      background: var(--green-dim);
+      color: var(--green);
+      border-color: rgba(14, 203, 129, 0.35);
+    }
+    .badge-tag.red {
+      background: var(--red-dim);
+      color: var(--red);
+      border-color: rgba(246, 70, 93, 0.35);
+    }
+    .badge-tag.gold {
+      background: var(--gold-dim);
+      color: var(--gold);
+      border-color: rgba(252, 213, 53, 0.35);
+    }
+    .badge-tag.blue {
+      background: var(--blue-dim);
+      color: var(--blue);
+      border-color: rgba(56, 97, 251, 0.35);
+    }
 
-    /* Chart Toolbar & Canvas */
-    .chart-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .tf-group { display: flex; background: var(--surface-2); border-radius: 8px; padding: 2px; gap: 2px; }
-    .tf-btn, .ctype-btn {
-      border: none; background: transparent; color: var(--text-sub);
-      font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 6px; cursor: pointer;
-    }
-    .tf-btn.active, .ctype-btn.active { background: var(--surface); color: var(--gold); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
-
-    .overlay-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
-    .chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px;
-      background: var(--surface-2); color: var(--text-sub); border: 1px solid transparent; cursor: pointer;
-    }
-    .chip.active { color: var(--text); border-color: var(--border); background: var(--surface-2); }
-    .chip.active::before {
-      content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+    .help-btn {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-sub);
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      vertical-align: middle;
     }
 
-    .ma-legend-row {
-      display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
-      font-size: 10px; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; padding: 0 2px;
+    /* Ticker Grid */
+    .ticker-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
     }
-    .ma-dot { display: inline-block; width: 7px; height: 2px; vertical-align: middle; margin-right: 3px; }
+    .ticker-symbol-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+    .ticker-symbol {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .ticker-usd-row {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+    }
+    .ticker-usd {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+    }
+    .chg-pill {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    .chg-pill.up {
+      background: var(--green-dim);
+      color: var(--green);
+    }
+    .chg-pill.dn {
+      background: var(--red-dim);
+      color: var(--red);
+    }
+    .ticker-krw-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 3px;
+      font-size: 12.5px;
+      color: var(--text-sub);
+    }
+    .ticker-krw {
+      font-weight: 700;
+      color: var(--text);
+    }
+    .ticker-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px 12px;
+      font-size: 11px;
+      text-align: right;
+    }
+    .stat-lbl {
+      color: var(--text-sub);
+      display: block;
+      font-size: 10px;
+    }
+    .stat-val {
+      font-weight: 700;
+      color: var(--text);
+    }
+    .ticker-chips {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-sub);
+      flex-wrap: wrap;
+    }
+    .chip-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Tab Sections */
+    .tab-section {
+      display: none;
+    }
+    .tab-section.active {
+      display: block;
+    }
+
+    /* Chart Controls & Canvas */
+    .chart-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .tf-group {
+      display: inline-flex;
+      background: var(--surface-2);
+      border-radius: 7px;
+      padding: 2px;
+    }
+    .tf-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .tf-btn.active {
+      background: var(--surface);
+      color: var(--gold);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+    .overlay-chips {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .overlay-chips::-webkit-scrollbar {
+      display: none;
+    }
+    .ov-chip {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-sub);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3.5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ov-chip.on {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-dim);
+    }
+    .ma-legend {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 10px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .ma-legend span::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 2px;
+      margin-right: 3px;
+      vertical-align: middle;
+    }
+    .ma-legend .l5::before { background: #FCD535; }
+    .ma-legend .l10::before { background: #3861FB; }
+    .ma-legend .l20::before { background: #E040FB; }
+    .ma-legend .l60::before { background: #00BCD4; }
 
     .chart-hud {
-      display: flex; justify-content: space-between; align-items: center; gap: 6px;
-      font-size: 10.5px; color: var(--text-sub); background: var(--surface-2);
-      padding: 5px 8px; border-radius: 6px; margin-bottom: 6px; min-height: 27px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10.5px;
+      color: var(--text-sub);
+      background: var(--surface-2);
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      min-height: 24px;
     }
     .hud-reset-btn {
-      border: 1px solid var(--border); background: var(--surface); color: var(--gold);
-      border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    .canvas-wrap { position: relative; width: 100%; height: 305px; touch-action: pan-y; }
-    canvas#pro-chart { width: 100%; height: 100%; display: block; }
+    .canvas-wrap {
+      width: 100%;
+      height: 310px;
+      position: relative;
+      touch-action: pan-y;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
     /* Fear & Greed */
-    .fng-main-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .fng-score-row { display: flex; align-items: baseline; gap: 8px; }
-    .fng-num { font-size: 30px; font-weight: 800; }
-    .fng-label { font-size: 14px; font-weight: 700; }
-    .fng-7d { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
-    .fng-day { background: var(--surface-2); border-radius: 7px; padding: 6px 2px; }
-    .fng-day span { display: block; font-size: 10px; color: var(--text-sub); margin-bottom: 2px; }
-    .fng-day strong { font-size: 12px; font-weight: 700; }
-
-    /* AI DCA Hero & 6-Tier */
-    .dca-hero-wrap {
-      display: flex; align-items: center; gap: 14px;
-      background: var(--surface-2); border-radius: 12px; padding: 12px; margin-bottom: 12px;
+    .fng-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0 10px;
     }
-    .gauge-box { position: relative; width: 78px; height: 78px; flex-shrink: 0; }
-    .gauge-box svg { width: 78px; height: 78px; transform: rotate(-90deg); }
-    .gauge-track { fill: none; stroke: var(--border); stroke-width: 7; }
-    .gauge-fill {
-      fill: none; stroke: var(--green); stroke-width: 7; stroke-linecap: round;
-      stroke-dasharray: 213.6; stroke-dashoffset: 213.6; transition: stroke-dashoffset 0.5s ease;
+    .fng-score-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .fng-val {
+      font-size: 30px;
+      font-weight: 800;
+    }
+    .fng-cls {
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .fng-7d {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .fng-day {
+      background: var(--surface-2);
+      border-radius: 6px;
+      padding: 5px 2px;
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+    .fng-day strong {
+      display: block;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    /* =====================================================
+       v5.0 AI Multi-Horizon Strategy Styles
+       ===================================================== */
+    .horizon-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-bottom: 11px;
+    }
+    .hz-mini-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .hz-mini-card:active {
+      transform: scale(0.97);
+    }
+    .hz-mini-card.selected {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+    }
+    .hz-mini-lbl {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-sub);
+      display: block;
+    }
+    .hz-mini-sub {
+      font-size: 9.5px;
+      color: var(--text-sub);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .hz-mini-score {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .hz-mini-tag {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+    }
+
+    .dca-hero {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 6px 0 10px;
+    }
+    .gauge-box {
+      position: relative;
+      width: 78px;
+      height: 78px;
+      flex-shrink: 0;
+    }
+    .gauge-box svg {
+      width: 78px;
+      height: 78px;
+      transform: rotate(-90deg);
+    }
+    .gauge-bg {
+      fill: none;
+      stroke: var(--surface-2);
+      stroke-width: 7;
+    }
+    .gauge-fg {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-dasharray: 213.6;
+      stroke-dashoffset: 106.8;
+      transition: stroke-dashoffset 0.5s ease, stroke 0.3s ease;
     }
     .gauge-center {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    .gauge-num { font-size: 20px; font-weight: 800; line-height: 1.1; }
-    .gauge-denom { font-size: 9.5px; color: var(--text-sub); }
-    .dca-hero-info { flex: 1; min-width: 0; }
-    .dca-tier-badge {
-      display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 7px;
-      border-radius: 5px; margin-bottom: 4px;
+    .gauge-num {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
     }
-    .dca-hero-headline { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
-    .dca-hero-action { font-size: 12px; color: var(--text-sub); }
+    .gauge-unit {
+      font-size: 9.5px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+    .dca-summary {
+      flex: 1;
+      min-width: 0;
+    }
+    .dca-headline {
+      font-size: 14px;
+      font-weight: 800;
+      margin: 4px 0 3px;
+    }
+    .dca-action {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
 
-    .tier-legend-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 12px;
+    /* Seed Allocation Stacked Bar */
+    .seed-alloc-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
     }
-    .tier-cell {
-      background: var(--surface-2); border: 1px solid transparent; border-radius: 7px;
-      padding: 6px 7px; font-size: 10.5px;
+    .seed-alloc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
     }
-    .tier-cell.current { border-color: var(--gold); background: var(--gold-dim); }
-    .tier-cell strong { display: block; font-size: 11px; }
-    .tier-cell span { color: var(--text-sub); font-size: 10px; }
-
-    .factor-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 12px; }
-    .factor-item { background: var(--surface-2); border-radius: 9px; padding: 9px 10px; }
-    .factor-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 5px; }
-    .factor-name { display: flex; align-items: center; gap: 5px; font-weight: 700; }
-    .factor-score { font-weight: 800; color: var(--gold); }
-    .progress-track { width: 100%; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s ease; }
-    .factor-desc { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
-
-    .limit-guide-box {
-      background: var(--surface-2); border-left: 3px solid var(--gold);
-      border-radius: 8px; padding: 10px 12px;
+    .seed-bar {
+      display: flex;
+      height: 9px;
+      border-radius: 5px;
+      overflow: hidden;
+      background: var(--bg);
+      margin-bottom: 7px;
     }
-    .limit-guide-title {
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 12.5px; font-weight: 800; color: var(--gold); margin-bottom: 6px;
+    .seed-seg-short { background: var(--blue); transition: width 0.4s; }
+    .seed-seg-mid { background: var(--gold); transition: width 0.4s; }
+    .seed-seg-long { background: var(--green); transition: width 0.4s; }
+    .seed-seg-cash { background: var(--border); transition: width 0.4s; }
+    .seed-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      font-size: 10.5px;
+      color: var(--text-sub);
     }
-    .limit-guide-list { list-style: none; font-size: 11.5px; display: flex; flex-direction: column; gap: 6px; }
-    .limit-krw-sub { display: block; color: var(--text-sub); font-size: 10.5px; padding-left: 10px; }
-
-    /* Intelligence Grid */
-    .metric-2col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .sub-tile { background: var(--surface-2); border-radius: 10px; padding: 10px; }
-    .sub-tile-top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-sub); margin-bottom: 4px; }
-    .sub-tile-label { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
-    .sub-tile-val { font-size: 16px; font-weight: 800; }
-    .sub-tile-foot { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
-    .etf-summary-note { font-size: 11.5px; color: var(--text-sub); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-
-    .halving-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-    .h-box { background: var(--surface-2); border-radius: 8px; padding: 8px; text-align: center; }
-    .h-box label { display: block; font-size: 10.5px; color: var(--text-sub); margin-bottom: 2px; }
-    .h-box strong { font-size: 12.5px; font-weight: 800; }
-
-    .inst-card { background: var(--surface-2); border-radius: 10px; padding: 11px; }
-    .inst-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; }
-    .inst-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .inst-metric span { display: block; font-size: 10.5px; color: var(--text-sub); }
-    .inst-metric strong { font-size: 12.5px; font-weight: 700; }
-    .sec-link { display: inline-block; margin-top: 8px; font-size: 11px; color: var(--gold); text-decoration: none; font-weight: 700; }
-
-    /* News Monitor */
-    .news-window-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 8px; margin-bottom: 8px; }
-    .nw-btn {
-      border: none; background: transparent; color: var(--text-sub);
-      font-size: 11px; font-weight: 700; padding: 5px 4px; border-radius: 6px; cursor: pointer;
+    .seed-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 4px;
     }
-    .nw-btn.active { background: var(--surface); color: var(--gold); }
-    .news-count-bar {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
-      font-size: 11px; color: var(--text-sub); margin-bottom: 8px;
-    }
-    .news-count-pills { display: flex; gap: 4px; }
-    .news-item { padding: 11px 0; border-bottom: 1px solid var(--border); }
-    .news-item:last-child { border-bottom: none; }
-    .news-meta { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--text-sub); margin-bottom: 4px; }
-    .news-title { display: block; font-size: 13px; font-weight: 700; color: var(--text); text-decoration: none; margin-bottom: 5px; line-height: 1.4; }
-    .news-body-sum { font-size: 11.5px; color: var(--text-sub); margin-bottom: 5px; line-height: 1.45; }
-    .news-reason {
-      font-size: 11px; color: var(--text); background: var(--surface-2);
-      border-left: 2.5px solid var(--gold); padding: 5px 8px; border-radius: 0 6px 6px 0;
-    }
-    .news-reason.bull { border-left-color: var(--green); }
-    .news-reason.bear { border-left-color: var(--red); }
 
-    .period-briefing-panel {
-      margin-top: 12px; background: var(--surface-2); border-radius: 10px; padding: 11px;
+    /* Avg-Down (물타기) Advice Banner inside Strategy */
+    .avgdown-box {
+      margin-top: 9px;
+      padding: 9px 11px;
+      border-radius: 9px;
+      background: var(--blue-dim);
+      border: 1px solid rgba(56, 97, 251, 0.35);
+      font-size: 11.5px;
+    }
+    .avgdown-box.warn {
+      background: var(--gold-dim);
+      border-color: rgba(252, 213, 53, 0.35);
+    }
+    .avgdown-title {
+      font-weight: 800;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Horizon Session Switcher Tabs */
+    .horizon-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+    .hz-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .hz-tab-btn.active {
+      background: var(--gold);
+      color: #0B0E11;
+    }
+
+    /* Factor Bars */
+    .factor-item {
+      margin-bottom: 11px;
+    }
+    .factor-item:last-child {
+      margin-bottom: 0;
+    }
+    .factor-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .factor-score {
+      color: var(--gold);
+    }
+    .progress-track {
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--green));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+    .factor-desc {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    /* Limit Order Targets List */
+    .limit-list {
+      list-style: none;
+      font-size: 12.5px;
+    }
+    .limit-list li {
+      padding: 8px 10px;
+      background: var(--surface-2);
+      border-radius: 8px;
+      margin-bottom: 7px;
+      border-left: 3px solid var(--green);
+    }
+    .limit-list li.resist {
+      border-left-color: var(--gold);
+    }
+    .limit-list li:last-child {
+      margin-bottom: 0;
+    }
+    .limit-krw-sub {
+      display: block;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    /* Comparison Matrix Table (All-in-One Session) */
+    .matrix-row {
+      background: var(--surface-2);
+      border-radius: 9px;
+      padding: 9px 10px;
+      margin-bottom: 7px;
       border: 1px solid var(--border);
     }
-    .briefing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .briefing-title { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 800; color: var(--gold); }
-    .briefing-item { font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.45; }
-    .briefing-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .briefing-src { color: var(--gold); font-size: 11px; font-weight: 700; text-decoration: none; margin-left: 4px; }
+    .matrix-row:last-child {
+      margin-bottom: 0;
+    }
+    .matrix-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+    .matrix-body {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-    /* Forms & Position */
-    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 11.5px; color: var(--text-sub); margin-bottom: 4px; font-weight: 600; }
-    .form-group input {
-      width: 100%; background: var(--surface-2); border: 1px solid var(--border);
-      color: var(--text); border-radius: 8px; padding: 9px 10px; font-size: 14px; font-weight: 700;
+    /* 6-Tier Legend */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .tier-cell {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px;
+      text-align: center;
+      font-size: 10.5px;
+    }
+    .tier-cell.current {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+    }
+    .tier-cell strong {
+      display: block;
+      font-size: 11.5px;
+    }
+
+    /* Intelligence Sub-Tiles */
+    .etf-grid, .sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .sub-tile {
+      background: var(--surface-2);
+      border-radius: 9px;
+      padding: 9px 10px;
+    }
+    .sub-tile-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      color: var(--text-sub);
+      margin-bottom: 3px;
+    }
+    .sub-tile-val {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .sub-tile-foot {
+      font-size: 10.5px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+    .kv-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .kv-row:last-child {
+      border-bottom: none;
+    }
+    .kv-lbl {
+      color: var(--text-sub);
+    }
+    .kv-val {
+      font-weight: 700;
+    }
+
+    /* News Feed */
+    .news-filters {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 9px;
+    }
+    .news-win-btn {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-sub);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 0;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    .news-win-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-dim);
+    }
+    .news-sent-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-2);
+      padding: 6px 9px;
+      border-radius: 7px;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+    .news-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .news-item:last-child {
+      border-bottom: none;
+      padding-bottom: 2px;
+    }
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10.5px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+    .news-title {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      margin-bottom: 4px;
+    }
+    .news-body-sum {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+    .news-reason {
+      font-size: 10.5px;
+      color: var(--text-sub);
+      background: var(--surface-2);
+      padding: 4px 7px;
+      border-radius: 5px;
+    }
+    .news-reason.bull { border-left: 2.5px solid var(--green); }
+    .news-reason.bear { border-left: 2.5px solid var(--red); }
+
+    .briefing-box {
+      margin-top: 10px;
+      background: var(--surface-2);
+      border-radius: 9px;
+      padding: 10px;
+      border: 1px solid var(--border);
+    }
+    .briefing-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .briefing-item {
+      font-size: 11.5px;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+    .briefing-src {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 10.5px;
+      margin-left: 4px;
+    }
+
+    /* Forms in My Position Tab (KRW Auto-USD Conversion) */
+    .fx-rate-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: var(--gold-dim);
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .form-group {
+      margin-bottom: 9px;
+    }
+    .form-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+    .form-group input[type="number"] {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .form-group input[type="number"]:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .input-helper {
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 600;
+      margin-top: 3px;
+      min-height: 15px;
+    }
+    .converted-preview-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 9px 11px;
+      margin-bottom: 10px;
+      font-size: 12px;
     }
     .checkbox-row {
-      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;
-      color: var(--text); margin-bottom: 10px; cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 10px;
+      cursor: pointer;
     }
-    .checkbox-row input { width: 16px; height: 16px; accent-color: var(--gold); }
     .btn-primary {
-      width: 100%; border: none; background: var(--gold); color: #0B0E11;
-      font-size: 13px; font-weight: 800; padding: 11px; border-radius: 9px; cursor: pointer;
+      width: 100%;
+      background: var(--gold);
+      color: #0B0E11;
+      border: none;
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-primary:active {
+      opacity: 0.9;
     }
     .btn-secondary {
-      width: 100%; border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
-      font-size: 12px; font-weight: 700; padding: 9px; border-radius: 9px; cursor: pointer; margin-top: 8px;
-    }
-    .pnl-summary {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-top: 10px; padding: 10px; background: var(--surface-2); border-radius: 8px; font-size: 12px;
+      width: 100%;
+      background: var(--surface-2);
+      color: var(--text-sub);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 7px;
+      cursor: pointer;
     }
 
     /* Bottom Navigation */
     .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       height: calc(var(--nav-h) + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
-      background: var(--surface); border-top: 1px solid var(--border);
-      display: grid; grid-template-columns: repeat(4, 1fr); z-index: 90;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 90;
     }
     .nav-item {
-      border: none; background: transparent; color: var(--text-sub);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 3px; font-size: 10.5px; font-weight: 700; cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .nav-item.active { color: var(--gold); }
+    .nav-item.active {
+      color: var(--gold);
+    }
 
-    /* Help Bottom Sheet Modal */
-    .help-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 120;
-      display: none; align-items: flex-end; justify-content: center;
+    /* Help Bottom Sheet & Toast */
+    .sheet-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.62);
+      z-index: 120;
+      align-items: flex-end;
+      justify-content: center;
     }
-    .help-backdrop.open { display: flex; }
-    .help-sheet {
-      width: 100%; max-width: 540px; background: var(--surface);
-      border-top-left-radius: 18px; border-top-right-radius: 18px;
+    .sheet-backdrop.open {
+      display: flex;
+    }
+    .sheet-panel {
+      width: 100%;
+      max-width: 540px;
+      background: var(--surface);
       border-top: 1px solid var(--border);
-      padding: 18px 16px calc(22px + env(safe-area-inset-bottom));
+      border-radius: 18px 18px 0 0;
+      padding: 18px 18px calc(22px + env(safe-area-inset-bottom));
     }
-    .help-sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .help-sheet-title { font-size: 16px; font-weight: 800; color: var(--gold); }
-    .help-close {
-      border: none; background: var(--surface-2); color: var(--text);
-      width: 28px; height: 28px; border-radius: 50%; font-weight: 800; cursor: pointer;
+    .sheet-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .help-body { font-size: 13px; color: var(--text); line-height: 1.55; }
-    .help-tip {
-      margin-top: 10px; padding: 10px; border-radius: 9px;
-      background: var(--surface-2); border-left: 3px solid var(--green);
-      font-size: 12px; color: var(--text-sub);
+    .sheet-desc {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 9px;
+    }
+    .sheet-tip {
+      font-size: 12px;
+      color: var(--gold);
+      background: var(--gold-dim);
+      padding: 9px 11px;
+      border-radius: 9px;
     }
 
-    /* Toast & Footer */
     .toast {
-      position: fixed; top: max(16px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
-      background: var(--surface-2); color: var(--text); border: 1px solid var(--gold);
-      padding: 8px 14px; border-radius: 99px; font-size: 12px; font-weight: 700;
-      z-index: 150; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+      position: fixed;
+      bottom: calc(var(--nav-h) + 14px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--gold);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s;
+      z-index: 150;
+      white-space: nowrap;
     }
-    .toast.show { opacity: 1; }
-    .footer-sync { text-align: center; font-size: 11px; color: var(--text-sub); padding: 8px 0 12px; }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .sync-footer {
+      text-align: center;
+      font-size: 10.5px;
+      color: var(--text-sub);
+      padding: 6px 0 10px;
+    }
   </style>
 </head>
 <body>
 <div class="container">
-
-  <!-- Real-time RSI / Target Price Alert Banner -->
+  <!-- Top Alert Banner -->
   <div class="alert-banner" id="top-alert-banner">
-    <span id="top-alert-text">매수 신호 감지</span>
-    <button type="button" onclick="dismissAlert()">확인</button>
+    <span id="top-alert-text">알림 메시지</span>
+    <button type="button" class="alert-close" onclick="dismissAlert()">✕</button>
   </div>
 
   <!-- App Header -->
   <header class="app-header">
-    <div class="brand">
-      <span class="brand-dot" id="ws-status-dot"></span>
-      <span class="brand-title">Crypto Pulse</span>
-      <span class="brand-ver">PRO v4.4</span>
+    <div class="brand-area">
+      <div class="brand-title">
+        <span class="live-dot" id="ws-status-dot"></span>
+        <span>Crypto Pulse</span>
+      </div>
+      <div class="asset-switcher">
+        <button type="button" class="asset-btn active" id="btn-asset-BTC" onclick="switchAsset('BTC')">BTC</button>
+        <button type="button" class="asset-btn" id="btn-asset-ETH" onclick="switchAsset('ETH')">ETH</button>
+      </div>
     </div>
     <div class="header-actions">
-      <div class="asset-switch">
-        <button type="button" class="asset-btn active" id="btn-asset-BTC" onclick="setAsset('BTC')">BTC</button>
-        <button type="button" class="asset-btn" id="btn-asset-ETH" onclick="setAsset('ETH')">ETH</button>
-      </div>
-      <button type="button" class="icon-btn" onclick="manualRefresh()" title="새로고침">
-        <svg class="icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-      </button>
       <button type="button" class="icon-btn" onclick="toggleTheme()" title="테마 전환">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      </button>
+      <button type="button" class="icon-btn" onclick="manualRefresh(false)" title="새로고침">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
       </button>
     </div>
   </header>
 
   <!-- Live Dual-Currency Ticker Card -->
-  <section class="ticker-card">
+  <section class="card">
     <div class="ticker-top">
       <div>
-        <div class="ticker-pair">
-          <span id="ticker-symbol">BTC / USDT</span>
+        <div class="ticker-symbol-row">
+          <span class="ticker-symbol" id="ticker-symbol">BTC / USDT</span>
           <span class="badge-tag" id="ticker-rsi-badge">RSI --</span>
           <button type="button" class="help-btn" onclick="openHelp('rsi')">?</button>
         </div>
-        <div class="ticker-price" id="ticker-usd">$--</div>
-        <div class="ticker-sub-row">
+        <div class="ticker-usd-row">
+          <span class="ticker-usd" id="ticker-usd">$--</span>
           <span class="chg-pill up" id="ticker-chg">0.00%</span>
-          <span class="krw-txt" id="ticker-krw">₩--</span>
-          <span class="kimp-pill" id="ticker-kimp">김프 --%</span>
+        </div>
+        <div class="ticker-krw-row">
+          <span class="ticker-krw" id="ticker-krw">₩--</span>
+          <span id="ticker-kimp">김프 0.00%</span>
           <button type="button" class="help-btn" onclick="openHelp('kimp')">?</button>
         </div>
       </div>
       <div class="ticker-stats">
-        <div class="t-stat"><span>24h 최고</span><strong id="ticker-high">$--</strong></div>
-        <div class="t-stat"><span>24h 최저</span><strong id="ticker-low">$--</strong></div>
-        <div class="t-stat"><span>24h 거래대금</span><strong id="ticker-vol">--</strong></div>
-        <div class="t-stat"><span>고점 대비 (ATH)</span><strong id="ticker-ath-dd" style="color:var(--red);">--%</strong></div>
+        <div><span class="stat-lbl">24h 최고</span><span class="stat-val" id="ticker-high">--</span></div>
+        <div><span class="stat-lbl">24h 최저</span><span class="stat-val" id="ticker-low">--</span></div>
+        <div><span class="stat-lbl">24h 거래대금</span><span class="stat-val" id="ticker-vol">--</span></div>
+        <div><span class="stat-lbl">고점(ATH) 대비</span><span class="stat-val" id="ticker-ath-dd">--</span></div>
       </div>
     </div>
-
-    <div class="ticker-badges">
-      <div class="mini-chip">
-        <span>8h 펀딩비: <strong id="chip-funding">--%</strong></span>
+    <div class="ticker-chips">
+      <div class="chip-item">
+        <span>ATH 낙폭: <strong id="chip-ath-val">--</strong></span>
+        <button type="button" class="help-btn" onclick="openHelp('ath_dd')">?</button>
+      </div>
+      <div class="chip-item">
+        <span>8h 펀딩비: <strong id="chip-funding">--</strong></span>
         <button type="button" class="help-btn" onclick="openHelp('funding')">?</button>
       </div>
-      <div class="mini-chip">
+      <div class="chip-item">
         <span id="chip-rel-label">Mayer 배수: <strong id="chip-rel-val">--</strong></span>
         <button type="button" class="help-btn" onclick="openHelp('rel_metric')">?</button>
-      </div>
-      <div class="mini-chip">
-        <span>ATH 하락률: <strong id="chip-ath-val">--%</strong></span>
-        <button type="button" class="help-btn" onclick="openHelp('ath_dd')">?</button>
       </div>
     </div>
   </section>
 
-  <!-- TAB 1: PRO CHART -->
+  <!-- =====================================================
+       TAB 1: PRO CHART & FEAR/GREED
+       ===================================================== -->
   <section class="tab-section active" id="tab-chart">
     <div class="card">
       <div class="chart-toolbar">
         <div class="tf-group">
-          <button type="button" class="tf-btn" data-tf="1h" onclick="setTimeframe('1h')">1시간</button>
-          <button type="button" class="tf-btn active" data-tf="1d" onclick="setTimeframe('1d')">일</button>
-          <button type="button" class="tf-btn" data-tf="1w" onclick="setTimeframe('1w')">주</button>
-          <button type="button" class="tf-btn" data-tf="1M" onclick="setTimeframe('1M')">월</button>
+          <button type="button" class="tf-btn" data-tf="1h" onclick="changeTimeframe('1h')">1시간</button>
+          <button type="button" class="tf-btn active" data-tf="1d" onclick="changeTimeframe('1d')">일</button>
+          <button type="button" class="tf-btn" data-tf="1w" onclick="changeTimeframe('1w')">주</button>
+          <button type="button" class="tf-btn" data-tf="1M" onclick="changeTimeframe('1M')">월</button>
         </div>
         <div class="tf-group">
-          <button type="button" class="ctype-btn active" data-ctype="candle" onclick="setChartType('candle')">캔들</button>
-          <button type="button" class="ctype-btn" data-ctype="line" onclick="setChartType('line')">라인</button>
+          <button type="button" class="tf-btn active" id="btn-ct-candle" onclick="setChartType('candle')">캔들</button>
+          <button type="button" class="tf-btn" id="btn-ct-line" onclick="setChartType('line')">라인</button>
         </div>
       </div>
 
       <div class="overlay-chips">
-        <div class="chip active" id="chip-ma" onclick="toggleOverlay('ma')">
-          <span>MA 5/10/20/60</span>
-          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('ma')">?</button>
-        </div>
-        <div class="chip active" id="chip-bb" onclick="toggleOverlay('bb')">
-          <span>볼린저밴드</span>
-          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('bb')">?</button>
-        </div>
-        <div class="chip active" id="chip-bs" onclick="toggleOverlay('bs')">
-          <span>B/S 타점핀</span>
-          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('bs_pin')">?</button>
-        </div>
-        <div class="chip active" id="chip-avg" onclick="toggleOverlay('avg')">
-          <span>매수평균선</span>
-          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('avg_line')">?</button>
-        </div>
+        <button type="button" class="ov-chip on" id="ov-ma" onclick="toggleOverlay('ma')">MA 5·10·20·60</button>
+        <button type="button" class="ov-chip on" id="ov-bb" onclick="toggleOverlay('bb')">볼린저밴드</button>
+        <button type="button" class="ov-chip on" id="ov-bs" onclick="toggleOverlay('bs')">B/S 타점핀</button>
+        <button type="button" class="ov-chip on" id="ov-avg" onclick="toggleOverlay('avg')">매수평균선</button>
       </div>
 
-      <div class="ma-legend-row" id="ma-legend-row">
-        <span><i class="ma-dot" style="background:#FCD535;"></i>MA5</span>
-        <span><i class="ma-dot" style="background:#3861FB;"></i>MA10</span>
-        <span><i class="ma-dot" style="background:#E040FB;"></i>MA20</span>
-        <span><i class="ma-dot" style="background:#00BCD4;"></i>MA60</span>
-        <span style="margin-left:auto; color:var(--text-sub);">거래량 · RSI(14)/Sig(9)</span>
+      <div class="ma-legend">
+        <span class="l5">MA5</span>
+        <span class="l10">MA10</span>
+        <span class="l20">MA20</span>
+        <span class="l60">MA60</span>
+        <button type="button" class="help-btn" onclick="openHelp('ma')">?</button>
       </div>
 
-      <div class="chart-hud" id="chart-hud">
+      <div class="chart-hud">
         <span id="hud-left">차트를 터치·드래그하여 시점별 OHLC/RSI 조회</span>
-        <span id="hud-right">RSI(14) · Sig(9)</span>
+        <span id="hud-right">RSI --</span>
       </div>
 
       <div class="canvas-wrap" id="canvas-wrap">
@@ -528,280 +1276,322 @@
       </div>
     </div>
 
-    <!-- Sentiment Card -->
+    <!-- Fear & Greed Card -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"></path></svg>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"></path><path d="M12 6v6l4 2"></path></svg>
           <span id="fng-card-title">BTC 공포·탐욕 지수</span>
           <button type="button" class="help-btn" onclick="openHelp('fng')">?</button>
         </div>
         <span class="badge-tag" id="fng-source-tag">Alternative API · 7일</span>
       </div>
-      <div class="fng-main-row">
-        <div class="fng-score-row">
-          <span class="fng-num" id="active-fng-val">--</span>
-          <span class="fng-label" id="active-fng-class">로딩중</span>
+      <div class="fng-main">
+        <div class="fng-score-box">
+          <span class="fng-val" id="active-fng-val">--</span>
+          <span class="fng-cls" id="active-fng-class">로딩중</span>
         </div>
-        <span class="badge-tag" id="fng-guide-tag">역발상 심리 지표</span>
+        <span class="badge-tag gold">역발상 심리 지표</span>
       </div>
       <div class="fng-7d" id="active-fng-7d"></div>
     </div>
   </section>
 
-  <!-- TAB 2: AI DCA STRATEGY -->
-  <section class="tab-section" id="tab-strategy">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-          <span id="strat-detail-title">BTC AI 분할 매수(DCA)</span>
-          <button type="button" class="help-btn" onclick="openHelp('dca_main')">?</button>
-        </div>
-        <span class="badge-tag green" id="strat-alloc-pill">분석중</span>
-      </div>
-
-      <div class="dca-hero-wrap">
-        <div class="gauge-box">
-          <svg viewBox="0 0 80 80">
-            <circle class="gauge-track" cx="40" cy="40" r="34"></circle>
-            <circle class="gauge-fill" id="dca-gauge-circle" cx="40" cy="40" r="34"></circle>
-          </svg>
-          <div class="gauge-center">
-            <span class="gauge-num" id="strat-hero-score">--</span>
-            <span class="gauge-denom">/ 100점</span>
-          </div>
-        </div>
-        <div class="dca-hero-info">
-          <span class="dca-tier-badge badge-tag green" id="strat-tier-badge">등급 산출중</span>
-          <div class="dca-hero-headline" id="strat-hero-grade">6대 멀티팩터·ATH 분석 중</div>
-          <div class="dca-hero-action" id="strat-action-short">권장 분할 진입 비중 계산 중...</div>
-        </div>
-      </div>
-
-      <div class="tier-legend-grid" id="tier-legend-grid">
-        <div class="tier-cell" data-tier="SS"><strong>SS (92~100)</strong><span>30~35% 투매매집</span></div>
-        <div class="tier-cell" data-tier="S"><strong>S (82~91)</strong><span>20~25% 적극매집</span></div>
-        <div class="tier-cell" data-tier="A"><strong>A (68~81)</strong><span>10~15% 분할추매</span></div>
-        <div class="tier-cell" data-tier="B"><strong>B (50~67)</strong><span>5~10% 소액적립</span></div>
-        <div class="tier-cell" data-tier="C"><strong>C (35~49)</strong><span>진입보류·관망</span></div>
-        <div class="tier-cell" data-tier="D"><strong>D (0~34)</strong><span>매수중단·익절</span></div>
-      </div>
-
-      <div class="factor-list" id="strat-factor-list"></div>
-
-      <div class="limit-guide-box">
-        <div class="limit-guide-title">
-          <span id="limit-guide-title">AI 지정가 분할 매수 타점 (BTC)</span>
-          <button type="button" class="help-btn" onclick="openHelp('limit_krw')">?</button>
-        </div>
-        <ul class="limit-guide-list" id="limit-guide-list">
-          <li>• 1차 눌림목 지정가: 시세 연결 중...</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- TAB 3: INTELLIGENCE -->
+  <!-- =====================================================
+       TAB 2: INTELLIGENCE (ETF, DERIVATIVES, HALVING, INST, NEWS)
+       ===================================================== -->
   <section class="tab-section" id="tab-intel">
-
-    <!-- 1. US Spot ETF Net Flow -->
+    <!-- US Spot ETF Net Flow -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
           <span>미국 현물 ETF 순유입 (Net Flow)</span>
           <button type="button" class="help-btn" onclick="openHelp('etf_flow')">?</button>
         </div>
-        <span class="badge-tag gold" id="etf-date-badge">--</span>
+        <span class="badge-tag" id="etf-date-badge">--</span>
       </div>
-
-      <div class="metric-2col">
+      <div class="etf-grid">
         <div class="sub-tile">
-          <div class="sub-tile-top">
-            <span class="sub-tile-label">BTC 현물 ETF <button type="button" class="help-btn" onclick="openHelp('etf_btc')">?</button></span>
-            <span>IBIT·FBTC</span>
-          </div>
+          <div class="sub-tile-top"><span>BTC 현물 ETF</span><span>IBIT·FBTC</span></div>
           <div class="sub-tile-val" id="etf-btc-val">--</div>
-          <div class="sub-tile-foot" id="etf-btc-sub">데이터 로딩중</div>
+          <div class="sub-tile-foot" id="etf-btc-sub">일간 자금 흐름</div>
         </div>
-
         <div class="sub-tile">
-          <div class="sub-tile-top">
-            <span class="sub-tile-label">ETH 현물 ETF <button type="button" class="help-btn" onclick="openHelp('etf_eth')">?</button></span>
-            <span>ETHA·FETH</span>
-          </div>
+          <div class="sub-tile-top"><span>ETH 현물 ETF</span><span>ETHA·FETH</span></div>
           <div class="sub-tile-val" id="etf-eth-val">--</div>
-          <div class="sub-tile-foot" id="etf-eth-sub">데이터 로딩중</div>
+          <div class="sub-tile-foot" id="etf-eth-sub">일간 자금 흐름</div>
         </div>
       </div>
-      <div class="etf-summary-note" id="etf-summary-note">기관 현물 ETF 일간 순유입·유출 수급 모니터</div>
+      <div style="font-size:11px; color:var(--text-sub); margin-top:8px;" id="etf-summary-note">데이터 동기화 중...</div>
     </div>
 
-    <!-- 2. Derivatives, On-Chain & ATH Drawdown -->
+    <!-- Derivatives & On-chain -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
           <span id="deriv-card-title">BTC 파생상품 수급 & 온체인</span>
-          <button type="button" class="help-btn" onclick="openHelp('deriv_onchain')">?</button>
+          <button type="button" class="help-btn" onclick="openHelp('deriv_oi')">?</button>
         </div>
-        <span class="badge-tag green" id="deriv-regime-badge">수급 분석중</span>
+        <span class="badge-tag" id="deriv-regime-badge">수급 분석중</span>
       </div>
-      <div class="metric-2col" id="deriv-grid"></div>
+      <div class="sub-grid" id="deriv-grid"></div>
     </div>
 
-    <!-- 3. Bitcoin 5th Halving Tracker -->
+    <!-- 5th Halving Tracker (BTC) -->
     <div class="card" id="halving-card-wrap">
       <div class="card-header">
         <div class="card-title">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          <span>비트코인 5차 반감기 현황</span>
+          <span>비트코인 5차 반감기 카운트다운</span>
           <button type="button" class="help-btn" onclick="openHelp('halving')">?</button>
         </div>
-        <span class="badge-tag green" id="halving-dday-pill">D---일</span>
+        <span class="badge-tag gold" id="halving-dday-pill">D---일</span>
       </div>
-      <div class="halving-stats">
-        <div class="h-box"><label>현재 블록</label><strong id="halving-cur-block">--</strong></div>
-        <div class="h-box"><label>잔여 블록</label><strong id="halving-rem-block">--</strong></div>
-        <div class="h-box"><label>예상 시기</label><strong id="halving-est-date">--</strong></div>
-      </div>
-      <div class="progress-track" style="height:8px;">
-        <div class="progress-fill" id="halving-bar" style="width:0%; background:var(--gold);"></div>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-sub); margin-top:4px;">
-        <span>4차 (840,000)</span>
-        <span id="halving-pct">진행률 --%</span>
-        <span>목표: 1,050,000</span>
-      </div>
+      <div class="kv-row"><span class="kv-lbl">현재 블록 높이 (목표 1,050,000)</span><span class="kv-val" id="halving-cur-block">--</span></div>
+      <div class="kv-row"><span class="kv-lbl">남은 블록 / 예상 도달 시점</span><span class="kv-val"><span id="halving-rem-block">--</span> 블록 · <span id="halving-est-date">--</span></span></div>
+      <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" id="halving-bar" style="width:0%;"></div></div>
+      <div style="text-align:right; font-size:10.5px; color:var(--text-sub); margin-top:3px;" id="halving-pct">진행률 0.0%</div>
     </div>
 
-    <!-- 4. Institutional Debt & Liquidation Monitor -->
+    <!-- Institutional Debt & Risk Monitor -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18M9 21V9"></path></svg>
-          <span id="inst-card-title">BTC 기관 부채·청산 모니터</span>
+          <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          <span id="inst-card-title">BTC 기관 부채·청산 모니터 (Strategy)</span>
           <button type="button" class="help-btn" onclick="openHelp('inst_risk')">?</button>
         </div>
-        <span class="badge-tag green" id="inst-sync-badge">SEC 공시 연동</span>
+        <span class="badge-tag" id="inst-sync-badge">SEC 공시</span>
       </div>
 
-      <div class="inst-card" id="inst-box-BTC">
-        <div class="inst-head">
-          <strong style="font-size:13px;">Strategy (MSTR · BTC)</strong>
-          <span class="badge-tag green" id="mstr-risk-badge">재무 안전</span>
+      <div id="inst-box-BTC">
+        <div class="kv-row"><span class="kv-lbl">보유량 (평균 매입단가)</span><span class="kv-val" id="mstr-holdings">--</span></div>
+        <div class="kv-row"><span class="kv-lbl">실시간 평가액 (미실현 손익)</span><span class="kv-val" id="mstr-val-pnl">--</span></div>
+        <div class="kv-row"><span class="kv-lbl">순부채 (총부채 - 현금유보)</span><span class="kv-val" id="mstr-net-debt">--</span></div>
+        <div class="kv-row">
+          <span class="kv-lbl">자산 대비 부채 커버리지</span>
+          <span class="kv-val"><span id="mstr-coverage">--</span> · <span class="badge-tag green" id="mstr-risk-badge">안전</span></span>
         </div>
-        <div class="inst-grid">
-          <div class="inst-metric"><span>보유량 / 평단가</span><strong id="mstr-holdings">--</strong></div>
-          <div class="inst-metric"><span>실시간 평가액 / 손익</span><strong id="mstr-val-pnl">--</strong></div>
-          <div class="inst-metric"><span>순부채 (총부채-현금)</span><strong id="mstr-net-debt">--</strong></div>
-          <div class="inst-metric"><span>자산 커버리지 배수</span><strong id="mstr-coverage" style="color:var(--green);">--x</strong></div>
+        <div style="margin-top:7px; text-align:right;">
+          <a id="mstr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001050446" target="_blank" rel="noopener" style="font-size:11px; color:var(--gold); text-decoration:none; font-weight:700;">SEC EDGAR 공시 원문 보기 ↗</a>
         </div>
-        <a class="sec-link" id="mstr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001050446" target="_blank" rel="noopener">SEC EDGAR 최신 8-K 공시 원문 보기 ↗</a>
       </div>
 
-      <div class="inst-card" id="inst-box-ETH" style="display:none;">
-        <div class="inst-head">
-          <strong style="font-size:13px;">Bitmine (BMNR · ETH)</strong>
-          <span class="badge-tag green" id="bmnr-risk-badge">재무 양호</span>
+      <div id="inst-box-ETH" style="display:none;">
+        <div class="kv-row"><span class="kv-lbl">보유량 (평균 매입단가)</span><span class="kv-val" id="bmnr-holdings">--</span></div>
+        <div class="kv-row"><span class="kv-lbl">실시간 평가액 (미실현 손익)</span><span class="kv-val" id="bmnr-val-pnl">--</span></div>
+        <div class="kv-row"><span class="kv-lbl">총부채 / 현금유보액</span><span class="kv-val" id="bmnr-net-debt">--</span></div>
+        <div class="kv-row">
+          <span class="kv-lbl">재무 건전성 커버리지</span>
+          <span class="kv-val"><span id="bmnr-coverage">--</span> · <span class="badge-tag green">무차입 우량</span></span>
         </div>
-        <div class="inst-grid">
-          <div class="inst-metric"><span>보유량 / 평단가</span><strong id="bmnr-holdings">--</strong></div>
-          <div class="inst-metric"><span>실시간 평가액 / 손익</span><strong id="bmnr-val-pnl">--</strong></div>
-          <div class="inst-metric"><span>부채 / 현금 유보액</span><strong id="bmnr-net-debt">--</strong></div>
-          <div class="inst-metric"><span>담보 청산 리스크</span><strong id="bmnr-coverage" style="color:var(--green);">--</strong></div>
+        <div style="margin-top:7px; text-align:right;">
+          <a id="bmnr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001829311" target="_blank" rel="noopener" style="font-size:11px; color:var(--gold); text-decoration:none; font-weight:700;">SEC EDGAR 공시 원문 보기 ↗</a>
         </div>
-        <a class="sec-link" id="bmnr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001829311" target="_blank" rel="noopener">SEC EDGAR 최신 8-K 공시 원문 보기 ↗</a>
       </div>
     </div>
 
-    <!-- 5. 1st-Tier News Monitor -->
+    <!-- 1st-Tier News Monitor -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6Z"></path></svg>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8V6Z"></path></svg>
           <span id="news-card-title">BTC 1군 매체 뉴스 모니터</span>
-          <button type="button" class="help-btn" onclick="openHelp('news_guide')">?</button>
         </div>
-        <span class="badge-tag gold" id="news-tr-status">수집중</span>
+        <span class="badge-tag" id="news-tr-status">번역 대기</span>
       </div>
 
-      <div class="news-window-bar">
-        <button type="button" class="nw-btn active" data-win="live" onclick="setNewsWindow('live')">실시간 속보</button>
-        <button type="button" class="nw-btn" data-win="24h" onclick="setNewsWindow('24h')">24시간</button>
-        <button type="button" class="nw-btn" data-win="3d" onclick="setNewsWindow('3d')">3일간</button>
-        <button type="button" class="nw-btn" data-win="7d" onclick="setNewsWindow('7d')">일주일(7일)</button>
+      <div class="news-filters">
+        <button type="button" class="news-win-btn" data-win="live" onclick="setNewsWindow('live')">속보</button>
+        <button type="button" class="news-win-btn active" data-win="24h" onclick="setNewsWindow('24h')">24시간</button>
+        <button type="button" class="news-win-btn" data-win="3d" onclick="setNewsWindow('3d')">3일</button>
+        <button type="button" class="news-win-btn" data-win="7d" onclick="setNewsWindow('7d')">7일</button>
       </div>
 
-      <div class="news-count-bar" id="news-sentiment-bar" style="display:none;">
-        <span id="news-total-label">표시 0건</span>
-        <div class="news-count-pills" id="news-count-pills"></div>
+      <div class="news-sent-bar" id="news-sentiment-bar" style="display:none;">
+        <span id="news-total-label">핵심 기사 0건</span>
+        <div id="news-count-pills" style="display:flex; gap:4px;"></div>
       </div>
 
-      <div id="news-list">
-        <div style="font-size:12px; color:var(--text-sub); padding:8px 0;">1군 매체 뉴스 수집 및 본문 요약 한국어 번역 중...</div>
-      </div>
+      <div id="news-list"></div>
 
-      <div class="period-briefing-panel" id="period-briefing-panel" style="display:none;">
-        <div class="briefing-header">
-          <div class="briefing-title">
-            <svg class="icon" style="width:15px;height:15px;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-            <span id="briefing-panel-title">기간별 핵심 이슈 요약 정리</span>
-          </div>
-          <span class="badge-tag">출처 표기</span>
-        </div>
+      <div class="briefing-box" id="period-briefing-panel" style="display:none;">
+        <div class="briefing-title" id="briefing-panel-title">기간별 핵심 이슈 요약</div>
         <div id="briefing-list"></div>
       </div>
     </div>
   </section>
 
-  <!-- TAB 4: MY POSITION, TARGET ALERT & CALIBRATION -->
-  <section class="tab-section" id="tab-position">
+  <!-- =====================================================
+       TAB 3: AI MULTI-HORIZON DCA STRATEGY (v5.0)
+       ===================================================== -->
+  <section class="tab-section" id="tab-strategy">
+    <!-- 1. Comprehensive Multi-Horizon Overview & Seed Allocation -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
-          <span id="pos-card-title">BTC 내 매수평균가 & 보유수량</span>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+          <span id="strat-detail-title">BTC 멀티 호라이즌 AI 추매전략</span>
+          <button type="button" class="help-btn" onclick="openHelp('multi_horizon')">?</button>
         </div>
-        <span class="badge-tag">차트 기준선 연동</span>
+        <span class="badge-tag green" id="strat-alloc-pill">비중 계산중</span>
       </div>
-      <div id="pos-group-BTC">
-        <div class="form-row">
-          <div class="form-group">
-            <label>BTC 매수평균가 (USD)</label>
-            <input type="number" id="input-avg-btc" placeholder="예: 82500" step="any" />
-          </div>
-          <div class="form-group">
-            <label>보유 수량 (선택, BTC)</label>
-            <input type="number" id="input-qty-btc" placeholder="예: 0.5" step="any" />
-          </div>
+
+      <!-- 3-Horizon Mini Score Cards -->
+      <div class="horizon-overview-grid">
+        <div class="hz-mini-card" id="mini-hz-short" onclick="selectHorizonSession('short')">
+          <span class="hz-mini-lbl">⚡ 단기 스윙</span>
+          <span class="hz-mini-sub">1일 ~ 1주</span>
+          <div class="hz-mini-score" id="mini-short-score">--</div>
+          <span class="hz-mini-tag badge-tag" id="mini-short-tag">분석중</span>
+        </div>
+        <div class="hz-mini-card" id="mini-hz-mid" onclick="selectHorizonSession('mid')">
+          <span class="hz-mini-lbl">📈 중기 추세</span>
+          <span class="hz-mini-sub">2주 ~ 2개월</span>
+          <div class="hz-mini-score" id="mini-mid-score">--</div>
+          <span class="hz-mini-tag badge-tag" id="mini-mid-tag">분석중</span>
+        </div>
+        <div class="hz-mini-card" id="mini-hz-long" onclick="selectHorizonSession('long')">
+          <span class="hz-mini-lbl">🏛️ 장기 적립</span>
+          <span class="hz-mini-sub">3개월 ~ 반감기</span>
+          <div class="hz-mini-score" id="mini-long-score">--</div>
+          <span class="hz-mini-tag badge-tag" id="mini-long-tag">분석중</span>
         </div>
       </div>
-      <div id="pos-group-ETH" style="display:none;">
-        <div class="form-row">
-          <div class="form-group">
-            <label>ETH 매수평균가 (USD)</label>
-            <input type="number" id="input-avg-eth" placeholder="예: 2650" step="any" />
-          </div>
-          <div class="form-group">
-            <label>보유 수량 (선택, ETH)</label>
-            <input type="number" id="input-qty-eth" placeholder="예: 5.0" step="any" />
+
+      <!-- Comprehensive Gauge & Headline -->
+      <div class="dca-hero">
+        <div class="gauge-box">
+          <svg viewBox="0 0 80 80">
+            <circle class="gauge-bg" cx="40" cy="40" r="34"></circle>
+            <circle class="gauge-fg" id="dca-gauge-circle" cx="40" cy="40" r="34"></circle>
+          </svg>
+          <div class="gauge-center">
+            <span class="gauge-num" id="strat-hero-score">--</span>
+            <span class="gauge-unit">종합 / 100</span>
           </div>
         </div>
+        <div class="dca-summary">
+          <span class="badge-tag green" id="strat-tier-badge">등급 --</span>
+          <div class="dca-headline" id="strat-hero-grade">시계열별 매수 매력도 분석 중...</div>
+          <div class="dca-action" id="strat-action-short">단기·중기·장기 지표를 통합 연산하고 있습니다.</div>
+        </div>
       </div>
-      <button type="button" class="btn-primary" onclick="saveMyAvgPrices()">매수평균가 저장 및 차트 반영</button>
-      <div class="pnl-summary">
-        <span id="my-pnl-label">BTC 평단 대비 현재 손익</span>
-        <strong id="my-pnl-val">미설정</strong>
+
+      <!-- Recommended Seed Allocation Matrix -->
+      <div class="seed-alloc-box">
+        <div class="seed-alloc-head">
+          <span>가용 현금 권장 시드 배분</span>
+          <span style="color:var(--gold);" id="seed-total-deploy">총 투입 0%</span>
+        </div>
+        <div class="seed-bar">
+          <div class="seed-seg-short" id="seg-short" style="width:0%;"></div>
+          <div class="seed-seg-mid" id="seg-mid" style="width:0%;"></div>
+          <div class="seed-seg-long" id="seg-long" style="width:0%;"></div>
+          <div class="seed-seg-cash" id="seg-cash" style="width:100%;"></div>
+        </div>
+        <div class="seed-legend" id="seed-legend-list"></div>
       </div>
-      <div class="pnl-summary" id="my-eval-row" style="display:none; margin-top:6px;">
-        <span>총 평가액 / 미실현 손익</span>
-        <strong id="my-eval-val">--</strong>
-      </div>
+
+      <!-- My Average Price Linked Averaging-Down (물타기) Insight -->
+      <div class="avgdown-box" id="avgdown-insight-box" style="display:none;"></div>
     </div>
 
-    <!-- Target Price & RSI Alert Card -->
+    <!-- 2. Session Switcher Bar: 종합 | 단기 | 중기 | 장기 -->
+    <div class="horizon-tabs">
+      <button type="button" class="hz-tab-btn active" data-hz="all" onclick="selectHorizonSession('all')">종합 비교</button>
+      <button type="button" class="hz-tab-btn" data-hz="short" onclick="selectHorizonSession('short')">단기 (1주)</button>
+      <button type="button" class="hz-tab-btn" data-hz="mid" onclick="selectHorizonSession('mid')">중기 (2달)</button>
+      <button type="button" class="hz-tab-btn" data-hz="long" onclick="selectHorizonSession('long')">장기 (사이클)</button>
+    </div>
+
+    <!-- 3. Dynamic Session Detail Panel -->
+    <div id="session-detail-container"></div>
+  </section>
+
+  <!-- =====================================================
+       TAB 4: MY POSITION (KRW INPUT -> AUTO USD SYNC) & ALERTS
+       ===================================================== -->
+  <section class="tab-section" id="tab-position">
+    <!-- My Average Price Card (KRW Primary + Auto USD Conversion) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5Z"></path></svg>
+          <span id="pos-card-title">BTC 내 매수평균가 (원화 기준 입력)</span>
+          <button type="button" class="help-btn" onclick="openHelp('avg_line')">?</button>
+        </div>
+        <span class="badge-tag green">자동 환율 연동</span>
+      </div>
+
+      <div class="fx-rate-pill" id="pos-fx-badge">적용 환율: 1 USDT = ₩1,450</div>
+
+      <!-- BTC Inputs -->
+      <div id="pos-group-BTC">
+        <div class="form-group">
+          <label>
+            <span>BTC 평균 매수가 (원화 ₩ 기준)</span>
+            <span style="color:var(--gold);">차트·전략 자동 반영</span>
+          </label>
+          <input type="number" id="input-avg-krw-btc" placeholder="예: 132000000 (1억 3,200만원)" step="any" oninput="onAvgKrwInput('BTC')" />
+          <div class="input-helper" id="helper-krw-btc"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><span>환산 달러 평단 ($ USD)</span></label>
+            <input type="number" id="input-avg-usd-btc" placeholder="자동 환산" step="any" oninput="onAvgUsdInput('BTC')" />
+          </div>
+          <div class="form-group">
+            <label><span>보유 수량 (BTC · 선택)</span></label>
+            <input type="number" id="input-qty-btc" placeholder="예: 0.25" step="any" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ETH Inputs -->
+      <div id="pos-group-ETH" style="display:none;">
+        <div class="form-group">
+          <label>
+            <span>ETH 평균 매수가 (원화 ₩ 기준)</span>
+            <span style="color:var(--gold);">차트·전략 자동 반영</span>
+          </label>
+          <input type="number" id="input-avg-krw-eth" placeholder="예: 3850000 (385만원)" step="any" oninput="onAvgKrwInput('ETH')" />
+          <div class="input-helper" id="helper-krw-eth"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><span>환산 달러 평단 ($ USD)</span></label>
+            <input type="number" id="input-avg-usd-eth" placeholder="자동 환산" step="any" oninput="onAvgUsdInput('ETH')" />
+          </div>
+          <div class="form-group">
+            <label><span>보유 수량 (ETH · 선택)</span></label>
+            <input type="number" id="input-qty-eth" placeholder="예: 4.5" step="any" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Live PnL Summary (Both KRW & USD) -->
+      <div class="converted-preview-box">
+        <div class="kv-row" style="padding-top:0;">
+          <span class="kv-lbl" id="my-pnl-krw-label">원화(₩) 기준 현재 손익</span>
+          <span class="kv-val" id="my-pnl-krw-val">미설정</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-lbl">달러($) 환산 기준 손익</span>
+          <span class="kv-val" id="my-pnl-usd-val">미설정</span>
+        </div>
+        <div class="kv-row" id="my-eval-row" style="display:none; padding-bottom:0;">
+          <span class="kv-lbl">총 평가금액 (평가손익)</span>
+          <span class="kv-val" id="my-eval-val">--</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-primary" onclick="saveMyAvgPrices()">원화·달러 평단 저장 및 차트·전략 반영</button>
+    </div>
+
+    <!-- Target Price & RSI Alert Card (Supports KRW & USD) -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
@@ -811,13 +1601,29 @@
         </div>
         <span class="badge-tag gold" id="alert-status-tag">대기중</span>
       </div>
-      <div class="form-group" id="alert-group-BTC">
-        <label>BTC 매수 목표가 도달 알림 (USD 이하 진입 시 상단 배너)</label>
-        <input type="number" id="input-target-btc" placeholder="예: 78000 (비워두면 비활성)" step="any" />
+      <div id="alert-group-BTC">
+        <div class="form-row">
+          <div class="form-group">
+            <label><span>목표 매수가 (원화 ₩)</span></label>
+            <input type="number" id="input-target-krw-btc" placeholder="예: 115000000" step="any" oninput="onTargetKrwInput('BTC')" />
+          </div>
+          <div class="form-group">
+            <label><span>목표 매수가 (달러 $)</span></label>
+            <input type="number" id="input-target-btc" placeholder="자동 환산" step="any" oninput="onTargetUsdInput('BTC')" />
+          </div>
+        </div>
       </div>
-      <div class="form-group" id="alert-group-ETH" style="display:none;">
-        <label>ETH 매수 목표가 도달 알림 (USD 이하 진입 시 상단 배너)</label>
-        <input type="number" id="input-target-eth" placeholder="예: 2300 (비워두면 비활성)" step="any" />
+      <div id="alert-group-ETH" style="display:none;">
+        <div class="form-row">
+          <div class="form-group">
+            <label><span>목표 매수가 (원화 ₩)</span></label>
+            <input type="number" id="input-target-krw-eth" placeholder="예: 3100000" step="any" oninput="onTargetKrwInput('ETH')" />
+          </div>
+          <div class="form-group">
+            <label><span>목표 매수가 (달러 $)</span></label>
+            <input type="number" id="input-target-eth" placeholder="자동 환산" step="any" oninput="onTargetUsdInput('ETH')" />
+          </div>
+        </div>
       </div>
       <label class="checkbox-row">
         <input type="checkbox" id="chk-rsi-alert" checked />
@@ -838,26 +1644,26 @@
 
       <div id="inst-form-BTC">
         <div class="form-row">
-          <div class="form-group"><label>MSTR 보유량 (BTC)</label><input type="number" id="input-mstr-btc" step="1" /></div>
-          <div class="form-group"><label>MSTR 평단가 ($)</label><input type="number" id="input-mstr-avg" step="1" /></div>
+          <div class="form-group"><label><span>MSTR 보유량 (BTC)</span></label><input type="number" id="input-mstr-btc" step="1" /></div>
+          <div class="form-group"><label><span>MSTR 평단가 ($)</span></label><input type="number" id="input-mstr-avg" step="1" /></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>MSTR 총부채 ($B)</label><input type="number" id="input-mstr-debt" step="0.01" /></div>
-          <div class="form-group"><label>MSTR 현금유보 ($B)</label><input type="number" id="input-mstr-cash" step="0.01" /></div>
+          <div class="form-group"><label><span>MSTR 총부채 ($B)</span></label><input type="number" id="input-mstr-debt" step="0.01" /></div>
+          <div class="form-group"><label><span>MSTR 현금유보 ($B)</span></label><input type="number" id="input-mstr-cash" step="0.01" /></div>
         </div>
-        <div class="form-group"><label>BTC 현물 ETF 일간 순유입 ($M)</label><input type="number" id="input-etf-btc" step="0.1" /></div>
+        <div class="form-group"><label><span>BTC 현물 ETF 일간 순유입 ($M)</span></label><input type="number" id="input-etf-btc" step="0.1" /></div>
       </div>
 
       <div id="inst-form-ETH" style="display:none;">
         <div class="form-row">
-          <div class="form-group"><label>BMNR 보유량 (ETH)</label><input type="number" id="input-bmnr-eth" step="1" /></div>
-          <div class="form-group"><label>BMNR 평단가 ($)</label><input type="number" id="input-bmnr-avg" step="1" /></div>
+          <div class="form-group"><label><span>BMNR 보유량 (ETH)</span></label><input type="number" id="input-bmnr-eth" step="1" /></div>
+          <div class="form-group"><label><span>BMNR 평단가 ($)</span></label><input type="number" id="input-bmnr-avg" step="1" /></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>BMNR 총부채 ($B)</label><input type="number" id="input-bmnr-debt" step="0.01" /></div>
-          <div class="form-group"><label>BMNR 현금유보 ($B)</label><input type="number" id="input-bmnr-cash" step="0.01" /></div>
+          <div class="form-group"><label><span>BMNR 총부채 ($B)</span></label><input type="number" id="input-bmnr-debt" step="0.01" /></div>
+          <div class="form-group"><label><span>BMNR 현금유보 ($B)</span></label><input type="number" id="input-bmnr-cash" step="0.01" /></div>
         </div>
-        <div class="form-group"><label>ETH 현물 ETF 일간 순유입 ($M)</label><input type="number" id="input-etf-eth" step="0.1" /></div>
+        <div class="form-group"><label><span>ETH 현물 ETF 일간 순유입 ($M)</span></label><input type="number" id="input-etf-eth" step="0.1" /></div>
       </div>
 
       <button type="button" class="btn-primary" onclick="saveManualInstData()">기관·ETF 수급 데이터 반영</button>
@@ -865,22 +1671,22 @@
     </div>
   </section>
 
-  <div class="footer-sync" id="last-sync-time">데이터 연결 중...</div>
+  <div class="sync-footer" id="last-sync-time">실시간 데이터 동기화 대기중...</div>
 </div>
 
 <!-- Bottom Fixed Navigation -->
 <nav class="bottom-nav">
   <button type="button" class="nav-item active" data-tab="chart" onclick="switchTab('chart')">
-    <svg class="icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
     <span>프로 차트</span>
   </button>
-  <button type="button" class="nav-item" data-tab="strategy" onclick="switchTab('strategy')">
-    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
-    <span>AI 추매전략</span>
-  </button>
   <button type="button" class="nav-item" data-tab="intel" onclick="switchTab('intel')">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
     <span>인텔리전스</span>
+  </button>
+  <button type="button" class="nav-item" data-tab="strategy" onclick="switchTab('strategy')">
+    <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+    <span>AI 추매전략</span>
   </button>
   <button type="button" class="nav-item" data-tab="position" onclick="switchTab('position')">
     <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -888,49 +1694,52 @@
   </button>
 </nav>
 
-<!-- Help Modal Bottom Sheet -->
-<div class="help-backdrop" id="help-backdrop" onclick="closeHelp(event)">
-  <div class="help-sheet" onclick="event.stopPropagation()">
-    <div class="help-sheet-head">
-      <div class="help-sheet-title" id="help-title">지표 설명</div>
-      <button type="button" class="help-close" onclick="closeHelp()">✕</button>
+<!-- Help Bottom Sheet -->
+<div class="sheet-backdrop" id="help-backdrop" onclick="closeHelp(event)">
+  <div class="sheet-panel" onclick="event.stopPropagation()">
+    <div class="sheet-title">
+      <span id="help-title">지표 설명</span>
+      <button type="button" class="alert-close" onclick="closeHelp()">✕</button>
     </div>
-    <div class="help-body" id="help-desc"></div>
-    <div class="help-tip" id="help-tip"></div>
+    <div class="sheet-desc" id="help-desc"></div>
+    <div class="sheet-tip" id="help-tip"></div>
   </div>
 </div>
 
-<div class="toast" id="toast">알림</div>
+<!-- Toast Notification -->
+<div class="toast" id="toast-msg">저장되었습니다</div>
+
 <script>
   // =========================================================
-  // Crypto Pulse Pro v4.4 - Core Engine (Part 2 / 2)
+  // Crypto Pulse Pro v5.0 - State, Constants & Math Helpers
   // =========================================================
   const LS_KEYS = {
-    THEME: 'cp_theme_v4',
-    POS: 'cp_my_pos_v4',
-    ALERTS: 'cp_alerts_v4',
+    THEME: 'cp_theme',
+    POS: 'cp_positions_v5',
+    POS_V4: 'cp_positions_v4',
+    ALERTS: 'cp_alerts_v5',
     INST_MANUAL: 'cp_inst_manual_v4',
-    NEWS_ARCHIVE: 'cp_news_archive_v4',
-    TR_CACHE: 'cp_tr_cache_v4'
+    TR_CACHE: 'cp_tr_cache_v4',
+    NEWS_ARCHIVE: 'cp_news_archive_v4'
   };
 
   const DEFAULT_INST = {
     mstrBtc: 850364,
-    mstrAvgCost: 75450,
-    mstrDebtB: 6.70,
-    mstrCashB: 5.02,
-    mstrFilingDate: '2026-11-09',
+    mstrAvgCost: 66385,
+    mstrDebtB: 8.21,
+    mstrCashB: 0.45,
+    mstrFilingDate: 'SEC 8-K',
     mstrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001050446',
     bmnrEth: 6070092,
-    bmnrAvgCost: 2810,
-    bmnrDebtB: 0.30,
-    bmnrCashB: 0.48,
-    bmnrFilingDate: '2026-11-09',
+    bmnrAvgCost: 2740,
+    bmnrDebtB: 0.0,
+    bmnrCashB: 0.52,
+    bmnrFilingDate: 'SEC 8-K',
     bmnrSecUrl: 'https://www.sec.gov/edgar/browse/?CIK=0001829311',
-    btcEtfFlowM: 245.0,
-    ethEtfFlowM: 68.5,
-    etfDate: '2026-11-16',
-    etfNote: 'IBIT·FBTC 중심 현물 ETF 순유입 우위',
+    btcEtfFlowM: 142.5,
+    ethEtfFlowM: 28.4,
+    etfDate: '최근 영업일',
+    etfNote: '미국 현물 ETF(IBIT·FBTC / ETHA·FETH) 일간 순유입 집계',
     isManual: false
   };
 
@@ -938,33 +1747,41 @@
     asset: 'BTC',
     timeframe: '1d',
     chartType: 'candle',
-    overlays: { ma: true, bb: true, bs: true, avg: true },
-    newsWindow: 'live',
-    usdtKrw: 1400,
-    ath: { BTC: 109588, ETH: 4891 },
+    horizonTab: 'all',
+    newsWindow: '24h',
+    usdtKrw: 1450,
     prices: {
       BTC: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0 },
       ETH: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0 }
     },
+    ath: { BTC: 109588, ETH: 4891 },
+    ethBtc: { ratio: 0, chg: 0 },
     klines: { BTC: [], ETH: [] },
+    horizonsData: {
+      BTC: { k1h: [], k4h: [], k1d: [], k1w: [] },
+      ETH: { k1h: [], k4h: [], k1d: [], k1w: [] }
+    },
     rsi1d: { BTC: 50, ETH: 50 },
     rsi4h: { BTC: 50, ETH: 50 },
     mayer: { BTC: 1.0, ETH: 1.0 },
-    ethBtc: { ratio: 0, chg: 0 },
+    fngBtc: { val: 50, cls: 'Neutral', hist: [] },
+    fngEth: { val: 50, cls: 'Neutral', hist: [] },
     deriv: {
       BTC: { funding: 0, oi: 0 },
       ETH: { funding: 0, oi: 0 }
     },
-    mempoolFee: 0,
     halving: { height: 0, rem: 0, pct: 0, dday: 0, estDate: '--' },
-    fngBtc: { val: 50, cls: 'Neutral', hist: [] },
-    fngEth: { val: 50, cls: 'Neutral', hist: [] },
+    mempoolFee: 0,
     inst: { ...DEFAULT_INST },
-    myPos: { BTC: { avg: 0, qty: 0 }, ETH: { avg: 0, qty: 0 } },
-    alerts: { BTC: 0, ETH: 0, rsiEnabled: true },
-    dismissedAlerts: {},
-    hoverIdx: -1,
     newsItems: [],
+    myPos: {
+      BTC: { avgKrw: 0, avgUsd: 0, qty: 0, mode: 'KRW' },
+      ETH: { avgKrw: 0, avgUsd: 0, qty: 0, mode: 'KRW' }
+    },
+    alerts: { BTC: 0, BTC_KRW: 0, ETH: 0, ETH_KRW: 0, rsiEnabled: true },
+    dismissedAlerts: {},
+    overlays: { ma: true, bb: true, bs: true, avg: true },
+    hoverIdx: -1,
     ws: null
   };
 
@@ -985,7 +1802,7 @@
     funding: {
       title: '무기한 선물 8시간 펀딩비',
       desc: '선물 시장에서 롱(매수)과 숏(매도) 포지션 비율의 균형을 맞추기 위해 8시간마다 주고받는 수수료율입니다.',
-      tip: '실전 해석: 마이너스(-) 전환 시 숏 포지션 과밀로 숏 스퀴즈(급반등) 확률이 높아지며, +0.05% 이상은 롱 과열을 뜻합니다.'
+      tip: '실전 해석: 마이너스(-) 전환 시 숏 포지션 과밀로 숏 스퀴즈(급반등) 확률이 높아지며, +0.04% 이상은 롱 과열을 뜻합니다.'
     },
     rel_metric: {
       title: 'Mayer 배수 (BTC) / ETH·BTC 상대강도',
@@ -995,82 +1812,52 @@
     ath_dd: {
       title: 'ATH 고점 대비 하락률 (Drawdown)',
       desc: '역대 최고가(All-Time High) 대비 현재 가격이 몇 퍼센트 조정받았는지 나타내는 가치 평가 지표입니다.',
-      tip: '실전 해석: 고점 대비 -20% 이상 조정 구간부터는 AI 분할 매수 전략에서 저평가 가산점이 단계적으로 부여됩니다.'
+      tip: '실전 해석: 고점 대비 -20% 이상 조정 구간부터는 장기 적립식(DCA) 전략에서 저평가 가산점이 단계적으로 부여됩니다.'
     },
     ma: {
       title: '이동평균선 (MA 5 / 10 / 20 / 60)',
       desc: '최근 5·10·20·60개 봉 종가의 평균값을 연결한 추세선입니다. 단기·중기·수급 생명선 역할을 합니다.',
       tip: '실전 해석: 단기선(5·10)이 중기선(20·60)을 상향 돌파하면 골든크로스(상승 전환), 하향 이탈 시 조정 압력을 의미합니다.'
     },
-    bb: {
-      title: '볼린저밴드 (Bollinger Bands 20, 2)',
-      desc: '20일 이동평균선을 중심으로 표준편차 2배 범위의 상·하단 변동성 밴드를 표시합니다.',
-      tip: '실전 해석: 주가가 하단 밴드에 닿거나 이탈 후 안쪽으로 복귀할 때 단기 기술적 반등 확률이 높아집니다.'
-    },
-    bs_pin: {
-      title: 'B / S 자동 매매 타점핀',
-      desc: 'Wilder RSI(14)가 32 이하 과매도 구간에서 상승 반전할 때 빨간색 B, 68 이상 과열에서 꺾일 때 파란색 S를 표시합니다.',
-      tip: '실전 해석: 보조적 타이밍 참고용이며, 일봉과 1시간봉에서 B 핀이 겹칠 때 분할 진입 신뢰도가 높습니다.'
-    },
-    avg_line: {
-      title: '내 매수평균가 기준선',
-      desc: '[내 평단] 탭에 입력한 본인의 평균 매수단가를 차트 위에 초록색 수평 실선으로 표시합니다.',
-      tip: '실전 해석: 현재가가 매수평균선 아래에 있을 때 분할 추매하여 평단가를 낮추는 기준선으로 활용하세요.'
-    },
     fng: {
       title: '공포·탐욕 지수 (Fear & Greed)',
       desc: 'BTC는 Alternative.me 시장 심리 지수를, ETH는 일봉 Wilder RSI(14) 기반 자체 심리 추정 모델을 0~100으로 표시합니다.',
       tip: '실전 해석: 25 이하 극단적 공포(Extreme Fear) 구간은 역사적으로 분할 매수 성과가 가장 좋았던 역발상 기회입니다.'
     },
-    dca_main: {
-      title: '6단계 AI 분할 매수 (DCA) 전략',
-      desc: '기술적 지표·ATH 낙폭·심리/김프·파생 수급·현물 ETF 유입·기관 건전성 등 6대 팩터를 100점 만점으로 합산합니다.',
-      tip: '실전 해석: SS(92+)·S(82+)·A(68+)·B(50+) 구간에서는 비중을 나누어 진입하고, C·D 구간에서는 추격 매수를 멈춥니다.'
-    },
-    limit_krw: {
-      title: 'AI 지정가 분할 매수 타점 (USD / KRW)',
-      desc: '현재 변동성과 볼린저 하단·지지선을 반영한 1차·2차 눌림목 지정가 주문 가격과 실시간 원화(₩) 환산 금액입니다.',
-      tip: '실전 해석: 시장가 추격 매수 대신 제시된 1차·2차 지정가에 미리 분할 주문을 걸어두면 평균 매입 단가를 낮출 수 있습니다.'
-    },
     etf_flow: {
-      title: '미국 현물 ETF 일간 순유입 (Net Flow)',
-      desc: '블랙록(IBIT·ETHA), 피델리티(FBTC·FETH) 등 미국 증시 상장 현물 ETF의 일간 자금 순유입(+)·순유출(-) 규모입니다.',
-      tip: '실전 해석: 연속 순유입(+)은 월가 기관 현물 매수세가 가격 하방을 지지하고 있음을 의미합니다.'
+      title: '미국 현물 ETF 순유입 (Net Flow)',
+      desc: 'BlackRock(IBIT·ETHA), Fidelity(FBTC·FETH) 등 월가 현물 ETF의 일간 순매수·순매도 자금 규모입니다.',
+      tip: '실전 해석: 중기 추세(2주~2개월)의 가장 강력한 수급 동력이며, 연속 순유입 시 눌림목 매수 신뢰도가 높아집니다.'
     },
-    etf_btc: {
-      title: '미국 비트코인 현물 ETF',
-      desc: 'IBIT, FBTC 등 미국 비트코인 현물 ETF의 일간 순자금 유출입($M) 현황입니다.',
-      tip: '실전 해석: +$100M 이상 순유입 시 수급 강세, 대규모 순유출 시 단기 매물 출회 가능성을 점검합니다.'
-    },
-    etf_eth: {
-      title: '미국 이더리움 현물 ETF',
-      desc: 'ETHA, FETH 등 미국 이더리움 현물 ETF의 일간 순자금 유출입($M) 현황입니다.',
-      tip: '실전 해석: ETH 현물 ETF 순유입 전환은 기관의 알트코인 수급 개선 신호로 해석됩니다.'
-    },
-    deriv_onchain: {
-      title: '파생상품 수급 & 온체인 지표',
-      desc: '선물 펀딩비, 미결제약정(OI), 비트코인 멤풀 수수료(sat/vB), 상대강도 지표를 실시간으로 통합 분석합니다.',
-      tip: '실전 해석: 가격은 하락하는데 미결제약정(OI)이 급증하고 펀딩비가 음수면 숏 스퀴즈 반등 가능성이 커집니다.'
+    deriv_oi: {
+      title: '선물 미결제약정 (OI) & 온체인 멤풀',
+      desc: 'OI는 청산되지 않고 남아 있는 선물 계약 총액이며, 멤풀 수수료(sat/vB)는 비트코인 온체인 실수요 혼잡도입니다.',
+      tip: '실전 해석: 가격 조정 중 OI가 급감하면 레버리지 청산이 완료된 바닥 신호로 해석할 수 있습니다.'
     },
     halving: {
-      title: '비트코인 5차 반감기 트래커',
-      desc: 'mempool.space 실시간 블록 높이를 조회하여 210,000블록마다 채굴 보상이 절반으로 줄어드는 5차 반감기(1,050,000블록)까지 남은 일정을 계산합니다.',
-      tip: '실전 해석: 반감기 사이클 진행률과 공급 축소 기대감을 중장기 적립식 비중 조절에 참고하세요.'
+      title: '비트코인 5차 반감기 사이클',
+      desc: '블록 높이 1,050,000 도달 시 채굴 보상이 절반으로 줄어드는 공급 축소 이벤트까지의 진행 현황입니다.',
+      tip: '실전 해석: 장기 적립식 투자에서 반감기 사이클 위치와 고점 대비 할인율을 결합해 적립 배수를 조절합니다.'
     },
     inst_risk: {
-      title: '기관 부채·청산 리스크 모니터',
-      desc: 'SEC EDGAR 8-K 공시 기반 Strategy(MSTR)와 Bitmine(BMNR)의 코인 보유량, 평단가, 순부채, 자산 커버리지 배수를 추적합니다.',
-      tip: '실전 해석: 자산 커버리지 배수가 2.0x 이상이면 재무가 안정적이며, 기관 평단가 부근에서는 강력한 기관 방어 심리가 작동합니다.'
+      title: '기관 평균 매입단가 & 재무 건전성',
+      desc: 'BTC 최대 보유 기업 Strategy(MSTR)와 ETH 대규모 트레저리 기업 Bitmine(BMNR)의 평단가 및 부채 커버리지입니다.',
+      tip: '실전 해석: 시세가 기관 평균 매입단가 부근에 근접하면 장기 가치 투자자들의 하방 방어 심리가 강해집니다.'
     },
-    news_guide: {
-      title: '1군 매체 뉴스 모니터 & 기간별 브리핑',
-      desc: 'CoinDesk, Cointelegraph, Decrypt, The Block, 블록미디어 등 검증된 1군 매체만 수집해 자동 번역 및 본문 맥락 기반 호재/리스크 분석을 제공합니다.',
-      tip: '실전 해석: 자극적인 제목 대신 헤드라인 아래의 본문 요약과 판단 근거를 확인하고, 상단 탭에서 24h·3일·7일 핵심 흐름을 점검하세요.'
+    multi_horizon: {
+      title: '멀티 호라이즌(단기·중기·장기) AI 추매전략',
+      desc: '단일 평균 점수의 착시를 없애기 위해 단기(1일~1주), 중기(2주~2개월), 장기(3개월~반감기) 엔진을 독립 연산합니다.',
+      tip: '실전 해석: 상단 카드에서 오늘 현금을 단기 스윙·중기 추세·장기 적립 중 어디에 배분할지 확인하고, 하단 탭에서 시간축별 지정가 타점을 선택하세요.'
+    },
+    avg_line: {
+      title: '원화 기준 내 평단 & 자동 달러 환산',
+      desc: '[내 평단] 탭에 업비트·빗썸 기준 원화(₩) 평균 매수가를 입력하면 실시간 환율로 달러($) 평단이 자동 계산됩니다.',
+      tip: '실전 해석: 환산된 달러 평단선은 프로 차트 위에 초록색 실선으로 표시되며, AI 추매전략 탭에서 물타기(평단 희석) 필요 여부를 자동 진단합니다.'
     },
     target_alert: {
-      title: '매수 목표가 & RSI 자동 알림 배너',
-      desc: '설정한 매수 목표가($) 이하로 가격이 내려오거나 일봉 RSI가 과매도(30 이하)·과열(75 이상) 구간에 진입하면 최상단에 즉시 배너를 띄웁니다.',
-      tip: '실전 해석: 지정해 둔 매수 구간 도달 여부를 앱 실행 즉시 놓치지 않고 확인할 수 있습니다.'
+      title: '매수 목표가 & RSI 자동 알림',
+      desc: '원화(₩) 또는 달러($) 목표 매수가를 입력해 두면 실시간 시세가 해당 가격 이하로 내려올 때 상단 배너로 알려줍니다.',
+      tip: '실전 해석: AI 추매전략이 제안한 1차·2차 지정가 타점을 목표가로 등록해 두면 매수 타이밍을 놓치지 않을 수 있습니다.'
     }
   };
 
@@ -1089,17 +1876,15 @@
     }
   }
 
-  // =========================================================
-  // Formatting & UI Helpers
-  // =========================================================
   function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.innerText = msg;
-    t.classList.add('show');
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+    const el = document.getElementById('toast-msg');
+    el.innerText = msg;
+    el.classList.add('show');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => el.classList.remove('show'), 2200);
   }
 
+  // Formatting Helpers
   function fmtUsd(num, dec = 0) {
     if (!isFinite(num) || num === 0) return '$--';
     const d = num < 100 ? 2 : dec;
@@ -1111,6 +1896,16 @@
     return '₩' + Math.round(num).toLocaleString('ko-KR');
   }
 
+  function fmtKoreanUnit(krw) {
+    if (!isFinite(krw) || krw <= 0) return '';
+    const eok = Math.floor(krw / 100000000);
+    const man = Math.round((krw % 100000000) / 10000);
+    if (eok > 0 && man > 0) return `약 ${eok}억 ${man.toLocaleString()}만원`;
+    if (eok > 0) return `약 ${eok}억원`;
+    if (man > 0) return `약 ${man.toLocaleString()}만원`;
+    return `${Math.round(krw).toLocaleString()}원`;
+  }
+
   function fmtCompactUsd(num) {
     if (!isFinite(num) || num === 0) return '--';
     const abs = Math.abs(num);
@@ -1119,138 +1914,167 @@
     return fmtUsd(num, 0);
   }
 
-  function getFngColor(v) {
-    if (v <= 25) return 'var(--red)';
-    if (v <= 45) return '#FF9800';
-    if (v <= 55) return 'var(--gold)';
-    if (v <= 75) return '#8BC34A';
+  function getFngColor(val) {
+    if (val <= 25) return 'var(--red)';
+    if (val <= 45) return '#FF9800';
+    if (val <= 55) return 'var(--gold)';
+    if (val <= 75) return '#8BC34A';
     return 'var(--green)';
   }
 
-  // =========================================================
-  // Navigation, Theme & Asset Switcher
-  // =========================================================
-  function toggleTheme() {
-    const cur = document.documentElement.getAttribute('data-theme');
-    const next = cur === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem(LS_KEYS.THEME, next);
-    drawProChart();
-    showToast(next === 'dark' ? '다크 테마 적용' : '라이트 테마 적용');
-  }
-
-  function switchTab(tab) {
-    document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    document.querySelector(`.nav-item[data-tab="${tab}"]`).classList.add('active');
-    if (tab === 'chart') setTimeout(drawProChart, 40);
-  }
-
-  function setAsset(asset) {
-    state.asset = asset;
-    state.hoverIdx = -1;
-    document.getElementById('btn-asset-BTC').classList.toggle('active', asset === 'BTC');
-    document.getElementById('btn-asset-ETH').classList.toggle('active', asset === 'ETH');
-    renderAll();
-  }
-
-  function setTimeframe(tf) {
-    state.timeframe = tf;
-    state.hoverIdx = -1;
-    document.querySelectorAll('.tf-btn').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
-    fetchKlinesForActive();
-  }
-
-  function setChartType(ctype) {
-    state.chartType = ctype;
-    document.querySelectorAll('.ctype-btn').forEach(b => b.classList.toggle('active', b.dataset.ctype === ctype));
-    drawProChart();
-  }
-
-  function toggleOverlay(key) {
-    state.overlays[key] = !state.overlays[key];
-    document.getElementById('chip-' + key).classList.toggle('active', state.overlays[key]);
-    if (key === 'ma') {
-      document.getElementById('ma-legend-row').style.display = state.overlays.ma ? 'flex' : 'none';
-    }
-    drawProChart();
-  }
-
-  function setNewsWindow(win) {
-    state.newsWindow = win;
-    document.querySelectorAll('.nw-btn').forEach(b => b.classList.toggle('active', b.dataset.win === win));
-    renderNewsSection();
-  }
-
-  // =========================================================
-  // Technical Indicators (Wilder RMA RSI, Signal, SMA, BB)
-  // =========================================================
+  // Technical Indicator Math
   function calcSMA(arr, period) {
-    const out = new Array(arr.length).fill(null);
-    let sum = 0;
+    return arr.map((_, i) => {
+      if (i < period - 1) return null;
+      let sum = 0;
+      for (let j = i - period + 1; j <= i; j++) sum += arr[j];
+      return sum / period;
+    });
+  }
+
+  function calcEMA(arr, period) {
+    const out = [];
+    const k = 2 / (period + 1);
+    let ema = null;
     for (let i = 0; i < arr.length; i++) {
-      sum += arr[i];
-      if (i >= period) sum -= arr[i - period];
-      if (i >= period - 1) out[i] = sum / period;
+      if (i < period - 1) {
+        out.push(null);
+      } else if (i === period - 1) {
+        let sum = 0;
+        for (let j = 0; j < period; j++) sum += arr[j];
+        ema = sum / period;
+        out.push(ema);
+      } else {
+        ema = arr[i] * k + ema * (1 - k);
+        out.push(ema);
+      }
     }
     return out;
   }
 
-  function calcBB(closes, period = 20, mult = 2) {
-    const mid = calcSMA(closes, period);
-    const upper = new Array(closes.length).fill(null);
-    const lower = new Array(closes.length).fill(null);
-    for (let i = period - 1; i < closes.length; i++) {
+  function calcBB(arr, period = 20, mult = 2) {
+    const mid = calcSMA(arr, period);
+    const upper = [], lower = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (mid[i] === null) {
+        upper.push(null);
+        lower.push(null);
+        continue;
+      }
       let sq = 0;
       for (let j = i - period + 1; j <= i; j++) {
-        const d = closes[j] - mid[i];
+        const d = arr[j] - mid[i];
         sq += d * d;
       }
-      const std = Math.sqrt(sq / period);
-      upper[i] = mid[i] + mult * std;
-      lower[i] = mid[i] - mult * std;
+      const sd = Math.sqrt(sq / period);
+      upper.push(mid[i] + mult * sd);
+      lower.push(mid[i] - mult * sd);
     }
     return { mid, upper, lower };
   }
 
   function calcWilderRSI(closes, period = 14) {
-    const rsi = new Array(closes.length).fill(null);
-    if (closes.length <= period) return rsi;
+    const out = new Array(closes.length).fill(null);
+    if (closes.length <= period) return out;
     let gains = 0, losses = 0;
     for (let i = 1; i <= period; i++) {
       const diff = closes[i] - closes[i - 1];
-      if (diff >= 0) gains += diff; else losses -= diff;
+      if (diff >= 0) gains += diff;
+      else losses -= diff;
     }
-    let avgGain = gains / period;
-    let avgLoss = losses / period;
-    rsi[period] = avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss));
+    let avgG = gains / period;
+    let avgL = losses / period;
+    out[period] = avgL === 0 ? 100 : 100 - (100 / (1 + avgG / avgL));
     for (let i = period + 1; i < closes.length; i++) {
       const diff = closes[i] - closes[i - 1];
       const g = diff > 0 ? diff : 0;
       const l = diff < 0 ? -diff : 0;
-      avgGain = (avgGain * (period - 1) + g) / period;
-      avgLoss = (avgLoss * (period - 1) + l) / period;
-      rsi[i] = avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss));
-    }
-    return rsi;
-  }
-
-  function calcRSISignal(rsiArr, sigPeriod = 9) {
-    const out = new Array(rsiArr.length).fill(null);
-    for (let i = 0; i < rsiArr.length; i++) {
-      if (rsiArr[i] === null) continue;
-      let sum = 0, cnt = 0;
-      for (let j = Math.max(0, i - sigPeriod + 1); j <= i; j++) {
-        if (rsiArr[j] !== null) { sum += rsiArr[j]; cnt++; }
-      }
-      if (cnt >= sigPeriod) out[i] = sum / cnt;
+      avgG = (avgG * (period - 1) + g) / period;
+      avgL = (avgL * (period - 1) + l) / period;
+      out[i] = avgL === 0 ? 100 : 100 - (100 / (1 + avgG / avgL));
     }
     return out;
   }
 
+  function calcRSISignal(rsiArr, period = 9) {
+    return rsiArr.map((_, i) => {
+      if (i < period - 1) return null;
+      let sum = 0, cnt = 0;
+      for (let j = i - period + 1; j <= i; j++) {
+        if (rsiArr[j] !== null) {
+          sum += rsiArr[j];
+          cnt++;
+        }
+      }
+      return cnt === period ? sum / period : null;
+    });
+  }
+
+  // Navigation & UI Controls
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    document.querySelector(`.nav-item[data-tab="${tabId}"]`).classList.add('active');
+    if (tabId === 'chart') {
+      requestAnimationFrame(drawProChart);
+    }
+  }
+
+  function switchAsset(sym) {
+    state.asset = sym;
+    state.hoverIdx = -1;
+    document.getElementById('btn-asset-BTC').classList.toggle('active', sym === 'BTC');
+    document.getElementById('btn-asset-ETH').classList.toggle('active', sym === 'ETH');
+    renderAll();
+  }
+
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem(LS_KEYS.THEME, next);
+    drawProChart();
+  }
+
+  function changeTimeframe(tf) {
+    state.timeframe = tf;
+    state.hoverIdx = -1;
+    document.querySelectorAll('.tf-btn[data-tf]').forEach(b => b.classList.toggle('active', b.dataset.tf === tf));
+    fetchKlinesForActive();
+  }
+
+  function setChartType(type) {
+    state.chartType = type;
+    document.getElementById('btn-ct-candle').classList.toggle('active', type === 'candle');
+    document.getElementById('btn-ct-line').classList.toggle('active', type === 'line');
+    drawProChart();
+  }
+
+  function toggleOverlay(key) {
+    state.overlays[key] = !state.overlays[key];
+    document.getElementById('ov-' + key).classList.toggle('on', state.overlays[key]);
+    drawProChart();
+  }
+
+  function setNewsWindow(win) {
+    state.newsWindow = win;
+    document.querySelectorAll('.news-win-btn').forEach(b => b.classList.toggle('active', b.dataset.win === win));
+    renderNewsSection();
+  }
+
+  function selectHorizonSession(hz) {
+    state.horizonTab = hz;
+    document.querySelectorAll('.hz-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.hz === hz));
+    ['short', 'mid', 'long'].forEach(k => {
+      const card = document.getElementById('mini-hz-' + k);
+      if (card) card.classList.toggle('selected', hz === k);
+    });
+    renderStrategy();
+  }
+
   // =========================================================
-  // Data Fetching (Binance, Upbit, Futures, Mempool, F&G, SEC)
+  // API Data Fetchers
   // =========================================================
   async function fetchMarketPrices() {
     try {
@@ -1264,7 +2088,10 @@
       const ethBtcData = await ethBtcRes.json();
 
       const usdtObj = upbitData.find(x => x.market === 'KRW-USDT');
-      if (usdtObj && usdtObj.trade_price) state.usdtKrw = usdtObj.trade_price;
+      if (usdtObj && usdtObj.trade_price) {
+        state.usdtKrw = usdtObj.trade_price;
+        recalcStoredAvgPricesWithFx();
+      }
 
       const upBtc = upbitData.find(x => x.market === 'KRW-BTC');
       const upEth = upbitData.find(x => x.market === 'KRW-ETH');
@@ -1294,6 +2121,8 @@
 
       updateSyncTime();
       renderTicker();
+      renderPositionPnL();
+      renderStrategy();
       checkAlerts();
     } catch (e) {
       console.warn('Market fetch err:', e);
@@ -1319,15 +2148,26 @@
     }
   }
 
-  async function fetchDailyAnd4hMetrics() {
+  async function fetchMultiHorizonData() {
     try {
-      const [b1d, e1d, b4h, e4h] = await Promise.all([
+      const [b1h, e1h, b4h, e4h, b1d, e1d, b1w, e1w] = await Promise.all([
+        fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=60'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1h&limit=60'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=60'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=4h&limit=60'),
         fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=210'),
         fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=210'),
-        fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h&limit=60'),
-        fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=4h&limit=60')
+        fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1w&limit=60'),
+        fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1w&limit=60')
       ]);
-      const [rb1d, re1d, rb4h, re4h] = await Promise.all([b1d.json(), e1d.json(), b4h.json(), e4h.json()]);
+      const [rb1h, re1h, rb4h, re4h, rb1d, re1d, rb1w, re1w] = await Promise.all([
+        b1h.json(), e1h.json(), b4h.json(), e4h.json(),
+        b1d.json(), e1d.json(), b1w.json(), e1w.json()
+      ]);
+
+      const parseK = raw => raw.map(d => ({ t: d[0], o: +d[1], h: +d[2], l: +d[3], c: +d[4], v: +d[5] }));
+      state.horizonsData.BTC = { k1h: parseK(rb1h), k4h: parseK(rb4h), k1d: parseK(rb1d), k1w: parseK(rb1w) };
+      state.horizonsData.ETH = { k1h: parseK(re1h), k4h: parseK(re4h), k1d: parseK(re1d), k1w: parseK(re1w) };
 
       const bCloses = rb1d.map(d => +d[4]);
       const eCloses = re1d.map(d => +d[4]);
@@ -1362,7 +2202,7 @@
       renderAll();
       checkAlerts();
     } catch (e) {
-      console.warn('1d/4h metrics err:', e);
+      console.warn('Multi-horizon metrics err:', e);
     }
   }
 
@@ -1380,6 +2220,7 @@
         }))
       };
       renderSentiment();
+      renderStrategy();
     } catch (e) {
       console.warn('FnG BTC err:', e);
     }
@@ -1449,7 +2290,7 @@
   }
 
   // =========================================================
-  // WebSocket Live Stream & Background Resume Handler
+  // WebSocket Live Stream & Background Resume
   // =========================================================
   function connectWebSocket() {
     if (state.ws) {
@@ -1481,7 +2322,6 @@
 
         state.prices[sym] = { usd, chg, high, low, vol, krw, kimp };
 
-        // Inject live tick into active chart last candle
         const kArr = state.klines[sym];
         if (kArr.length > 0) {
           const last = kArr[kArr.length - 1];
@@ -1514,7 +2354,7 @@
   });
 
   // =========================================================
-  // Render Functions (Ticker, Chart, Sentiment, Strategy, Intel, Position)
+  // Render Functions (Ticker, Sentiment, 3-Panel Pro Chart)
   // =========================================================
   function renderTicker() {
     const sym = state.asset;
@@ -1579,9 +2419,6 @@
     }).join('');
   }
 
-  // =========================================================
-  // 3-Panel Pro Chart Renderer (Price + Volume + RSI/Signal)
-  // =========================================================
   function drawProChart() {
     const canvas = document.getElementById('pro-chart');
     if (!canvas) return;
@@ -1638,14 +2475,12 @@
     const stepX = plotW / (bars.length + 1.5);
     const getX = i => (i + 0.8) * stepX;
 
-    // Panel vertical layout
     const p1Top = 10, p1H = H * 0.57;
     const p2Top = p1Top + p1H + 6, p2H = H * 0.16;
     const p3Top = p2Top + p2H + 6, p3H = H - p3Top - 8;
 
     ctx.clearRect(0, 0, W, H);
 
-    // Price scale
     let pMin = Infinity, pMax = -Infinity;
     let maxBarIdx = 0, minBarIdx = 0;
     bars.forEach((b, i) => {
@@ -1656,16 +2491,18 @@
         if (bbL[i] !== null && bbL[i] < pMin) pMin = bbL[i];
       }
     });
-    const myAvg = state.myPos[sym].avg;
-    if (state.overlays.avg && myAvg > 0) {
-      if (myAvg > pMax) pMax = myAvg;
-      if (myAvg < pMin) pMin = myAvg;
+
+    // Reflect KRW->USD auto-converted user average price on chart
+    const myAvgUsd = state.myPos[sym].avgUsd || 0;
+    if (state.overlays.avg && myAvgUsd > 0) {
+      if (myAvgUsd > pMax) pMax = myAvgUsd;
+      if (myAvgUsd < pMin) pMin = myAvgUsd;
     }
+
     const pPad = (pMax - pMin) * 0.12 || 1;
     pMax += pPad; pMin -= pPad;
     const getY1 = val => p1Top + p1H - ((val - pMin) / (pMax - pMin)) * p1H;
 
-    // Horizontal grid lines
     ctx.strokeStyle = cGrid;
     ctx.lineWidth = 1;
     [0.2, 0.5, 0.8].forEach(r => {
@@ -1675,7 +2512,6 @@
     ctx.beginPath(); ctx.moveTo(0, p2Top - 3); ctx.lineTo(W, p2Top - 3); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, p3Top - 3); ctx.lineTo(W, p3Top - 3); ctx.stroke();
 
-    // Bollinger Bands Shaded Area
     if (state.overlays.bb) {
       ctx.beginPath();
       let started = false;
@@ -1706,7 +2542,6 @@
       });
     }
 
-    // Price Candles or Line
     if (state.chartType === 'candle') {
       const cw = Math.max(3, stepX * 0.62);
       bars.forEach((b, i) => {
@@ -1736,7 +2571,6 @@
       ctx.stroke();
     }
 
-    // Moving Averages (5, 10, 20, 60)
     if (state.overlays.ma) {
       const maConfigs = [
         { arr: ma5, color: '#FCD535' },
@@ -1758,7 +2592,6 @@
       });
     }
 
-    // High / Low Period Callouts
     ctx.font = 'bold 9.5px -apple-system, sans-serif';
     const hiBar = bars[maxBarIdx];
     const loBar = bars[minBarIdx];
@@ -1771,7 +2604,6 @@
     ctx.textAlign = loX > plotW * 0.7 ? 'right' : 'left';
     ctx.fillText(`최저 ${fmtUsd(loBar.l, sym === 'ETH' ? 1 : 0)}`, loX, Math.min(p1Top + p1H - 2, loY + 11));
 
-    // B / S Signal Pins
     if (state.overlays.bs) {
       for (let i = 1; i < bars.length; i++) {
         if (rsi[i] === null || rsi[i - 1] === null) continue;
@@ -1792,21 +2624,21 @@
       }
     }
 
-    // My Average Price Horizontal Line
-    if (state.overlays.avg && myAvg > 0) {
-      const yAvg = getY1(myAvg);
+    if (state.overlays.avg && myAvgUsd > 0) {
+      const yAvg = getY1(myAvgUsd);
       ctx.strokeStyle = cUp;
-      ctx.lineWidth = 1.2;
+      ctx.lineWidth = 1.25;
       ctx.beginPath(); ctx.moveTo(0, yAvg); ctx.lineTo(plotW, yAvg); ctx.stroke();
-      ctx.fillStyle = cUp;
-      ctx.fillRect(2, yAvg - 8, 42, 14);
-      ctx.fillStyle = '#0B0E11';
+      const lblTxt = `평단 ${fmtUsd(myAvgUsd, sym === 'ETH' ? 0 : 0)}`;
       ctx.font = 'bold 8.5px sans-serif';
+      const boxW = Math.max(58, ctx.measureText(lblTxt).width + 8);
+      ctx.fillStyle = cUp;
+      ctx.fillRect(2, yAvg - 8, boxW, 14);
+      ctx.fillStyle = '#0B0E11';
       ctx.textAlign = 'left';
-      ctx.fillText('매수평균', 5, yAvg + 2);
+      ctx.fillText(lblTxt, 6, yAvg + 2);
     }
 
-    // Live Price Dashed Line + Right Axis Badge
     const lastPrice = bars[bars.length - 1].c;
     const yLive = getY1(lastPrice);
     const liveColor = lastPrice >= bars[bars.length - 1].o ? cUp : cDn;
@@ -1888,7 +2720,6 @@
     ctx.textAlign = 'center';
     ctx.fillText(curRsi.toFixed(1), plotW + rightMargin / 2, yRsi + 3);
 
-    // Crosshair Scrubbing HUD
     if (state.hoverIdx >= 0 && state.hoverIdx < bars.length) {
       const idx = state.hoverIdx;
       const hb = bars[idx];
@@ -1910,7 +2741,7 @@
       document.getElementById('hud-right').innerHTML = `<button type="button" class="hud-reset-btn" onclick="resetChartHover()">해제</button>`;
     } else {
       document.getElementById('hud-left').innerText = '차트를 터치·드래그하여 시점별 OHLC/RSI 조회';
-      document.getElementById('hud-right').innerText = `RSI ${(curRsi).toFixed(1)}`;
+      document.getElementById('hud-right').innerText = `RSI ${curRsi.toFixed(1)}`;
     }
   }
 
@@ -1950,149 +2781,463 @@
   }
 
   // =========================================================
-  // 6-Tier AI DCA Strategy Engine (SS / S / A / B / C / D)
+  // v5.0 Multi-Horizon AI DCA Strategy Engine (Short / Mid / Long)
   // =========================================================
-  function renderStrategy() {
-    const sym = state.asset;
+  function computeMultiHorizonStrategy(sym) {
     const p = state.prices[sym];
-    const rsi1d = state.rsi1d[sym] || 50;
-    const rsi4h = state.rsi4h[sym] || 50;
-    const ath = state.ath[sym];
-    const dd = p.usd > 0 && ath > 0 ? Math.abs(((p.usd - ath) / ath) * 100) : 0;
-    const fng = sym === 'BTC' ? state.fngBtc.val : state.fngEth.val;
-    const kimp = p.kimp || 0;
-    const fr = state.deriv[sym].funding || 0;
-    const etfM = sym === 'BTC' ? state.inst.btcEtfFlowM : state.inst.ethEtfFlowM;
-    const instAvg = sym === 'BTC' ? state.inst.mstrAvgCost : state.inst.bmnrAvgCost;
+    const hzData = state.horizonsData[sym];
+    const dec = sym === 'ETH' ? 2 : 0;
+    const krwRate = (p.usd > 0 && p.krw > 0) ? (p.krw / p.usd) : state.usdtKrw;
 
-    // 1. Technical Momentum (25 pts)
-    const avgRsi = rsi1d * 0.65 + rsi4h * 0.35;
-    const sTech = Math.round(Math.max(2, Math.min(25, ((75 - avgRsi) / 50) * 25)));
+    // ---------------------------------------------------------
+    // 1. SHORT-TERM ENGINE (1D ~ 1W: Swing & Short Squeeze)
+    // ---------------------------------------------------------
+    const c1h = hzData.k1h.map(b => b.c);
+    const c4h = hzData.k4h.map(b => b.c);
+    const rsi1hArr = calcWilderRSI(c1h, 14);
+    const rsi4hArr = calcWilderRSI(c4h, 14);
+    const r1h = rsi1hArr[rsi1hArr.length - 1] || 50;
+    const r1hPrev = rsi1hArr[rsi1hArr.length - 2] || r1h;
+    const r4h = rsi4hArr[rsi4hArr.length - 1] || state.rsi4h[sym] || 50;
+    const r4hPrev = rsi4hArr[rsi4hArr.length - 2] || r4h;
 
-    // 2. ATH Drawdown & Valuation Support (20 pts)
-    const sAth = Math.round(Math.max(3, Math.min(20, (dd / 35) * 20)));
-
-    // 3. Sentiment & Kimp Supply/Demand (15 pts)
-    let sSent = Math.round(Math.max(2, Math.min(12, ((80 - fng) / 60) * 12)));
-    if (kimp < 0) sSent = Math.min(15, sSent + 3);
-    else if (kimp <= 2.5) sSent = Math.min(15, sSent + 1);
-
-    // 4. Derivatives Funding Rate Contrarian (15 pts)
-    let sDeriv = 8;
-    if (fr <= -0.01) sDeriv = 15;
-    else if (fr < 0) sDeriv = 13;
-    else if (fr <= 0.015) sDeriv = 9;
-    else if (fr >= 0.04) sDeriv = 3;
-
-    // 5. US Spot ETF Net Flow (15 pts)
-    let sEtf = 8;
-    if (etfM >= 200) sEtf = 15;
-    else if (etfM >= 50) sEtf = 12;
-    else if (etfM > 0) sEtf = 10;
-    else if (etfM <= -150) sEtf = 3;
-    else if (etfM < 0) sEtf = 5;
-
-    // 6. Cycle & Institutional Cost Basis (10 pts)
-    let sInst = 6;
-    if (p.usd > 0 && instAvg > 0 && p.usd <= instAvg * 1.03) sInst = 10;
-    else if (sym === 'BTC' && state.halving.pct < 65) sInst = 8;
-
-    const total = Math.min(100, Math.max(0, sTech + sAth + sSent + sDeriv + sEtf + sInst));
-
-    // Tier classification
-    let tier = 'B', badgeCls = 'gold', headline = '', action = '', alloc = '';
-    if (total >= 92) {
-      tier = 'SS'; badgeCls = 'green'; alloc = '투매 매집 · 30~35%';
-      headline = '역대급 과매도 투매 구간 (최우선 매집)';
-      action = '가용 현금의 30~35%를 1·2차 지정가로 적극 분할 매집하세요.';
-    } else if (total >= 82) {
-      tier = 'S'; badgeCls = 'green'; alloc = '적극 매집 · 20~25%';
-      headline = '강력한 저평가 반등 구간';
-      action = '가용 현금의 20~25% 비중으로 눌림목 분할 진입을 권장합니다.';
-    } else if (total >= 68) {
-      tier = 'A'; badgeCls = 'green'; alloc = '분할 추매 · 10~15%';
-      headline = '양호한 분할 매수 우위 구간';
-      action = '가용 현금의 10~15% 범위에서 지정가 분할 매수가 유효합니다.';
-    } else if (total >= 50) {
-      tier = 'B'; badgeCls = 'gold'; alloc = '소액 적립 · 5~10%';
-      headline = '중립적 정액 적립식(DCA) 구간';
-      action = '추격 매수는 자제하고 5~10% 소액 정액 적립만 유지하세요.';
-    } else if (total >= 35) {
-      tier = 'C'; badgeCls = 'red'; alloc = '진입 보류 · 0%';
-      headline = '단기 과열 경계 · 현금 관망';
-      action = '신규 매수를 보류하고 조정 시까지 현금을 보유하세요.';
-    } else {
-      tier = 'D'; badgeCls = 'red'; alloc = '매수 중단 · 분할익절';
-      headline = '극단적 과열 · 리스크 관리 구간';
-      action = '매수를 전면 중단하고 목표 수익 구간에서 분할 익절을 고려하세요.';
+    // Factor S1: 1H & 4H Oversold & Bounce Turn (35 pts)
+    const blendShortRsi = r1h * 0.45 + r4h * 0.55;
+    let s1_rsi = Math.round(Math.max(3, Math.min(30, ((72 - blendShortRsi) / 44) * 30)));
+    if ((r1h <= 35 && r1h > r1hPrev) || (r4h <= 36 && r4h > r4hPrev)) {
+      s1_rsi = Math.min(35, s1_rsi + 5); // Rebound turn bonus
     }
 
-    document.getElementById('strat-detail-title').innerText = `${sym} AI 분할 매수(DCA)`;
+    // Factor S2: 1H/4H Bollinger Band Lower Touch/Reclaim (25 pts)
+    const bb4h = calcBB(c4h, 20, 2);
+    const bb4L = bb4h.lower[bb4h.lower.length - 1];
+    const bb4M = bb4h.mid[bb4h.mid.length - 1];
+    const ema20_4h = calcEMA(c4h, 20);
+    const resist4h = ema20_4h[ema20_4h.length - 1] || bb4M || (p.usd * 1.022);
+    let s2_bb = 12;
+    if (bb4L && p.usd > 0) {
+      const distPct = ((p.usd - bb4L) / bb4L) * 100;
+      if (distPct <= 0.3) s2_bb = 24;
+      else if (distPct <= 1.2) s2_bb = 20;
+      else if (distPct <= 2.5) s2_bb = 15;
+      else if (distPct >= 6.0) s2_bb = 6;
+    }
+
+    // Factor S3: Perpetual 8h Funding Rate Short-Squeeze Pressure (25 pts)
+    const fr = state.deriv[sym].funding || 0;
+    let s3_fr = 13;
+    if (fr <= -0.015) s3_fr = 25;
+    else if (fr < 0) s3_fr = 21;
+    else if (fr <= 0.015) s3_fr = 14;
+    else if (fr >= 0.04) s3_fr = 4;
+    else s3_fr = 9;
+
+    // Factor S4: Real-time Kimchi Premium Sufficiency (15 pts)
+    const kimp = p.kimp || 0;
+    let s4_kimp = 9;
+    if (kimp < -0.5) s4_kimp = 15;
+    else if (kimp <= 1.5) s4_kimp = 12;
+    else if (kimp <= 3.0) s4_kimp = 8;
+    else s4_kimp = 3;
+
+    const shortScore = Math.min(100, Math.max(0, s1_rsi + s2_bb + s3_fr + s4_kimp));
+    const shortTag = shortScore >= 75 ? '반등유효' : shortScore >= 55 ? '단기눌림' : shortScore >= 40 ? '방향탐색' : '과열경계';
+    const shortTagCls = shortScore >= 75 ? 'green' : shortScore >= 55 ? 'blue' : shortScore >= 40 ? 'gold' : 'red';
+
+    const sD1 = shortScore >= 75 ? 0.008 : 0.013;
+    const sD2 = shortScore >= 75 ? 0.018 : 0.026;
+    const shortTargets = {
+      t1Usd: p.usd * (1 - sD1),
+      t1Krw: p.usd * (1 - sD1) * krwRate,
+      t1Pct: (sD1 * 100).toFixed(1),
+      t2Usd: p.usd * (1 - sD2),
+      t2Krw: p.usd * (1 - sD2) * krwRate,
+      t2Pct: (sD2 * 100).toFixed(1),
+      resUsd: resist4h,
+      resKrw: resist4h * krwRate,
+      advice: shortScore >= 75
+        ? `1H RSI(${Math.round(r1h)})·4H RSI(${Math.round(r4h)}) 과매도 및 펀딩비(${fr.toFixed(4)}%) 구조가 단기 기술적 반등에 우호적입니다. 1차 눌림목 지정가로 짧게 대응하고 4H 20EMA 부근에서 일부 익절을 검토하세요.`
+        : shortScore >= 52
+          ? `단기 파동이 중립 구간에 있어 추격 매수보다 1·2차 지지선 지정가 대기 전략이 유리합니다.`
+          : `단기 과열 또는 김프·롱 쏠림 구간입니다. 단기 스윙 신규 진입은 보류하고 눌림목을 기다리세요.`
+    };
+
+    // ---------------------------------------------------------
+    // 2. MID-TERM ENGINE (2W ~ 2M: Swing Trend & ETF Institutional Flow)
+    // ---------------------------------------------------------
+    const c1d = hzData.k1d.map(b => b.c);
+    const rsi1d = state.rsi1d[sym] || 50;
+    const sma20_1d = calcSMA(c1d, 20);
+    const sma60_1d = calcSMA(c1d, 60);
+    const m20 = sma20_1d[sma20_1d.length - 1] || p.usd;
+    const m60 = sma60_1d[sma60_1d.length - 1] || p.usd;
+
+    // Factor M1: Daily RSI & 20D/60D MA Support (30 pts)
+    let m1_trend = Math.round(Math.max(4, Math.min(22, ((75 - rsi1d) / 50) * 22)));
+    if (p.usd >= m60 * 0.98 && p.usd <= m20 * 1.02) {
+      m1_trend = Math.min(30, m1_trend + 8); // Healthy pullback between 20D & 60D MA
+    } else if (p.usd < m60 * 0.92) {
+      m1_trend = Math.min(30, m1_trend + 4);
+    }
+
+    // Factor M2: US Spot ETF Institutional Net Flow (30 pts)
+    const etfM = sym === 'BTC' ? state.inst.btcEtfFlowM : state.inst.ethEtfFlowM;
+    let m2_etf = 15;
+    if (etfM >= 250) m2_etf = 30;
+    else if (etfM >= 80) m2_etf = 24;
+    else if (etfM > 0) m2_etf = 19;
+    else if (etfM <= -200) m2_etf = 5;
+    else if (etfM < 0) m2_etf = 9;
+
+    // Factor M3: Fear & Greed Sentiment & Relative Strength (20 pts)
+    const fng = sym === 'BTC' ? state.fngBtc.val : state.fngEth.val;
+    let m3_sent = Math.round(Math.max(3, Math.min(17, ((80 - fng) / 60) * 17)));
+    if (sym === 'ETH' && state.ethBtc.chg > 0) m3_sent = Math.min(20, m3_sent + 3);
+    if (sym === 'BTC' && kimp <= 2.0) m3_sent = Math.min(20, m3_sent + 2);
+
+    // Factor M4: On-chain Mempool & Leverage Health (20 pts)
+    let m4_health = 12;
+    if (fr <= 0.015 && state.mempoolFee > 0 && state.mempoolFee <= 35) m4_health = 17;
+    else if (fr >= 0.04) m4_health = 6;
+
+    const midScore = Math.min(100, Math.max(0, m1_trend + m2_etf + m3_sent + m4_health));
+    const midTag = midScore >= 75 ? '수급매집' : midScore >= 55 ? '눌림유효' : midScore >= 40 ? '추세관망' : '수급이탈';
+    const midTagCls = midScore >= 75 ? 'green' : midScore >= 55 ? 'blue' : midScore >= 40 ? 'gold' : 'red';
+
+    const mD1 = midScore >= 75 ? 0.020 : 0.028;
+    const mD2 = midScore >= 75 ? 0.042 : 0.055;
+    const midTargets = {
+      t1Usd: p.usd * (1 - mD1),
+      t1Krw: p.usd * (1 - mD1) * krwRate,
+      t1Pct: (mD1 * 100).toFixed(1),
+      t2Usd: p.usd * (1 - mD2),
+      t2Krw: p.usd * (1 - mD2) * krwRate,
+      t2Pct: (mD2 * 100).toFixed(1),
+      ma20Usd: m20,
+      ma20Krw: m20 * krwRate,
+      advice: midScore >= 72
+        ? `현물 ETF 수급(${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M)과 일봉 눌림목 구조가 중기 스윙 매집에 유리합니다. 1·2차 지정가로 분할 매집 후 일봉 20일선(${fmtUsd(m20, dec)}) 안착 여부를 확인하세요.`
+        : midScore >= 50
+          ? `중기 추세는 방향성 탐색 구간입니다. 성급한 비중 확대보다 20일선(${fmtUsd(m20, dec)}) 회복 또는 2차 지지선 도달 시 분할 접근하세요.`
+          : `ETF 순유출 또는 중기 역배열 압력이 존재합니다. 중기 스윙 비중은 보수적으로 유지하세요.`
+    };
+
+    // ---------------------------------------------------------
+    // 3. LONG-TERM ENGINE (3M ~ Halving Cycle: Value DCA)
+    // ---------------------------------------------------------
+    const ath = state.ath[sym];
+    const dd = p.usd > 0 && ath > 0 ? Math.abs(((p.usd - ath) / ath) * 100) : 0;
+    const mayer = state.mayer[sym] || 1.0;
+    const instAvg = sym === 'BTC' ? state.inst.mstrAvgCost : state.inst.bmnrAvgCost;
+    const c1w = hzData.k1w.map(b => b.c);
+    const rsi1wArr = calcWilderRSI(c1w, 14);
+    const r1w = rsi1wArr[rsi1wArr.length - 1] || 50;
+
+    // Factor L1: ATH Drawdown Discount (35 pts)
+    const maxDdScale = sym === 'BTC' ? 45 : 55;
+    const l1_ath = Math.round(Math.max(4, Math.min(35, (dd / maxDdScale) * 35)));
+
+    // Factor L2: 200-Day Moving Average Valuation / Mayer Multiple (25 pts)
+    let l2_mayer = 12;
+    if (mayer <= 0.80) l2_mayer = 25;
+    else if (mayer <= 0.95) l2_mayer = 21;
+    else if (mayer <= 1.10) l2_mayer = 16;
+    else if (mayer <= 1.45) l2_mayer = 10;
+    else l2_mayer = 4;
+
+    // Factor L3: Institutional Avg Cost Floor Support (20 pts)
+    let l3_inst = 10;
+    if (p.usd > 0 && instAvg > 0) {
+      const ratioToInst = p.usd / instAvg;
+      if (ratioToInst <= 0.95) l3_inst = 20;
+      else if (ratioToInst <= 1.08) l3_inst = 16;
+      else if (ratioToInst <= 1.30) l3_inst = 11;
+      else l3_inst = 6;
+    }
+
+    // Factor L4: 5th Halving Cycle & Weekly RSI (20 pts)
+    let l4_cycle = Math.round(Math.max(3, Math.min(14, ((75 - r1w) / 45) * 14)));
+    if (sym === 'BTC' && state.halving.pct < 65) l4_cycle = Math.min(20, l4_cycle + 6);
+    else if (sym === 'ETH' && r1w <= 45) l4_cycle = Math.min(20, l4_cycle + 5);
+
+    const longScore = Math.min(100, Math.max(0, l1_ath + l2_mayer + l3_inst + l4_cycle));
+    const longTag = longScore >= 78 ? '적극적립' : longScore >= 58 ? '가치할인' : longScore >= 42 ? '정액유지' : '비중축소';
+    const longTagCls = longScore >= 78 ? 'green' : longScore >= 58 ? 'blue' : longScore >= 42 ? 'gold' : 'red';
+
+    const dcaMult = longScore >= 85 ? '2.0x (대폭 증액)' : longScore >= 72 ? '1.5x (비중 확대)' : longScore >= 52 ? '1.0x (표준 적립)' : '0.5x (축소 적립)';
+    const lD1 = longScore >= 75 ? 0.040 : 0.055;
+    const lD2 = longScore >= 75 ? 0.080 : 0.105;
+    const longTargets = {
+      multiplier: dcaMult,
+      t1Usd: p.usd * (1 - lD1),
+      t1Krw: p.usd * (1 - lD1) * krwRate,
+      t1Pct: (lD1 * 100).toFixed(1),
+      t2Usd: p.usd * (1 - lD2),
+      t2Krw: p.usd * (1 - lD2) * krwRate,
+      t2Pct: (lD2 * 100).toFixed(1),
+      instUsd: instAvg,
+      instKrw: instAvg * krwRate,
+      advice: longScore >= 72
+        ? `역대 고점 대비 -${dd.toFixed(1)}% 조정 및 200일선 배수(${mayer.toFixed(2)}x) 기준 장기 저평가 구간입니다. 정기 적립액을 ${dcaMult}로 늘리고 깊은 그물망 지정가를 병행하세요.`
+        : longScore >= 50
+          ? `장기 가치 기준 적정 매집 구간입니다. 무리한 일시불 투입 대신 정기 적립식(DCA) 1.0배 페이스를 유지하세요.`
+          : `장기 추세 고점 부근입니다. 정기 적립 비중을 0.5배로 축소하고 현금 비중을 늘려 다음 조정을 대비하세요.`
+    };
+
+    // ---------------------------------------------------------
+    // 4. COMPOSITE SYNTHESIS & SEED ALLOCATION MATRIX
+    // ---------------------------------------------------------
+    const total = Math.round(shortScore * 0.30 + midScore * 0.35 + longScore * 0.35);
+    let tier = 'B', badgeCls = 'gold', headline = '', action = '', allocLabel = '';
+    let deployTotal = 10;
+
+    if (total >= 90) {
+      tier = 'SS'; badgeCls = 'green'; deployTotal = 35; allocLabel = '최우선 매집 · 35%';
+      headline = '단·중·장기 동반 투매 바닥 구간';
+    } else if (total >= 80) {
+      tier = 'S'; badgeCls = 'green'; deployTotal = 25; allocLabel = '적극 매집 · 25%';
+      headline = '강력한 다중 시간축 분할 매수 구간';
+    } else if (total >= 67) {
+      tier = 'A'; badgeCls = 'green'; deployTotal = 18; allocLabel = '분할 추매 · 18%';
+      headline = '매수 우위 · 시간축별 선별 진입 구간';
+    } else if (total >= 50) {
+      tier = 'B'; badgeCls = 'gold'; deployTotal = 10; allocLabel = '소액 적립 · 10%';
+      headline = '시간축 신호 혼재 · 선별적 소액 적립';
+    } else if (total >= 36) {
+      tier = 'C'; badgeCls = 'red'; deployTotal = 0; allocLabel = '진입 보류 · 0%';
+      headline = '단·중기 과열 경계 · 현금 관망';
+    } else {
+      tier = 'D'; badgeCls = 'red'; deployTotal = 0; allocLabel = '매수 중단 · 익절관리';
+      headline = '극단적 과열 · 리스크 관리 구간';
+    }
+
+    // Dynamic Seed Split across Short / Mid / Long / Cash
+    let allocShort = 0, allocMid = 0, allocLong = 0;
+    if (deployTotal > 0) {
+      const wS = Math.max(0, shortScore - 40);
+      const wM = Math.max(0, midScore - 40);
+      const wL = Math.max(0, longScore - 40);
+      const wSum = wS + wM + wL;
+      if (wSum > 0) {
+        allocShort = Math.round((wS / wSum) * deployTotal);
+        allocMid = Math.round((wM / wSum) * deployTotal);
+        allocLong = Math.max(0, deployTotal - allocShort - allocMid);
+      } else {
+        allocLong = deployTotal;
+      }
+    }
+    const allocCash = Math.max(0, 100 - (allocShort + allocMid + allocLong));
+
+    // Context-aware Conflict Synthesis Sentence
+    const maxHz = Math.max(shortScore, midScore, longScore);
+    const minHz = Math.min(shortScore, midScore, longScore);
+    if (deployTotal === 0) {
+      action = '단·중기 과열이 해소될 때까지 신규 매수를 보류하고 100% 현금을 관망 유지하세요.';
+    } else if (maxHz - minHz >= 22) {
+      const bestName = shortScore === maxHz ? '단기 반등' : midScore === maxHz ? '중기 눌림' : '장기 저평가';
+      const weakName = shortScore === minHz ? '단기 과열' : midScore === minHz ? '중기 추세' : '장기 고점';
+      action = `${bestName}(${maxHz}점)은 우호적이나 ${weakName}(${minHz}점)은 보수적입니다. 가용 현금의 ${deployTotal}%만 투입하되 유리한 시간축에 집중 배분하세요.`;
+    } else {
+      action = `단기(${shortScore}점)·중기(${midScore}점)·장기(${longScore}점) 흐름이 균형을 이루고 있습니다. 가용 현금의 ${deployTotal}%를 3개 시간축 비율대로 분할 집행하세요.`;
+    }
+
+    return {
+      sym, dec, total, tier, badgeCls, headline, action, allocLabel,
+      deployTotal, allocShort, allocMid, allocLong, allocCash,
+      short: {
+        score: shortScore, tag: shortTag, tagCls: shortTagCls,
+        factors: [
+          { name: '1. 1H·4H 초단기 RSI 과매도 & 반등 턴', help: 'rsi', score: s1_rsi, max: 35, desc: `1H RSI ${Math.round(r1h)} · 4H RSI ${Math.round(r4h)} (${r1h > r1hPrev || r4h > r4hPrev ? '상승 턴 포착' : '하락/횡보 진행'})` },
+          { name: '2. 4H 볼린저밴드 하단 지지 강도', help: 'ma', score: s2_bb, max: 25, desc: `4H 밴드 하단 ${fmtUsd(bb4L || 0, dec)} · 단기 저항(20EMA) ${fmtUsd(resist4h, dec)}` },
+          { name: '3. 선물 8h 펀딩비 숏 스퀴즈 압력', help: 'funding', score: s3_fr, max: 25, desc: `8h 펀딩비 ${fr >= 0 ? '+' : ''}${fr.toFixed(4)}% (${fr < 0 ? '숏 과밀·반등 유리' : '중립/롱 우위'})` },
+          { name: '4. 실시간 김프 역프/안정 수급', help: 'kimp', score: s4_kimp, max: 15, desc: `국내외 가격 괴리율 ${kimp >= 0 ? '+' : ''}${kimp.toFixed(2)}%` }
+        ],
+        targets: shortTargets
+      },
+      mid: {
+        score: midScore, tag: midTag, tagCls: midTagCls,
+        factors: [
+          { name: '1. 일봉 RSI(14) & 20일·60일 이평선 지지', help: 'ma', score: m1_trend, max: 30, desc: `일봉 RSI ${Math.round(rsi1d)} · 20일선 ${fmtUsd(m20, dec)} · 60일선 ${fmtUsd(m60, dec)}` },
+          { name: '2. 미국 현물 ETF 기관 순유입 수급', help: 'etf_flow', score: m2_etf, max: 30, desc: `${sym} 현물 ETF 일간 ${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M (${etfM >= 0 ? '순유입' : '순유출'})` },
+          { name: '3. 공포·탐욕 심리 & 상대강도', help: 'fng', score: m3_sent, max: 20, desc: `심리지수 ${fng} (${sym === 'BTC' ? state.fngBtc.cls : state.fngEth.cls})` },
+          { name: '4. 온체인 멤풀 & 파생 레버리지 건전성', help: 'deriv_oi', score: m4_health, max: 20, desc: `멤풀 수수료 ${state.mempoolFee || '--'} sat/vB · 펀딩비 ${fr.toFixed(4)}%` }
+        ],
+        targets: midTargets
+      },
+      long: {
+        score: longScore, tag: longTag, tagCls: longTagCls,
+        factors: [
+          { name: '1. 역대 최고가(ATH) 대비 할인 폭', help: 'ath_dd', score: l1_ath, max: 35, desc: `역대 고점(${fmtUsd(ath, 0)}) 대비 -${dd.toFixed(1)}% 조정 구간` },
+          { name: '2. 200일 이동평균선 배수 (Mayer Multiple)', help: 'rel_metric', score: l2_mayer, max: 25, desc: `현재가 ÷ 200일선 = ${mayer.toFixed(2)}x (${mayer < 1 ? '200일선 하회 저평가' : '200일선 상회'})` },
+          { name: '3. 기관 평균 매입단가(MSTR/BMNR) 방어선', help: 'inst_risk', score: l3_inst, max: 20, desc: `${sym === 'BTC' ? 'MSTR' : 'BMNR'} 기관 평단 ${fmtUsd(instAvg, 0)} (${fmtKrw(instAvg * krwRate)})` },
+          { name: '4. 5차 반감기 사이클 & 주봉 RSI 위치', help: 'halving', score: l4_cycle, max: 20, desc: `주봉 RSI ${Math.round(r1w)}${sym === 'BTC' ? ` · 반감기 진행률 ${state.halving.pct.toFixed(1)}%` : ''}` }
+        ],
+        targets: longTargets
+      }
+    };
+  }
+
+  function renderStrategy() {
+    const sym = state.asset;
+    const res = computeMultiHorizonStrategy(sym);
+    const p = state.prices[sym];
+
+    document.getElementById('strat-detail-title').innerText = `${sym} 멀티 호라이즌 AI 추매전략`;
     const allocPill = document.getElementById('strat-alloc-pill');
-    allocPill.innerText = alloc;
-    allocPill.className = 'badge-tag ' + badgeCls;
+    allocPill.innerText = res.allocLabel;
+    allocPill.className = 'badge-tag ' + res.badgeCls;
 
-    document.getElementById('strat-hero-score').innerText = total;
-    const circle = document.getElementById('dca-gauge-circle');
-    const circumference = 213.6;
-    circle.style.strokeDashoffset = circumference - (total / 100) * circumference;
-    circle.style.stroke = badgeCls === 'green' ? 'var(--green)' : badgeCls === 'gold' ? 'var(--gold)' : 'var(--red)';
-
-    const tBadge = document.getElementById('strat-tier-badge');
-    tBadge.innerText = `등급 ${tier} · ${total}점`;
-    tBadge.className = 'dca-tier-badge badge-tag ' + badgeCls;
-    document.getElementById('strat-hero-grade').innerText = headline;
-    document.getElementById('strat-action-short').innerText = action;
-
-    document.querySelectorAll('#tier-legend-grid .tier-cell').forEach(cell => {
-      cell.classList.toggle('current', cell.dataset.tier === tier);
+    // 3-Horizon Mini Cards
+    ['short', 'mid', 'long'].forEach(k => {
+      const item = res[k];
+      const scEl = document.getElementById(`mini-${k}-score`);
+      scEl.innerText = `${item.score}점`;
+      scEl.style.color = item.tagCls === 'green' ? 'var(--green)' : item.tagCls === 'blue' ? 'var(--blue)' : item.tagCls === 'gold' ? 'var(--gold)' : 'var(--red)';
+      const tgEl = document.getElementById(`mini-${k}-tag`);
+      tgEl.innerText = item.tag;
+      tgEl.className = 'hz-mini-tag badge-tag ' + item.tagCls;
     });
 
-    const factors = [
-      {
-        name: '1. 멀티 타임프레임 RSI 모멘텀',
-        help: 'rsi',
-        score: sTech, max: 25,
-        desc: `일봉 RSI ${Math.round(rsi1d)} · 4시간봉 RSI ${Math.round(rsi4h)} 기준 단기 과매도 반등 여력`
-      },
-      {
-        name: '2. 고점 대비(ATH) 낙폭 & 가치 지지',
-        help: 'ath_dd',
-        score: sAth, max: 20,
-        desc: `역대 고점 대비 -${dd.toFixed(1)}% 조정 · 200일선 배수 ${state.mayer[sym].toFixed(2)}x`
-      },
-      {
-        name: '3. 시장 심리 & 김프 수급',
-        help: 'kimp',
-        score: sSent, max: 15,
-        desc: `심리지수 ${fng} (${sym === 'BTC' ? state.fngBtc.cls : state.fngEth.cls}) · 김프 ${kimp >= 0 ? '+' : ''}${kimp.toFixed(2)}%`
-      },
-      {
-        name: '4. 선물 펀딩비 역발상 수급',
-        help: 'funding',
-        score: sDeriv, max: 15,
-        desc: `8h 펀딩비 ${fr >= 0 ? '+' : ''}${fr.toFixed(4)}% (${fr < 0 ? '숏 과밀·반등 우호' : '중립/롱 우위'})`
-      },
-      {
-        name: '5. 미국 현물 ETF 기관 순유입',
-        help: 'etf_flow',
-        score: sEtf, max: 15,
-        desc: `${sym} 현물 ETF 일간 ${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M (${etfM >= 0 ? '순유입' : '순유출'})`
-      },
-      {
-        name: '6. 기관 평단가 지지 & 사이클',
-        help: 'inst_risk',
-        score: sInst, max: 10,
-        desc: `${sym === 'BTC' ? 'MSTR' : 'BMNR'} 기관 평단 ${fmtUsd(instAvg, 0)} 대비 현재가 위치`
-      }
-    ];
+    // Comprehensive Gauge
+    document.getElementById('strat-hero-score').innerText = res.total;
+    const circle = document.getElementById('dca-gauge-circle');
+    const circumference = 213.6;
+    circle.style.strokeDashoffset = circumference - (res.total / 100) * circumference;
+    circle.style.stroke = res.badgeCls === 'green' ? 'var(--green)' : res.badgeCls === 'gold' ? 'var(--gold)' : 'var(--red)';
 
-    document.getElementById('strat-factor-list').innerHTML = factors.map(f => {
+    const tBadge = document.getElementById('strat-tier-badge');
+    tBadge.innerText = `종합 ${res.tier}등급 · ${res.total}점`;
+    tBadge.className = 'badge-tag ' + res.badgeCls;
+    document.getElementById('strat-hero-grade').innerText = res.headline;
+    document.getElementById('strat-action-short').innerText = res.action;
+
+    // Seed Allocation Bar
+    document.getElementById('seed-total-deploy').innerText = `총 투입 ${res.deployTotal}% (현금유보 ${res.allocCash}%)`;
+    document.getElementById('seg-short').style.width = `${res.allocShort}%`;
+    document.getElementById('seg-mid').style.width = `${res.allocMid}%`;
+    document.getElementById('seg-long').style.width = `${res.allocLong}%`;
+    document.getElementById('seg-cash').style.width = `${res.allocCash}%`;
+    document.getElementById('seed-legend-list').innerHTML = `
+      <span><i class="seed-dot" style="background:var(--blue);"></i>단기 스윙 ${res.allocShort}%</span>
+      <span><i class="seed-dot" style="background:var(--gold);"></i>중기 추세 ${res.allocMid}%</span>
+      <span><i class="seed-dot" style="background:var(--green);"></i>장기 적립 ${res.allocLong}%</span>
+      <span><i class="seed-dot" style="background:var(--border);"></i>현금 대기 ${res.allocCash}%</span>
+    `;
+
+    // My Avg Price Linked Averaging-Down (물타기) Advice
+    const pos = state.myPos[sym];
+    const avgBox = document.getElementById('avgdown-insight-box');
+    if (pos.avgKrw > 0 && p.krw > 0) {
+      const diffPct = ((p.krw - pos.avgKrw) / pos.avgKrw) * 100;
+      avgBox.style.display = 'block';
+      if (diffPct < -1.0) {
+        const isGoodAvgDown = res.mid.score >= 58 || res.long.score >= 65;
+        avgBox.className = 'avgdown-box' + (isGoodAvgDown ? '' : ' warn');
+        const simNewAvgKrw = (pos.avgKrw * 0.75) + (p.krw * 0.25);
+        const dropPct = ((pos.avgKrw - simNewAvgKrw) / pos.avgKrw) * 100;
+        avgBox.innerHTML = `
+          <div class="avgdown-title">
+            <span>내 평단 연동 물타기 진단 (${sym})</span>
+            <span style="color:var(--red);">${diffPct.toFixed(2)}% 손실권</span>
+          </div>
+          <div>
+            내 평단 <strong>${fmtKrw(pos.avgKrw)}</strong> (${fmtUsd(pos.avgUsd, res.dec)}) 대비 현재가 하회 중입니다.
+            ${isGoodAvgDown
+              ? `중·장기 점수가 양호하므로 권장 비중(${res.deployTotal}%) 분할 추매 시 평단가 약 <strong>${dropPct.toFixed(1)}%</strong> 인하가 유효합니다.`
+              : `단·중기 점수가 낮아 성급한 물타기는 자제하고 선택 세션의 2차 지지선까지 대기하세요.`}
+          </div>
+        `;
+      } else {
+        avgBox.className = 'avgdown-box';
+        avgBox.innerHTML = `
+          <div class="avgdown-title">
+            <span>내 평단 연동 포지션 진단 (${sym})</span>
+            <span style="color:var(--green);">+${diffPct.toFixed(2)}% 수익권</span>
+          </div>
+          <div>
+            내 평단 <strong>${fmtKrw(pos.avgKrw)}</strong> (${fmtUsd(pos.avgUsd, res.dec)}) 대비 수익 구간입니다. 무리한 추격 매수보다 눌림목 지정가 또는 장기 적립만 유지하세요.
+          </div>
+        `;
+      }
+    } else {
+      avgBox.style.display = 'none';
+    }
+
+    // Render Selected Session Detail
+    const container = document.getElementById('session-detail-container');
+    const hz = state.horizonTab;
+
+    if (hz === 'all') {
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>시계열별 핵심 타점 & 행동 요약</span></div>
+            <span class="badge-tag">터치 시 상세 전환</span>
+          </div>
+          <div class="matrix-row" onclick="selectHorizonSession('short')" style="cursor:pointer;">
+            <div class="matrix-top">
+              <span>⚡ 단기 스윙 (1일 ~ 1주)</span>
+              <span class="badge-tag ${res.short.tagCls}">${res.short.score}점 · ${res.short.tag}</span>
+            </div>
+            <div class="matrix-body">
+              <span>• 1차 눌림 지정가 (-${res.short.targets.t1Pct}%): <strong>${fmtUsd(res.short.targets.t1Usd, res.dec)}</strong> (${fmtKrw(res.short.targets.t1Krw)})</span>
+              <span>• 단기 반등 목표선(4H 20EMA): <strong>${fmtUsd(res.short.targets.resUsd, res.dec)}</strong> (${fmtKrw(res.short.targets.resKrw)})</span>
+            </div>
+          </div>
+          <div class="matrix-row" onclick="selectHorizonSession('mid')" style="cursor:pointer;">
+            <div class="matrix-top">
+              <span>📈 중기 스윙 (2주 ~ 2개월)</span>
+              <span class="badge-tag ${res.mid.tagCls}">${res.mid.score}점 · ${res.mid.tag}</span>
+            </div>
+            <div class="matrix-body">
+              <span>• 1차 스윙 지정가 (-${res.mid.targets.t1Pct}%): <strong>${fmtUsd(res.mid.targets.t1Usd, res.dec)}</strong> (${fmtKrw(res.mid.targets.t1Krw)})</span>
+              <span>• 추세 안착 기준선(일봉 20MA): <strong>${fmtUsd(res.mid.targets.ma20Usd, res.dec)}</strong> (${fmtKrw(res.mid.targets.ma20Krw)})</span>
+            </div>
+          </div>
+          <div class="matrix-row" onclick="selectHorizonSession('long')" style="cursor:pointer;">
+            <div class="matrix-top">
+              <span>🏛️ 장기 사이클 (3개월 ~ 반감기)</span>
+              <span class="badge-tag ${res.long.tagCls}">${res.long.score}점 · ${res.long.tag}</span>
+            </div>
+            <div class="matrix-body">
+              <span>• 정기 적립(DCA) 배수: <strong style="color:var(--gold);">${res.long.targets.multiplier}</strong></span>
+              <span>• 1차 그물망 지정가 (-${res.long.targets.t1Pct}%): <strong>${fmtUsd(res.long.targets.t1Usd, res.dec)}</strong> (${fmtKrw(res.long.targets.t1Krw)})</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span>6단계 AI 매수 등급 기준표</span></div>
+            <span class="badge-tag">현재 ${res.tier}등급</span>
+          </div>
+          <div class="tier-grid">
+            <div class="tier-cell ${res.tier === 'SS' ? 'current' : ''}"><strong>SS (90↑)</strong>투매 최우선 35%</div>
+            <div class="tier-cell ${res.tier === 'S' ? 'current' : ''}"><strong>S (80~89)</strong>적극 매집 25%</div>
+            <div class="tier-cell ${res.tier === 'A' ? 'current' : ''}"><strong>A (67~79)</strong>분할 추매 18%</div>
+            <div class="tier-cell ${res.tier === 'B' ? 'current' : ''}"><strong>B (50~66)</strong>소액 적립 10%</div>
+            <div class="tier-cell ${res.tier === 'C' ? 'current' : ''}"><strong>C (36~49)</strong>진입 보류 0%</div>
+            <div class="tier-cell ${res.tier === 'D' ? 'current' : ''}"><strong>D (35↓)</strong>매수 중단·익절</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    // Individual Session Detail View ('short' | 'mid' | 'long')
+    const sObj = res[hz];
+    const titles = {
+      short: '⚡ 단기 트레이딩 세션 (1일 ~ 1주)',
+      mid: '📈 중기 스윙 세션 (2주 ~ 2개월)',
+      long: '🏛️ 장기 사이클 적립 세션 (3개월 ~ 반감기)'
+    };
+
+    const factorsHtml = sObj.factors.map(f => {
       const pct = Math.round((f.score / f.max) * 100);
       return `
         <div class="factor-item">
           <div class="factor-top">
-            <span class="factor-name">${f.name} <button type="button" class="help-btn" onclick="openHelp('${f.help}')">?</button></span>
+            <span>${f.name} <button type="button" class="help-btn" onclick="openHelp('${f.help}')">?</button></span>
             <span class="factor-score">${f.score} / ${f.max}점</span>
           </div>
           <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
@@ -2101,26 +3246,71 @@
       `;
     }).join('');
 
-    // Limit Order Targets with KRW conversion
-    document.getElementById('limit-guide-title').innerText = `AI 지정가 분할 매수 타점 (${sym})`;
-    const dec = sym === 'ETH' ? 2 : 0;
-    const d1 = total >= 82 ? 0.012 : 0.020;
-    const d2 = total >= 82 ? 0.032 : 0.045;
-    if (p.usd > 0) {
-      const t1Usd = p.usd * (1 - d1);
-      const t2Usd = p.usd * (1 - d2);
-      const ratio = p.krw > 0 ? p.krw / p.usd : state.usdtKrw;
-      const t1Krw = t1Usd * ratio;
-      const t2Krw = t2Usd * ratio;
-      document.getElementById('limit-guide-list').innerHTML = `
-        <li>• 1차 눌림목 지정가 (-${(d1 * 100).toFixed(1)}%): <strong>${fmtUsd(t1Usd, dec)}</strong>
-          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t1Krw)} (1차 분할 비중 50%)</span>
+    let targetsHtml = '';
+    if (hz === 'short') {
+      const t = sObj.targets;
+      targetsHtml = `
+        <li>• 1차 초단기 눌림목 지정가 (-${t.t1Pct}%): <strong>${fmtUsd(t.t1Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.t1Krw)} (단기 배분 시드의 50%)</span>
         </li>
-        <li>• 2차 지지선 지정가 (-${(d2 * 100).toFixed(1)}%): <strong>${fmtUsd(t2Usd, dec)}</strong>
-          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t2Krw)} (2차 분할 비중 50%)</span>
+        <li>• 2차 4H 밴드 하단 지정가 (-${t.t2Pct}%): <strong>${fmtUsd(t.t2Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.t2Krw)} (단기 배분 시드의 50%)</span>
+        </li>
+        <li class="resist">• 단기 1차 반등 저항선 (4H 20EMA): <strong>${fmtUsd(t.resUsd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.resKrw)} (스윙 단기 익절 참고선)</span>
+        </li>
+      `;
+    } else if (hz === 'mid') {
+      const t = sObj.targets;
+      targetsHtml = `
+        <li>• 1차 중기 스윙 지정가 (-${t.t1Pct}%): <strong>${fmtUsd(t.t1Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.t1Krw)} (중기 배분 시드의 50%)</span>
+        </li>
+        <li>• 2차 일봉 지지선 지정가 (-${t.t2Pct}%): <strong>${fmtUsd(t.t2Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.t2Krw)} (중기 배분 시드의 50%)</span>
+        </li>
+        <li class="resist">• 중기 추세 전환 기준선 (일봉 20일선): <strong>${fmtUsd(t.ma20Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.ma20Krw)} (일봉 종가 안착 시 추세 강화)</span>
+        </li>
+      `;
+    } else {
+      const t = sObj.targets;
+      targetsHtml = `
+        <li class="resist">• 권장 정기 적립식(DCA) 투입 배수: <strong style="color:var(--gold);">${t.multiplier}</strong>
+          <span class="limit-krw-sub">평소 정기 매수 금액 대비 권장 증액·축소 배율</span>
+        </li>
+        <li>• 1차 장기 그물망 지정가 (-${t.t1Pct}%): <strong>${fmtUsd(t.t1Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.t1Krw)}</span>
+        </li>
+        <li>• 2차 깊은 조정 그물망 지정가 (-${t.t2Pct}%): <strong>${fmtUsd(t.t2Usd, res.dec)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.t2Krw)}</span>
+        </li>
+        <li class="resist">• 기관 평균 매입단가 방어선: <strong>${fmtUsd(t.instUsd, 0)}</strong>
+          <span class="limit-krw-sub">원화 환산 약 ${fmtKrw(t.instKrw)} (${sym === 'BTC' ? 'Strategy' : 'Bitmine'} 평단 기준)</span>
         </li>
       `;
     }
+
+    container.innerHTML = `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span>${titles[hz]}</span></div>
+          <span class="badge-tag ${sObj.tagCls}">${sObj.score} / 100점 · ${sObj.tag}</span>
+        </div>
+        <div style="font-size:12px; color:var(--text); background:var(--surface-2); padding:9px 10px; border-radius:8px; margin-bottom:12px;">
+          ${sObj.targets.advice}
+        </div>
+        ${factorsHtml}
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span>맞춤형 지정가 타점 & 핵심 기준선 (${sym})</span></div>
+          <span class="badge-tag gold">USD · KRW 병기</span>
+        </div>
+        <ul class="limit-list">${targetsHtml}</ul>
+      </div>
+    `;
   }
 
   // =========================================================
@@ -2130,7 +3320,6 @@
     const sym = state.asset;
     const inst = state.inst;
 
-    // 1. ETF Net Flow
     document.getElementById('etf-date-badge').innerText = inst.etfDate || '--';
     const bVal = document.getElementById('etf-btc-val');
     bVal.innerText = `${inst.btcEtfFlowM >= 0 ? '+' : ''}$${inst.btcEtfFlowM.toFixed(1)}M`;
@@ -2143,7 +3332,6 @@
     document.getElementById('etf-eth-sub').innerText = inst.ethEtfFlowM >= 0 ? '순유입 (기관 매수 우위)' : '순유출 (단기 매도 우위)';
     document.getElementById('etf-summary-note').innerText = inst.etfNote || '미국 현물 ETF 일간 자금 유출입 현황';
 
-    // 2. Derivatives & On-Chain
     document.getElementById('deriv-card-title').innerText = `${sym} 파생상품 수급 & 온체인`;
     const fr = state.deriv[sym].funding;
     const oi = state.deriv[sym].oi;
@@ -2190,7 +3378,6 @@
       </div>
     `;
 
-    // 3. Bitcoin Halving
     document.getElementById('halving-card-wrap').style.display = sym === 'BTC' ? 'block' : 'none';
     if (state.halving.height > 0) {
       document.getElementById('halving-dday-pill').innerText = `D-${state.halving.dday}일`;
@@ -2201,7 +3388,6 @@
       document.getElementById('halving-pct').innerText = `진행률 ${state.halving.pct.toFixed(1)}%`;
     }
 
-    // 4. Institutional Monitor
     document.getElementById('inst-card-title').innerText = sym === 'BTC'
       ? 'BTC 기관 부채·청산 모니터 (Strategy)'
       : 'ETH 기관 부채·청산 모니터 (Bitmine)';
@@ -2239,7 +3425,7 @@
   }
 
   // =========================================================
-  // 1st-Tier News Monitor, Translation & Period Briefing
+  // 1st-Tier News Monitor & Translation
   // =========================================================
   function decodeEntities(str) {
     const txt = document.createElement('textarea');
@@ -2346,7 +3532,6 @@
       });
     });
 
-    // Merge with 7-day archive
     const map = new Map();
     [...archive, ...collected].forEach(item => {
       if (Date.now() - item.pubMs <= 7 * 86400000) {
@@ -2355,12 +3540,10 @@
     });
     const merged = Array.from(map.values()).sort((a, b) => b.score - a.score);
 
-    // Translate top 16 items
-    for (let i = 0; i < Math.min(16, merged.length); i++) {
-      const it = merged[i];
+    await Promise.all(merged.slice(0, 14).map(async it => {
       if (!it.titleKo) it.titleKo = await translateKo(it.titleEn);
       if (!it.descKo && it.descEn) it.descKo = await translateKo(it.descEn.slice(0, 130));
-    }
+    }));
 
     state.newsItems = merged;
     try {
@@ -2450,82 +3633,222 @@
   }
 
   // =========================================================
-  // My Position, Target Price / RSI Alert Banner & Calibration
+  // My Position (KRW Input -> Auto USD Conversion) & Alerts
   // =========================================================
+  function onAvgKrwInput(sym) {
+    const krwVal = parseFloat(document.getElementById(`input-avg-krw-${sym.toLowerCase()}`).value) || 0;
+    const helper = document.getElementById(`helper-krw-${sym.toLowerCase()}`);
+    const usdInput = document.getElementById(`input-avg-usd-${sym.toLowerCase()}`);
+    if (krwVal > 0 && state.usdtKrw > 0) {
+      const usdVal = krwVal / state.usdtKrw;
+      const dec = sym === 'ETH' ? 2 : 1;
+      usdInput.value = usdVal.toFixed(dec);
+      helper.innerText = `${fmtKoreanUnit(krwVal)} → 환산 달러 평단 ${fmtUsd(usdVal, dec)}`;
+    } else {
+      usdInput.value = '';
+      helper.innerText = '';
+    }
+  }
+
+  function onAvgUsdInput(sym) {
+    const usdVal = parseFloat(document.getElementById(`input-avg-usd-${sym.toLowerCase()}`).value) || 0;
+    const krwInput = document.getElementById(`input-avg-krw-${sym.toLowerCase()}`);
+    const helper = document.getElementById(`helper-krw-${sym.toLowerCase()}`);
+    if (usdVal > 0 && state.usdtKrw > 0) {
+      const krwVal = Math.round(usdVal * state.usdtKrw);
+      krwInput.value = krwVal;
+      helper.innerText = `원화 환산 약 ${fmtKoreanUnit(krwVal)} (${fmtKrw(krwVal)})`;
+    } else {
+      krwInput.value = '';
+      helper.innerText = '';
+    }
+  }
+
+  function onTargetKrwInput(sym) {
+    const krwVal = parseFloat(document.getElementById(`input-target-krw-${sym.toLowerCase()}`).value) || 0;
+    const usdEl = document.getElementById(`input-target-${sym.toLowerCase()}`);
+    if (krwVal > 0 && state.usdtKrw > 0) {
+      usdEl.value = (krwVal / state.usdtKrw).toFixed(sym === 'ETH' ? 2 : 0);
+    } else {
+      usdEl.value = '';
+    }
+  }
+
+  function onTargetUsdInput(sym) {
+    const usdVal = parseFloat(document.getElementById(`input-target-${sym.toLowerCase()}`).value) || 0;
+    const krwEl = document.getElementById(`input-target-krw-${sym.toLowerCase()}`);
+    if (usdVal > 0 && state.usdtKrw > 0) {
+      krwEl.value = Math.round(usdVal * state.usdtKrw);
+    } else {
+      krwEl.value = '';
+    }
+  }
+
+  function recalcStoredAvgPricesWithFx() {
+    if (state.usdtKrw <= 0) return;
+    ['BTC', 'ETH'].forEach(sym => {
+      const pos = state.myPos[sym];
+      if (pos.mode === 'KRW' && pos.avgKrw > 0) {
+        pos.avgUsd = pos.avgKrw / state.usdtKrw;
+      } else if (pos.avgUsd > 0 && pos.avgKrw === 0) {
+        pos.avgKrw = Math.round(pos.avgUsd * state.usdtKrw);
+      }
+    });
+    syncPositionInputs();
+  }
+
+  function syncPositionInputs() {
+    const fxBadge = document.getElementById('pos-fx-badge');
+    if (fxBadge) {
+      fxBadge.innerText = `적용 환율: 1 USDT = ${fmtKrw(state.usdtKrw)}`;
+    }
+    ['BTC', 'ETH'].forEach(sym => {
+      const low = sym.toLowerCase();
+      const pos = state.myPos[sym];
+      const krwEl = document.getElementById(`input-avg-krw-${low}`);
+      const usdEl = document.getElementById(`input-avg-usd-${low}`);
+      const qtyEl = document.getElementById(`input-qty-${low}`);
+      const helper = document.getElementById(`helper-krw-${low}`);
+      if (!krwEl) return;
+
+      krwEl.value = pos.avgKrw > 0 ? Math.round(pos.avgKrw) : '';
+      usdEl.value = pos.avgUsd > 0 ? pos.avgUsd.toFixed(sym === 'ETH' ? 2 : 1) : '';
+      qtyEl.value = pos.qty > 0 ? pos.qty : '';
+      if (pos.avgKrw > 0) {
+        helper.innerText = `${fmtKoreanUnit(pos.avgKrw)} → 환산 달러 평단 ${fmtUsd(pos.avgUsd, sym === 'ETH' ? 2 : 1)}`;
+      } else {
+        helper.innerText = '';
+      }
+    });
+  }
+
   function loadSavedSettings() {
     try {
-      const pos = JSON.parse(localStorage.getItem(LS_KEYS.POS) || 'null');
-      if (pos) state.myPos = { BTC: { avg: 0, qty: 0, ...pos.BTC }, ETH: { avg: 0, qty: 0, ...pos.ETH } };
+      const posV5 = JSON.parse(localStorage.getItem(LS_KEYS.POS) || 'null');
+      if (posV5) {
+        state.myPos = {
+          BTC: { avgKrw: 0, avgUsd: 0, qty: 0, mode: 'KRW', ...posV5.BTC },
+          ETH: { avgKrw: 0, avgUsd: 0, qty: 0, mode: 'KRW', ...posV5.ETH }
+        };
+      } else {
+        // Migrate v4 USD-only positions seamlessly
+        const posV4 = JSON.parse(localStorage.getItem(LS_KEYS.POS_V4) || 'null');
+        if (posV4) {
+          ['BTC', 'ETH'].forEach(sym => {
+            if (posV4[sym] && posV4[sym].avg > 0) {
+              state.myPos[sym] = {
+                avgUsd: posV4[sym].avg,
+                avgKrw: Math.round(posV4[sym].avg * state.usdtKrw),
+                qty: posV4[sym].qty || 0,
+                mode: 'USD'
+              };
+            }
+          });
+        }
+      }
     } catch (e) {}
+
     try {
       const al = JSON.parse(localStorage.getItem(LS_KEYS.ALERTS) || 'null');
-      if (al) state.alerts = { BTC: 0, ETH: 0, rsiEnabled: true, ...al };
+      if (al) state.alerts = { BTC: 0, BTC_KRW: 0, ETH: 0, ETH_KRW: 0, rsiEnabled: true, ...al };
     } catch (e) {}
 
-    document.getElementById('input-avg-btc').value = state.myPos.BTC.avg || '';
-    document.getElementById('input-qty-btc').value = state.myPos.BTC.qty || '';
-    document.getElementById('input-avg-eth').value = state.myPos.ETH.avg || '';
-    document.getElementById('input-qty-eth').value = state.myPos.ETH.qty || '';
+    syncPositionInputs();
 
     document.getElementById('input-target-btc').value = state.alerts.BTC || '';
+    document.getElementById('input-target-krw-btc').value = state.alerts.BTC_KRW || (state.alerts.BTC > 0 ? Math.round(state.alerts.BTC * state.usdtKrw) : '');
     document.getElementById('input-target-eth').value = state.alerts.ETH || '';
+    document.getElementById('input-target-krw-eth').value = state.alerts.ETH_KRW || (state.alerts.ETH > 0 ? Math.round(state.alerts.ETH * state.usdtKrw) : '');
     document.getElementById('chk-rsi-alert').checked = !!state.alerts.rsiEnabled;
   }
 
   function saveMyAvgPrices() {
-    state.myPos.BTC.avg = parseFloat(document.getElementById('input-avg-btc').value) || 0;
-    state.myPos.BTC.qty = parseFloat(document.getElementById('input-qty-btc').value) || 0;
-    state.myPos.ETH.avg = parseFloat(document.getElementById('input-avg-eth').value) || 0;
-    state.myPos.ETH.qty = parseFloat(document.getElementById('input-qty-eth').value) || 0;
+    ['BTC', 'ETH'].forEach(sym => {
+      const low = sym.toLowerCase();
+      const krwVal = parseFloat(document.getElementById(`input-avg-krw-${low}`).value) || 0;
+      const usdVal = parseFloat(document.getElementById(`input-avg-usd-${low}`).value) || 0;
+      const qtyVal = parseFloat(document.getElementById(`input-qty-${low}`).value) || 0;
+
+      if (krwVal > 0) {
+        state.myPos[sym] = {
+          avgKrw: krwVal,
+          avgUsd: state.usdtKrw > 0 ? krwVal / state.usdtKrw : usdVal,
+          qty: qtyVal,
+          mode: 'KRW'
+        };
+      } else if (usdVal > 0) {
+        state.myPos[sym] = {
+          avgKrw: Math.round(usdVal * state.usdtKrw),
+          avgUsd: usdVal,
+          qty: qtyVal,
+          mode: 'USD'
+        };
+      } else {
+        state.myPos[sym] = { avgKrw: 0, avgUsd: 0, qty: 0, mode: 'KRW' };
+      }
+    });
+
     localStorage.setItem(LS_KEYS.POS, JSON.stringify(state.myPos));
+    syncPositionInputs();
     renderPositionPnL();
+    renderStrategy();
     drawProChart();
-    showToast('매수평균가 및 보유수량이 저장되었습니다');
+    showToast('원화·달러 평단이 저장되어 차트와 AI 전략에 반영되었습니다');
   }
 
   function renderPositionPnL() {
     const sym = state.asset;
-    document.getElementById('pos-card-title').innerText = `${sym} 내 매수평균가 & 보유수량`;
+    document.getElementById('pos-card-title').innerText = `${sym} 내 매수평균가 (원화 기준 입력)`;
     document.getElementById('pos-group-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
     document.getElementById('pos-group-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
-    document.getElementById('my-pnl-label').innerText = `${sym} 평단 대비 현재 손익`;
+    document.getElementById('my-pnl-krw-label').innerText = `${sym} 원화(₩) 기준 손익`;
 
     const pos = state.myPos[sym];
-    const cur = state.prices[sym].usd;
-    const pnlEl = document.getElementById('my-pnl-val');
+    const p = state.prices[sym];
+    const krwEl = document.getElementById('my-pnl-krw-val');
+    const usdEl = document.getElementById('my-pnl-usd-val');
     const evalRow = document.getElementById('my-eval-row');
     const evalEl = document.getElementById('my-eval-val');
 
-    if (pos.avg > 0 && cur > 0) {
-      const pct = ((cur - pos.avg) / pos.avg) * 100;
-      const diff = cur - pos.avg;
-      pnlEl.innerText = `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}% (${diff >= 0 ? '+' : ''}${fmtUsd(diff, sym === 'ETH' ? 2 : 0)})`;
-      pnlEl.style.color = pct >= 0 ? 'var(--green)' : 'var(--red)';
+    if (pos.avgKrw > 0 && p.krw > 0) {
+      const pctKrw = ((p.krw - pos.avgKrw) / pos.avgKrw) * 100;
+      const diffKrw = p.krw - pos.avgKrw;
+      krwEl.innerText = `${pctKrw >= 0 ? '+' : ''}${pctKrw.toFixed(2)}% (${diffKrw >= 0 ? '+' : ''}${fmtKrw(diffKrw)})`;
+      krwEl.style.color = pctKrw >= 0 ? 'var(--green)' : 'var(--red)';
+
+      const pctUsd = pos.avgUsd > 0 && p.usd > 0 ? ((p.usd - pos.avgUsd) / pos.avgUsd) * 100 : pctKrw;
+      const diffUsd = p.usd - pos.avgUsd;
+      usdEl.innerText = `${pctUsd >= 0 ? '+' : ''}${pctUsd.toFixed(2)}% (${diffUsd >= 0 ? '+' : ''}${fmtUsd(diffUsd, sym === 'ETH' ? 2 : 0)})`;
+      usdEl.style.color = pctUsd >= 0 ? 'var(--green)' : 'var(--red)';
 
       if (pos.qty > 0) {
         evalRow.style.display = 'flex';
-        const totalEval = cur * pos.qty;
-        const totalPnl = (cur - pos.avg) * pos.qty;
-        evalEl.innerText = `${fmtUsd(totalEval, 0)} (${totalPnl >= 0 ? '+' : ''}${fmtUsd(totalPnl, 0)})`;
-        evalEl.style.color = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+        const totalEvalKrw = p.krw * pos.qty;
+        const totalPnlKrw = (p.krw - pos.avgKrw) * pos.qty;
+        evalEl.innerText = `${fmtKrw(totalEvalKrw)} (${totalPnlKrw >= 0 ? '+' : ''}${fmtKrw(totalPnlKrw)})`;
+        evalEl.style.color = totalPnlKrw >= 0 ? 'var(--green)' : 'var(--red)';
       } else {
         evalRow.style.display = 'none';
       }
     } else {
-      pnlEl.innerText = '미설정';
-      pnlEl.style.color = 'var(--text-sub)';
+      krwEl.innerText = '미설정';
+      krwEl.style.color = 'var(--text-sub)';
+      usdEl.innerText = '미설정';
+      usdEl.style.color = 'var(--text-sub)';
       evalRow.style.display = 'none';
     }
   }
 
   function saveAlertSettings() {
     state.alerts.BTC = parseFloat(document.getElementById('input-target-btc').value) || 0;
+    state.alerts.BTC_KRW = parseFloat(document.getElementById('input-target-krw-btc').value) || 0;
     state.alerts.ETH = parseFloat(document.getElementById('input-target-eth').value) || 0;
+    state.alerts.ETH_KRW = parseFloat(document.getElementById('input-target-krw-eth').value) || 0;
     state.alerts.rsiEnabled = document.getElementById('chk-rsi-alert').checked;
     state.dismissedAlerts = {};
     localStorage.setItem(LS_KEYS.ALERTS, JSON.stringify(state.alerts));
     checkAlerts();
-    showToast('알림 설정이 저장되었습니다');
+    showToast('목표가 및 RSI 알림 기준이 저장되었습니다');
   }
 
   function dismissAlert() {
@@ -2541,28 +3864,40 @@
     document.getElementById('alert-group-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
     document.getElementById('alert-group-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
 
-    const cur = state.prices[sym].usd;
-    const target = state.alerts[sym];
+    const curUsd = state.prices[sym].usd;
+    const curKrw = state.prices[sym].krw;
+    const targetUsd = state.alerts[sym];
+    const targetKrw = state.alerts[sym + '_KRW'];
     const rsi = Math.round(state.rsi1d[sym] || 50);
 
     const statusTag = document.getElementById('alert-status-tag');
-    statusTag.innerText = target > 0 ? `목표 ${fmtUsd(target, 0)}` : (state.alerts.rsiEnabled ? 'RSI 감시중' : '비활성');
+    if (targetKrw > 0) {
+      statusTag.innerText = `목표 ${fmtKrw(targetKrw)}`;
+    } else if (targetUsd > 0) {
+      statusTag.innerText = `목표 ${fmtUsd(targetUsd, 0)}`;
+    } else {
+      statusTag.innerText = state.alerts.rsiEnabled ? 'RSI 감시중' : '비활성';
+    }
 
     const banner = document.getElementById('top-alert-banner');
     const textEl = document.getElementById('top-alert-text');
 
     let alertKey = '', msg = '', cls = '';
-    if (target > 0 && cur > 0 && cur <= target) {
-      alertKey = `target_${sym}_${target}`;
-      msg = `🎯 목표가 도달: ${sym} 현재가 ${fmtUsd(cur, sym === 'ETH' ? 2 : 0)} (목표 ${fmtUsd(target, 0)} 이하)`;
+    if (targetKrw > 0 && curKrw > 0 && curKrw <= targetKrw) {
+      alertKey = `target_krw_${sym}_${targetKrw}`;
+      msg = `목표가 도달: ${sym} 업비트 ${fmtKrw(curKrw)} (목표 ${fmtKrw(targetKrw)} 이하)`;
+      cls = 'gold';
+    } else if (targetUsd > 0 && curUsd > 0 && curUsd <= targetUsd) {
+      alertKey = `target_usd_${sym}_${targetUsd}`;
+      msg = `목표가 도달: ${sym} 현재가 ${fmtUsd(curUsd, sym === 'ETH' ? 2 : 0)} (목표 ${fmtUsd(targetUsd, 0)} 이하)`;
       cls = 'gold';
     } else if (state.alerts.rsiEnabled && rsi <= 30) {
       alertKey = `rsi_low_${sym}`;
-      msg = `🟢 매수 신호: ${sym} 일봉 RSI ${rsi} 과매도 구간 진입`;
+      msg = `매수 신호: ${sym} 일봉 RSI ${rsi} 과매도 구간 진입`;
       cls = '';
     } else if (state.alerts.rsiEnabled && rsi >= 75) {
       alertKey = `rsi_high_${sym}`;
-      msg = `🔴 과열 경고: ${sym} 일봉 RSI ${rsi} 단기 과매수 구간`;
+      msg = `과열 경고: ${sym} 일봉 RSI ${rsi} 단기 과매수 구간`;
       cls = 'warn';
     }
 
@@ -2631,7 +3966,7 @@
     const hh = String(d.getHours()).padStart(2, '0');
     const mm = String(d.getMinutes()).padStart(2, '0');
     const ss = String(d.getSeconds()).padStart(2, '0');
-    document.getElementById('last-sync-time').innerText = `실시간 동기화: ${hh}:${mm}:${ss} (환율 ₩${Math.round(state.usdtKrw).toLocaleString()})`;
+    document.getElementById('last-sync-time').innerText = `실시간 동기화: ${hh}:${mm}:${ss} (적용 환율 ₩${Math.round(state.usdtKrw).toLocaleString()})`;
   }
 
   function renderAll() {
@@ -2651,7 +3986,7 @@
     await Promise.all([
       fetchMarketPrices(),
       fetchKlinesForActive(),
-      fetchDailyAnd4hMetrics(),
+      fetchMultiHorizonData(),
       fetchDerivativesAndOnchain()
     ]);
     if (!silent) showToast('최신 데이터 동기화 완료');
@@ -2670,7 +4005,7 @@
     await Promise.all([
       fetchMarketPrices(),
       fetchKlinesForActive(),
-      fetchDailyAnd4hMetrics(),
+      fetchMultiHorizonData(),
       fetchFnGBTC(),
       fetchAutoInstData()
     ]);
@@ -2686,7 +4021,3 @@
 </script>
 </body>
 </html>
-
-
-
-
