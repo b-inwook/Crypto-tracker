@@ -453,7 +453,7 @@
     }
     .canvas-wrap {
       width: 100%;
-      height: 310px;
+      height: 315px;
       position: relative;
       touch-action: pan-y;
     }
@@ -1535,7 +1535,7 @@
             <span>BTC 평균 매수가 (원화 ₩ 기준)</span>
             <span style="color:var(--gold);">차트·전략 자동 반영</span>
           </label>
-          <input type="number" id="input-avg-krw-btc" placeholder="예: 132000000 (1억 3,200만원)" step="any" oninput="onAvgKrwInput('BTC')" />
+          <input type="number" id="input-avg-krw-btc" placeholder="예: 116000000 (1억 1,600만원)" step="any" oninput="onAvgKrwInput('BTC')" />
           <div class="input-helper" id="helper-krw-btc"></div>
         </div>
         <div class="form-row">
@@ -1850,9 +1850,9 @@
       tip: '실전 해석: 상단 카드에서 오늘 현금을 단기 스윙·중기 추세·장기 적립 중 어디에 배분할지 확인하고, 하단 탭에서 시간축별 지정가 타점을 선택하세요.'
     },
     avg_line: {
-      title: '원화 기준 내 평단 & 자동 달러 환산',
-      desc: '[내 평단] 탭에 업비트·빗썸 기준 원화(₩) 평균 매수가를 입력하면 실시간 환율로 달러($) 평단이 자동 계산됩니다.',
-      tip: '실전 해석: 환산된 달러 평단선은 프로 차트 위에 초록색 실선으로 표시되며, AI 추매전략 탭에서 물타기(평단 희석) 필요 여부를 자동 진단합니다.'
+      title: '내 매수평균가 기준선 & 물결 생략 표시',
+      desc: '[내 평단] 탭에 입력한 원화(₩) 평단가를 달러($)로 자동 환산해 차트에 표시합니다. 1시간봉처럼 현재 시세와 평단가 차이가 커서 차트가 눌릴 경우, 현재가 캔들 스케일을 우선 보호하고 상단/하단에 물결 절단선(≈)과 함께 평단 배지를 고정 표시합니다.',
+      tip: '실전 해석: 평단가가 현재 차트 범위 안에 들어오면 자동으로 정위치 수평 실선으로 전환됩니다.'
     },
     target_alert: {
       title: '매수 목표가 & RSI 자동 알림',
@@ -2419,6 +2419,50 @@
     }).join('');
   }
 
+  // Helper: Draw a clean axis-break sine wave (물결 절단선) along a horizontal line
+  function drawWaveBreakLine(ctx, xStart, xEnd, y, color, bgFill) {
+    const waveCenterX = (xStart + xEnd) * 0.68;
+    const waveHalfW = 14;
+    const amp = 4.2;
+
+    // 1. Dashed reference line on left and right of wave
+    ctx.save();
+    ctx.setLineDash([4, 3]);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.25;
+
+    ctx.beginPath();
+    ctx.moveTo(xStart, y);
+    ctx.lineTo(waveCenterX - waveHalfW, y);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(waveCenterX + waveHalfW, y);
+    ctx.lineTo(xEnd, y);
+    ctx.stroke();
+    ctx.restore();
+
+    // 2. Clear tiny mask behind the wave so candles/grid don't clutter it
+    ctx.save();
+    ctx.fillStyle = bgFill;
+    ctx.fillRect(waveCenterX - waveHalfW - 1, y - amp - 1, (waveHalfW + 1) * 2, (amp + 1) * 2);
+
+    // 3. Draw smooth double-crest sine wave (물결)
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    const steps = 28;
+    for (let s = 0; s <= steps; s++) {
+      const t = s / steps;
+      const wx = (waveCenterX - waveHalfW) + t * (waveHalfW * 2);
+      const wy = y + Math.sin(t * Math.PI * 2) * amp;
+      if (s === 0) ctx.moveTo(wx, wy);
+      else ctx.lineTo(wx, wy);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawProChart() {
     const canvas = document.getElementById('pro-chart');
     if (!canvas) return;
@@ -2439,6 +2483,7 @@
     if (!allBars || allBars.length < 30) return;
 
     const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const cBg = isDark ? '#181A20' : '#FFFFFF';
     const cGrid = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
     const cText = isDark ? '#848E9C' : '#707A8A';
     const cUp = '#0ECB81';
@@ -2481,6 +2526,10 @@
 
     ctx.clearRect(0, 0, W, H);
 
+    // ---------------------------------------------------------
+    // Y-Axis Scale Calculation: ALWAYS anchored to visible price action!
+    // Never stretched by far-away user average price (myAvgUsd).
+    // ---------------------------------------------------------
     let pMin = Infinity, pMax = -Infinity;
     let maxBarIdx = 0, minBarIdx = 0;
     bars.forEach((b, i) => {
@@ -2492,17 +2541,20 @@
       }
     });
 
-    // Reflect KRW->USD auto-converted user average price on chart
     const myAvgUsd = state.myPos[sym].avgUsd || 0;
-    if (state.overlays.avg && myAvgUsd > 0) {
-      if (myAvgUsd > pMax) pMax = myAvgUsd;
-      if (myAvgUsd < pMin) pMin = myAvgUsd;
-    }
+    const showAvg = state.overlays.avg && myAvgUsd > 0;
+    const avgOutTop = showAvg && myAvgUsd > pMax;
+    const avgOutBot = showAvg && myAvgUsd < pMin;
 
-    const pPad = (pMax - pMin) * 0.12 || 1;
-    pMax += pPad; pMin -= pPad;
+    // Add extra top/bottom padding only when pinned wave-break badge is present so candles never collide
+    const topPadRatio = avgOutTop ? 0.22 : 0.12;
+    const botPadRatio = avgOutBot ? 0.22 : 0.12;
+    const rawSpan = (pMax - pMin) || 1;
+    pMax += rawSpan * topPadRatio;
+    pMin -= rawSpan * botPadRatio;
     const getY1 = val => p1Top + p1H - ((val - pMin) / (pMax - pMin)) * p1H;
 
+    // Grid lines
     ctx.strokeStyle = cGrid;
     ctx.lineWidth = 1;
     [0.2, 0.5, 0.8].forEach(r => {
@@ -2512,6 +2564,7 @@
     ctx.beginPath(); ctx.moveTo(0, p2Top - 3); ctx.lineTo(W, p2Top - 3); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, p3Top - 3); ctx.lineTo(W, p3Top - 3); ctx.stroke();
 
+    // Bollinger Bands
     if (state.overlays.bb) {
       ctx.beginPath();
       let started = false;
@@ -2542,6 +2595,7 @@
       });
     }
 
+    // Candlesticks or Line
     if (state.chartType === 'candle') {
       const cw = Math.max(3, stepX * 0.62);
       bars.forEach((b, i) => {
@@ -2571,6 +2625,7 @@
       ctx.stroke();
     }
 
+    // Moving Averages
     if (state.overlays.ma) {
       const maConfigs = [
         { arr: ma5, color: '#FCD535' },
@@ -2592,30 +2647,35 @@
       });
     }
 
+    // Period High / Low Callouts
     ctx.font = 'bold 9.5px -apple-system, sans-serif';
     const hiBar = bars[maxBarIdx];
     const loBar = bars[minBarIdx];
     const hiX = getX(maxBarIdx), hiY = getY1(hiBar.h);
     const loX = getX(minBarIdx), loY = getY1(loBar.l);
+    const minTopY = avgOutTop ? (p1Top + 26) : (p1Top + 9);
+    const maxBotY = avgOutBot ? (p1Top + p1H - 22) : (p1Top + p1H - 2);
+
     ctx.fillStyle = cUp;
     ctx.textAlign = hiX > plotW * 0.7 ? 'right' : 'left';
-    ctx.fillText(`최고 ${fmtUsd(hiBar.h, sym === 'ETH' ? 1 : 0)}`, hiX, Math.max(p1Top + 9, hiY - 4));
+    ctx.fillText(`최고 ${fmtUsd(hiBar.h, sym === 'ETH' ? 1 : 0)}`, hiX, Math.max(minTopY, hiY - 4));
     ctx.fillStyle = cDn;
     ctx.textAlign = loX > plotW * 0.7 ? 'right' : 'left';
-    ctx.fillText(`최저 ${fmtUsd(loBar.l, sym === 'ETH' ? 1 : 0)}`, loX, Math.min(p1Top + p1H - 2, loY + 11));
+    ctx.fillText(`최저 ${fmtUsd(loBar.l, sym === 'ETH' ? 1 : 0)}`, loX, Math.min(maxBotY, loY + 11));
 
+    // B / S Signal Pins
     if (state.overlays.bs) {
       for (let i = 1; i < bars.length; i++) {
         if (rsi[i] === null || rsi[i - 1] === null) continue;
         const x = getX(i);
         if (rsi[i - 1] <= 32 && rsi[i] > rsi[i - 1]) {
-          const y = Math.min(p1Top + p1H - 8, getY1(bars[i].l) + 12);
+          const y = Math.min(maxBotY - 6, getY1(bars[i].l) + 12);
           ctx.fillStyle = cDn;
           ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2); ctx.fill();
           ctx.fillStyle = '#FFF'; ctx.font = 'bold 8.5px sans-serif'; ctx.textAlign = 'center';
           ctx.fillText('B', x, y + 3);
         } else if (rsi[i - 1] >= 68 && rsi[i] < rsi[i - 1]) {
-          const y = Math.max(p1Top + 8, getY1(bars[i].h) - 12);
+          const y = Math.max(minTopY + 6, getY1(bars[i].h) - 12);
           ctx.fillStyle = '#3861FB';
           ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2); ctx.fill();
           ctx.fillStyle = '#FFF'; ctx.font = 'bold 8.5px sans-serif'; ctx.textAlign = 'center';
@@ -2624,22 +2684,51 @@
       }
     }
 
-    if (state.overlays.avg && myAvgUsd > 0) {
-      const yAvg = getY1(myAvgUsd);
-      ctx.strokeStyle = cUp;
-      ctx.lineWidth = 1.25;
-      ctx.beginPath(); ctx.moveTo(0, yAvg); ctx.lineTo(plotW, yAvg); ctx.stroke();
-      const lblTxt = `평단 ${fmtUsd(myAvgUsd, sym === 'ETH' ? 0 : 0)}`;
-      ctx.font = 'bold 8.5px sans-serif';
-      const boxW = Math.max(58, ctx.measureText(lblTxt).width + 8);
-      ctx.fillStyle = cUp;
-      ctx.fillRect(2, yAvg - 8, boxW, 14);
-      ctx.fillStyle = '#0B0E11';
-      ctx.textAlign = 'left';
-      ctx.fillText(lblTxt, 6, yAvg + 2);
+    // ---------------------------------------------------------
+    // Smart Average Price Line (In-Range Solid vs Out-of-Range Wave-Break Pin)
+    // ---------------------------------------------------------
+    const lastPrice = bars[bars.length - 1].c;
+    if (showAvg) {
+      const diffPct = ((lastPrice - myAvgUsd) / myAvgUsd) * 100;
+      const pctStr = `${diffPct >= 0 ? '+' : ''}${diffPct.toFixed(1)}%`;
+      const avgStr = fmtUsd(myAvgUsd, sym === 'ETH' ? 1 : 0);
+
+      if (!avgOutTop && !avgOutBot) {
+        // Case 1: Inside current visible price range -> Exact Y position solid green line
+        const yAvg = getY1(myAvgUsd);
+        ctx.strokeStyle = cUp;
+        ctx.lineWidth = 1.25;
+        ctx.beginPath(); ctx.moveTo(0, yAvg); ctx.lineTo(plotW, yAvg); ctx.stroke();
+
+        const lblTxt = `평단 ${avgStr} (${pctStr})`;
+        ctx.font = 'bold 8.5px sans-serif';
+        const boxW = Math.max(68, ctx.measureText(lblTxt).width + 10);
+        ctx.fillStyle = cUp;
+        ctx.fillRect(2, yAvg - 8, boxW, 15);
+        ctx.fillStyle = '#0B0E11';
+        ctx.textAlign = 'left';
+        ctx.fillText(lblTxt, 7, yAvg + 2.5);
+      } else {
+        // Case 2: Far above or below visible range -> Wave-Break (물결 생략선) + Pinned Edge Badge
+        const isTop = avgOutTop;
+        const yPin = isTop ? (p1Top + 11) : (p1Top + p1H - 11);
+        const arrow = isTop ? '▲' : '▼';
+        const pinColor = isTop ? '#FCD535' : cUp;
+
+        drawWaveBreakLine(ctx, 2, plotW, yPin, pinColor, cBg);
+
+        const lblTxt = `${arrow} 내 평단 ${avgStr} (${pctStr})`;
+        ctx.font = 'bold 8.5px sans-serif';
+        const boxW = Math.max(88, ctx.measureText(lblTxt).width + 10);
+        ctx.fillStyle = pinColor;
+        ctx.fillRect(2, yPin - 8, boxW, 15);
+        ctx.fillStyle = '#0B0E11';
+        ctx.textAlign = 'left';
+        ctx.fillText(lblTxt, 7, yPin + 2.5);
+      }
     }
 
-    const lastPrice = bars[bars.length - 1].c;
+    // Live Price Dashed Line & Right Y-Axis Pill
     const yLive = getY1(lastPrice);
     const liveColor = lastPrice >= bars[bars.length - 1].o ? cUp : cDn;
     ctx.save();
@@ -2789,9 +2878,7 @@
     const dec = sym === 'ETH' ? 2 : 0;
     const krwRate = (p.usd > 0 && p.krw > 0) ? (p.krw / p.usd) : state.usdtKrw;
 
-    // ---------------------------------------------------------
     // 1. SHORT-TERM ENGINE (1D ~ 1W: Swing & Short Squeeze)
-    // ---------------------------------------------------------
     const c1h = hzData.k1h.map(b => b.c);
     const c4h = hzData.k4h.map(b => b.c);
     const rsi1hArr = calcWilderRSI(c1h, 14);
@@ -2801,14 +2888,12 @@
     const r4h = rsi4hArr[rsi4hArr.length - 1] || state.rsi4h[sym] || 50;
     const r4hPrev = rsi4hArr[rsi4hArr.length - 2] || r4h;
 
-    // Factor S1: 1H & 4H Oversold & Bounce Turn (35 pts)
     const blendShortRsi = r1h * 0.45 + r4h * 0.55;
     let s1_rsi = Math.round(Math.max(3, Math.min(30, ((72 - blendShortRsi) / 44) * 30)));
     if ((r1h <= 35 && r1h > r1hPrev) || (r4h <= 36 && r4h > r4hPrev)) {
-      s1_rsi = Math.min(35, s1_rsi + 5); // Rebound turn bonus
+      s1_rsi = Math.min(35, s1_rsi + 5);
     }
 
-    // Factor S2: 1H/4H Bollinger Band Lower Touch/Reclaim (25 pts)
     const bb4h = calcBB(c4h, 20, 2);
     const bb4L = bb4h.lower[bb4h.lower.length - 1];
     const bb4M = bb4h.mid[bb4h.mid.length - 1];
@@ -2823,7 +2908,6 @@
       else if (distPct >= 6.0) s2_bb = 6;
     }
 
-    // Factor S3: Perpetual 8h Funding Rate Short-Squeeze Pressure (25 pts)
     const fr = state.deriv[sym].funding || 0;
     let s3_fr = 13;
     if (fr <= -0.015) s3_fr = 25;
@@ -2832,7 +2916,6 @@
     else if (fr >= 0.04) s3_fr = 4;
     else s3_fr = 9;
 
-    // Factor S4: Real-time Kimchi Premium Sufficiency (15 pts)
     const kimp = p.kimp || 0;
     let s4_kimp = 9;
     if (kimp < -0.5) s4_kimp = 15;
@@ -2862,9 +2945,7 @@
           : `단기 과열 또는 김프·롱 쏠림 구간입니다. 단기 스윙 신규 진입은 보류하고 눌림목을 기다리세요.`
     };
 
-    // ---------------------------------------------------------
     // 2. MID-TERM ENGINE (2W ~ 2M: Swing Trend & ETF Institutional Flow)
-    // ---------------------------------------------------------
     const c1d = hzData.k1d.map(b => b.c);
     const rsi1d = state.rsi1d[sym] || 50;
     const sma20_1d = calcSMA(c1d, 20);
@@ -2872,15 +2953,13 @@
     const m20 = sma20_1d[sma20_1d.length - 1] || p.usd;
     const m60 = sma60_1d[sma60_1d.length - 1] || p.usd;
 
-    // Factor M1: Daily RSI & 20D/60D MA Support (30 pts)
     let m1_trend = Math.round(Math.max(4, Math.min(22, ((75 - rsi1d) / 50) * 22)));
     if (p.usd >= m60 * 0.98 && p.usd <= m20 * 1.02) {
-      m1_trend = Math.min(30, m1_trend + 8); // Healthy pullback between 20D & 60D MA
+      m1_trend = Math.min(30, m1_trend + 8);
     } else if (p.usd < m60 * 0.92) {
       m1_trend = Math.min(30, m1_trend + 4);
     }
 
-    // Factor M2: US Spot ETF Institutional Net Flow (30 pts)
     const etfM = sym === 'BTC' ? state.inst.btcEtfFlowM : state.inst.ethEtfFlowM;
     let m2_etf = 15;
     if (etfM >= 250) m2_etf = 30;
@@ -2889,13 +2968,11 @@
     else if (etfM <= -200) m2_etf = 5;
     else if (etfM < 0) m2_etf = 9;
 
-    // Factor M3: Fear & Greed Sentiment & Relative Strength (20 pts)
     const fng = sym === 'BTC' ? state.fngBtc.val : state.fngEth.val;
     let m3_sent = Math.round(Math.max(3, Math.min(17, ((80 - fng) / 60) * 17)));
     if (sym === 'ETH' && state.ethBtc.chg > 0) m3_sent = Math.min(20, m3_sent + 3);
     if (sym === 'BTC' && kimp <= 2.0) m3_sent = Math.min(20, m3_sent + 2);
 
-    // Factor M4: On-chain Mempool & Leverage Health (20 pts)
     let m4_health = 12;
     if (fr <= 0.015 && state.mempoolFee > 0 && state.mempoolFee <= 35) m4_health = 17;
     else if (fr >= 0.04) m4_health = 6;
@@ -2922,9 +2999,7 @@
           : `ETF 순유출 또는 중기 역배열 압력이 존재합니다. 중기 스윙 비중은 보수적으로 유지하세요.`
     };
 
-    // ---------------------------------------------------------
     // 3. LONG-TERM ENGINE (3M ~ Halving Cycle: Value DCA)
-    // ---------------------------------------------------------
     const ath = state.ath[sym];
     const dd = p.usd > 0 && ath > 0 ? Math.abs(((p.usd - ath) / ath) * 100) : 0;
     const mayer = state.mayer[sym] || 1.0;
@@ -2933,11 +3008,9 @@
     const rsi1wArr = calcWilderRSI(c1w, 14);
     const r1w = rsi1wArr[rsi1wArr.length - 1] || 50;
 
-    // Factor L1: ATH Drawdown Discount (35 pts)
     const maxDdScale = sym === 'BTC' ? 45 : 55;
     const l1_ath = Math.round(Math.max(4, Math.min(35, (dd / maxDdScale) * 35)));
 
-    // Factor L2: 200-Day Moving Average Valuation / Mayer Multiple (25 pts)
     let l2_mayer = 12;
     if (mayer <= 0.80) l2_mayer = 25;
     else if (mayer <= 0.95) l2_mayer = 21;
@@ -2945,7 +3018,6 @@
     else if (mayer <= 1.45) l2_mayer = 10;
     else l2_mayer = 4;
 
-    // Factor L3: Institutional Avg Cost Floor Support (20 pts)
     let l3_inst = 10;
     if (p.usd > 0 && instAvg > 0) {
       const ratioToInst = p.usd / instAvg;
@@ -2955,7 +3027,6 @@
       else l3_inst = 6;
     }
 
-    // Factor L4: 5th Halving Cycle & Weekly RSI (20 pts)
     let l4_cycle = Math.round(Math.max(3, Math.min(14, ((75 - r1w) / 45) * 14)));
     if (sym === 'BTC' && state.halving.pct < 65) l4_cycle = Math.min(20, l4_cycle + 6);
     else if (sym === 'ETH' && r1w <= 45) l4_cycle = Math.min(20, l4_cycle + 5);
@@ -2984,9 +3055,7 @@
           : `장기 추세 고점 부근입니다. 정기 적립 비중을 0.5배로 축소하고 현금 비중을 늘려 다음 조정을 대비하세요.`
     };
 
-    // ---------------------------------------------------------
     // 4. COMPOSITE SYNTHESIS & SEED ALLOCATION MATRIX
-    // ---------------------------------------------------------
     const total = Math.round(shortScore * 0.30 + midScore * 0.35 + longScore * 0.35);
     let tier = 'B', badgeCls = 'gold', headline = '', action = '', allocLabel = '';
     let deployTotal = 10;
@@ -3011,7 +3080,6 @@
       headline = '극단적 과열 · 리스크 관리 구간';
     }
 
-    // Dynamic Seed Split across Short / Mid / Long / Cash
     let allocShort = 0, allocMid = 0, allocLong = 0;
     if (deployTotal > 0) {
       const wS = Math.max(0, shortScore - 40);
@@ -3028,7 +3096,6 @@
     }
     const allocCash = Math.max(0, 100 - (allocShort + allocMid + allocLong));
 
-    // Context-aware Conflict Synthesis Sentence
     const maxHz = Math.max(shortScore, midScore, longScore);
     const minHz = Math.min(shortScore, midScore, longScore);
     if (deployTotal === 0) {
@@ -3087,7 +3154,6 @@
     allocPill.innerText = res.allocLabel;
     allocPill.className = 'badge-tag ' + res.badgeCls;
 
-    // 3-Horizon Mini Cards
     ['short', 'mid', 'long'].forEach(k => {
       const item = res[k];
       const scEl = document.getElementById(`mini-${k}-score`);
@@ -3098,7 +3164,6 @@
       tgEl.className = 'hz-mini-tag badge-tag ' + item.tagCls;
     });
 
-    // Comprehensive Gauge
     document.getElementById('strat-hero-score').innerText = res.total;
     const circle = document.getElementById('dca-gauge-circle');
     const circumference = 213.6;
@@ -3111,7 +3176,6 @@
     document.getElementById('strat-hero-grade').innerText = res.headline;
     document.getElementById('strat-action-short').innerText = res.action;
 
-    // Seed Allocation Bar
     document.getElementById('seed-total-deploy').innerText = `총 투입 ${res.deployTotal}% (현금유보 ${res.allocCash}%)`;
     document.getElementById('seg-short').style.width = `${res.allocShort}%`;
     document.getElementById('seg-mid').style.width = `${res.allocMid}%`;
@@ -3124,7 +3188,6 @@
       <span><i class="seed-dot" style="background:var(--border);"></i>현금 대기 ${res.allocCash}%</span>
     `;
 
-    // My Avg Price Linked Averaging-Down (물타기) Advice
     const pos = state.myPos[sym];
     const avgBox = document.getElementById('avgdown-insight-box');
     if (pos.avgKrw > 0 && p.krw > 0) {
@@ -3163,7 +3226,6 @@
       avgBox.style.display = 'none';
     }
 
-    // Render Selected Session Detail
     const container = document.getElementById('session-detail-container');
     const hz = state.horizonTab;
 
@@ -3224,7 +3286,6 @@
       return;
     }
 
-    // Individual Session Detail View ('short' | 'mid' | 'long')
     const sObj = res[hz];
     const titles = {
       short: '⚡ 단기 트레이딩 세션 (1일 ~ 1주)',
@@ -3731,7 +3792,6 @@
           ETH: { avgKrw: 0, avgUsd: 0, qty: 0, mode: 'KRW', ...posV5.ETH }
         };
       } else {
-        // Migrate v4 USD-only positions seamlessly
         const posV4 = JSON.parse(localStorage.getItem(LS_KEYS.POS_V4) || 'null');
         if (posV4) {
           ['BTC', 'ETH'].forEach(sym => {
