@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Crypto Pulse" />
   <meta name="theme-color" content="#0B0E11" />
-  <title>Crypto Pulse Pro v5.0</title>
+  <title>Crypto Pulse Pro v6.0</title>
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230B0E11'/%3E%3Crect x='14' y='14' width='152' height='152' rx='30' fill='none' stroke='%23FCD535' stroke-width='4'/%3E%3Cpath d='M36 112 L68 80 L94 98 L142 50' fill='none' stroke='%230ECB81' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='142' cy='50' r='8' fill='%23FCD535'/%3E%3C/svg%3E" />
   <style>
     :root {
@@ -190,7 +190,14 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 13px 14px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card.card-hero {
+      border-left: 3.5px solid var(--gold);
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(24, 26, 32, 0.96) 100%);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+      padding: 15px 16px;
     }
     .card-header {
       display: flex;
@@ -238,6 +245,33 @@
       border-color: rgba(56, 97, 251, 0.35);
     }
 
+    /* Status Pills */
+    .status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .status-pill.live {
+      background: var(--green-dim);
+      color: var(--green);
+      border-color: rgba(14, 203, 129, 0.35);
+    }
+    .status-pill.delayed {
+      background: var(--gold-dim);
+      color: var(--gold);
+      border-color: rgba(252, 213, 53, 0.35);
+    }
+    .status-pill.offline {
+      background: var(--red-dim);
+      color: var(--red);
+      border-color: rgba(246, 70, 93, 0.35);
+    }
+
     .help-btn {
       width: 16px;
       height: 16px;
@@ -252,6 +286,59 @@
       justify-content: center;
       cursor: pointer;
       vertical-align: middle;
+    }
+
+    /* Ticker Grid & Collapsible */
+    .ticker-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .ticker-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ticker-toggle-btn:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+    .ticker-toggle-btn svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      transition: transform 0.22s ease;
+    }
+    .ticker-toggle-btn.open svg {
+      transform: rotate(180deg);
+    }
+    .ticker-details-pane {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      animation: fadeInPane 0.2s ease;
+    }
+    .ticker-details-pane.open {
+      display: block;
+    }
+    @keyframes fadeInPane {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Ticker Grid */
@@ -821,6 +908,70 @@
       font-size: 11.5px;
     }
 
+    /* Intelligence Accordions */
+    .card-accordion {
+      padding: 0;
+      overflow: hidden;
+      margin-bottom: 9px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-accordion.open {
+      border-color: rgba(252, 213, 53, 0.35);
+    }
+    .acc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      cursor: pointer;
+      user-select: none;
+      background: var(--surface);
+      transition: background 0.15s;
+    }
+    .acc-header:hover {
+      background: var(--surface-2);
+    }
+    .acc-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+    .acc-right {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .acc-preview {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+    .acc-chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-sub);
+      stroke-width: 2.2;
+      fill: none;
+      transition: transform 0.22s ease, stroke 0.2s ease;
+      flex-shrink: 0;
+    }
+    .card-accordion.open .acc-chevron {
+      transform: rotate(180deg);
+      stroke: var(--gold);
+    }
+    .acc-body {
+      display: none;
+      padding: 4px 14px 13px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .card-accordion.open .acc-body {
+      display: block;
+      animation: fadeInPane 0.2s ease;
+    }
+
     /* Intelligence Sub-Tiles */
     .etf-grid, .sub-grid {
       display: grid;
@@ -1058,6 +1209,72 @@
       cursor: pointer;
     }
 
+    /* DCA Simulator Styles */
+    .sim-quick-btns {
+      display: flex;
+      gap: 5px;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+    .sim-qbtn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sim-qbtn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .sim-res-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 12px;
+      margin-top: 10px;
+    }
+    .sim-verdict {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .sim-verdict.good {
+      background: var(--green-dim);
+      border: 1px solid rgba(14, 203, 129, 0.35);
+      color: var(--green);
+    }
+    .sim-verdict.warn {
+      background: var(--gold-dim);
+      border: 1px solid rgba(252, 213, 53, 0.35);
+      color: var(--gold);
+    }
+    .target-return-table {
+      width: 100%;
+      margin-top: 9px;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .target-return-table th, .target-return-table td {
+      padding: 5px 6px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    .target-return-table th:first-child, .target-return-table td:first-child {
+      text-align: left;
+    }
+    .target-return-table th {
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
     /* Bottom Navigation */
     .bottom-nav {
       position: fixed;
@@ -1073,6 +1290,7 @@
       z-index: 90;
     }
     .nav-item {
+      position: relative;
       border: none;
       background: transparent;
       color: var(--text-sub);
@@ -1087,6 +1305,15 @@
     }
     .nav-item.active {
       color: var(--gold);
+    }
+    .nav-item.active::after {
+      content: "";
+      position: absolute;
+      bottom: 5px;
+      width: 20px;
+      height: 2.5px;
+      background: var(--gold);
+      border-radius: 2px;
     }
 
     /* Help Bottom Sheet & Toast */
@@ -1191,14 +1418,13 @@
     </div>
   </header>
 
-  <!-- Live Dual-Currency Ticker Card -->
-  <section class="card">
-    <div class="ticker-top">
+  <!-- Live Dual-Currency Ticker Card (Clean Primary + Collapsible Secondary) -->
+  <section class="card card-hero">
+    <div class="ticker-main-row">
       <div>
         <div class="ticker-symbol-row">
           <span class="ticker-symbol" id="ticker-symbol">BTC / USDT</span>
-          <span class="badge-tag" id="ticker-rsi-badge">RSI --</span>
-          <button type="button" class="help-btn" onclick="openHelp('rsi')">?</button>
+          <span class="status-pill live" id="ticker-ws-pill">LIVE</span>
         </div>
         <div class="ticker-usd-row">
           <span class="ticker-usd" id="ticker-usd">$--</span>
@@ -1210,25 +1436,39 @@
           <button type="button" class="help-btn" onclick="openHelp('kimp')">?</button>
         </div>
       </div>
+      <div>
+        <button type="button" class="ticker-toggle-btn" id="ticker-toggle-btn" onclick="toggleTickerDetails()" title="상세 보조지표 펼치기/접기">
+          <span id="ticker-toggle-txt">상세 지표</span>
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsible Secondary Stats Pane -->
+    <div class="ticker-details-pane" id="ticker-details-pane">
       <div class="ticker-stats">
         <div><span class="stat-lbl">24h 최고</span><span class="stat-val" id="ticker-high">--</span></div>
         <div><span class="stat-lbl">24h 최저</span><span class="stat-val" id="ticker-low">--</span></div>
         <div><span class="stat-lbl">24h 거래대금</span><span class="stat-val" id="ticker-vol">--</span></div>
         <div><span class="stat-lbl">고점(ATH) 대비</span><span class="stat-val" id="ticker-ath-dd">--</span></div>
       </div>
-    </div>
-    <div class="ticker-chips">
-      <div class="chip-item">
-        <span>ATH 낙폭: <strong id="chip-ath-val">--</strong></span>
-        <button type="button" class="help-btn" onclick="openHelp('ath_dd')">?</button>
-      </div>
-      <div class="chip-item">
-        <span>8h 펀딩비: <strong id="chip-funding">--</strong></span>
-        <button type="button" class="help-btn" onclick="openHelp('funding')">?</button>
-      </div>
-      <div class="chip-item">
-        <span id="chip-rel-label">Mayer 배수: <strong id="chip-rel-val">--</strong></span>
-        <button type="button" class="help-btn" onclick="openHelp('rel_metric')">?</button>
+      <div class="ticker-chips">
+        <div class="chip-item">
+          <span class="badge-tag" id="ticker-rsi-badge">RSI --</span>
+          <button type="button" class="help-btn" onclick="openHelp('rsi')">?</button>
+        </div>
+        <div class="chip-item">
+          <span>ATH 낙폭: <strong id="chip-ath-val">--</strong></span>
+          <button type="button" class="help-btn" onclick="openHelp('ath_dd')">?</button>
+        </div>
+        <div class="chip-item">
+          <span>8h 펀딩비: <strong id="chip-funding">--</strong></span>
+          <button type="button" class="help-btn" onclick="openHelp('funding')">?</button>
+        </div>
+        <div class="chip-item">
+          <span id="chip-rel-label">Mayer 배수: <strong id="chip-rel-val">--</strong></span>
+          <button type="button" class="help-btn" onclick="openHelp('rel_metric')">?</button>
+        </div>
       </div>
     </div>
   </section>
@@ -1298,138 +1538,164 @@
   </section>
 
   <!-- =====================================================
-       TAB 2: INTELLIGENCE (ETF, DERIVATIVES, HALVING, INST, NEWS)
+       TAB 2: INTELLIGENCE (ACCORDION RESTRUCTURED)
        ===================================================== -->
   <section class="tab-section" id="tab-intel">
-    <!-- US Spot ETF Net Flow -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
+    <!-- 1. US Spot ETF Net Flow Accordion -->
+    <div class="card card-accordion open" id="acc-etf">
+      <div class="acc-header" onclick="toggleAccordion('etf')">
+        <div class="acc-title-wrap">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
-          <span>미국 현물 ETF 순유입 (Net Flow)</span>
-          <button type="button" class="help-btn" onclick="openHelp('etf_flow')">?</button>
+          <span>미국 현물 ETF 순유입</span>
+          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('etf_flow')">?</button>
         </div>
-        <span class="badge-tag" id="etf-date-badge">--</span>
-      </div>
-      <div class="etf-grid">
-        <div class="sub-tile">
-          <div class="sub-tile-top"><span>BTC 현물 ETF</span><span>IBIT·FBTC</span></div>
-          <div class="sub-tile-val" id="etf-btc-val">--</div>
-          <div class="sub-tile-foot" id="etf-btc-sub">일간 자금 흐름</div>
-        </div>
-        <div class="sub-tile">
-          <div class="sub-tile-top"><span>ETH 현물 ETF</span><span>ETHA·FETH</span></div>
-          <div class="sub-tile-val" id="etf-eth-val">--</div>
-          <div class="sub-tile-foot" id="etf-eth-sub">일간 자금 흐름</div>
+        <div class="acc-right">
+          <span class="acc-preview" id="acc-etf-preview">--</span>
+          <span class="badge-tag" id="etf-date-badge">--</span>
+          <svg class="acc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
       </div>
-      <div style="font-size:11px; color:var(--text-sub); margin-top:8px;" id="etf-summary-note">데이터 동기화 중...</div>
+      <div class="acc-body">
+        <div class="etf-grid">
+          <div class="sub-tile">
+            <div class="sub-tile-top"><span>BTC 현물 ETF</span><span>IBIT·FBTC</span></div>
+            <div class="sub-tile-val" id="etf-btc-val">--</div>
+            <div class="sub-tile-foot" id="etf-btc-sub">일간 자금 흐름</div>
+          </div>
+          <div class="sub-tile">
+            <div class="sub-tile-top"><span>ETH 현물 ETF</span><span>ETHA·FETH</span></div>
+            <div class="sub-tile-val" id="etf-eth-val">--</div>
+            <div class="sub-tile-foot" id="etf-eth-sub">일간 자금 흐름</div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--text-sub); margin-top:8px;" id="etf-summary-note">데이터 동기화 중...</div>
+      </div>
     </div>
 
-    <!-- Derivatives & On-chain -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
+    <!-- 2. Derivatives & On-chain Accordion -->
+    <div class="card card-accordion open" id="acc-deriv">
+      <div class="acc-header" onclick="toggleAccordion('deriv')">
+        <div class="acc-title-wrap">
           <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
           <span id="deriv-card-title">BTC 파생상품 수급 & 온체인</span>
-          <button type="button" class="help-btn" onclick="openHelp('deriv_oi')">?</button>
+          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('deriv_oi')">?</button>
         </div>
-        <span class="badge-tag" id="deriv-regime-badge">수급 분석중</span>
+        <div class="acc-right">
+          <span class="acc-preview" id="acc-deriv-preview">--</span>
+          <span class="badge-tag" id="deriv-regime-badge">수급 분석중</span>
+          <svg class="acc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
       </div>
-      <div class="sub-grid" id="deriv-grid"></div>
+      <div class="acc-body">
+        <div class="sub-grid" id="deriv-grid"></div>
+      </div>
     </div>
 
-    <!-- 5th Halving Tracker (BTC) -->
-    <div class="card" id="halving-card-wrap">
-      <div class="card-header">
-        <div class="card-title">
+    <!-- 3. 5th Halving Tracker Accordion (BTC only) -->
+    <div class="card card-accordion" id="acc-halving">
+      <div class="acc-header" onclick="toggleAccordion('halving')">
+        <div class="acc-title-wrap">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          <span>비트코인 5차 반감기 카운트다운</span>
-          <button type="button" class="help-btn" onclick="openHelp('halving')">?</button>
+          <span>비트코인 5차 반감기 사이클</span>
+          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('halving')">?</button>
         </div>
-        <span class="badge-tag gold" id="halving-dday-pill">D---일</span>
+        <div class="acc-right">
+          <span class="badge-tag gold" id="halving-dday-pill">D---일</span>
+          <svg class="acc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
       </div>
-      <div class="kv-row"><span class="kv-lbl">현재 블록 높이 (목표 1,050,000)</span><span class="kv-val" id="halving-cur-block">--</span></div>
-      <div class="kv-row"><span class="kv-lbl">남은 블록 / 예상 도달 시점</span><span class="kv-val"><span id="halving-rem-block">--</span> 블록 · <span id="halving-est-date">--</span></span></div>
-      <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" id="halving-bar" style="width:0%;"></div></div>
-      <div style="text-align:right; font-size:10.5px; color:var(--text-sub); margin-top:3px;" id="halving-pct">진행률 0.0%</div>
+      <div class="acc-body">
+        <div class="kv-row"><span class="kv-lbl">현재 블록 높이 (목표 1,050,000)</span><span class="kv-val" id="halving-cur-block">--</span></div>
+        <div class="kv-row"><span class="kv-lbl">남은 블록 / 예상 도달 시점</span><span class="kv-val"><span id="halving-rem-block">--</span> 블록 · <span id="halving-est-date">--</span></span></div>
+        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" id="halving-bar" style="width:0%;"></div></div>
+        <div style="text-align:right; font-size:10.5px; color:var(--text-sub); margin-top:3px;" id="halving-pct">진행률 0.0%</div>
+      </div>
     </div>
 
-    <!-- Institutional Debt & Risk Monitor -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
+    <!-- 4. Institutional Debt & Risk Monitor Accordion -->
+    <div class="card card-accordion" id="acc-inst">
+      <div class="acc-header" onclick="toggleAccordion('inst')">
+        <div class="acc-title-wrap">
           <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
           <span id="inst-card-title">BTC 기관 부채·청산 모니터 (Strategy)</span>
-          <button type="button" class="help-btn" onclick="openHelp('inst_risk')">?</button>
+          <button type="button" class="help-btn" onclick="event.stopPropagation(); openHelp('inst_risk')">?</button>
         </div>
-        <span class="badge-tag" id="inst-sync-badge">SEC 공시</span>
-      </div>
-
-      <div id="inst-box-BTC">
-        <div class="kv-row"><span class="kv-lbl">보유량 (평균 매입단가)</span><span class="kv-val" id="mstr-holdings">--</span></div>
-        <div class="kv-row"><span class="kv-lbl">실시간 평가액 (미실현 손익)</span><span class="kv-val" id="mstr-val-pnl">--</span></div>
-        <div class="kv-row"><span class="kv-lbl">순부채 (총부채 - 현금유보)</span><span class="kv-val" id="mstr-net-debt">--</span></div>
-        <div class="kv-row">
-          <span class="kv-lbl">자산 대비 부채 커버리지</span>
-          <span class="kv-val"><span id="mstr-coverage">--</span> · <span class="badge-tag green" id="mstr-risk-badge">안전</span></span>
-        </div>
-        <div style="margin-top:7px; text-align:right;">
-          <a id="mstr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001050446" target="_blank" rel="noopener" style="font-size:11px; color:var(--gold); text-decoration:none; font-weight:700;">SEC EDGAR 공시 원문 보기 ↗</a>
+        <div class="acc-right">
+          <span class="acc-preview" id="acc-inst-preview">--</span>
+          <span class="badge-tag" id="inst-sync-badge">SEC 공시</span>
+          <svg class="acc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
       </div>
-
-      <div id="inst-box-ETH" style="display:none;">
-        <div class="kv-row"><span class="kv-lbl">보유량 (평균 매입단가)</span><span class="kv-val" id="bmnr-holdings">--</span></div>
-        <div class="kv-row"><span class="kv-lbl">실시간 평가액 (미실현 손익)</span><span class="kv-val" id="bmnr-val-pnl">--</span></div>
-        <div class="kv-row"><span class="kv-lbl">총부채 / 현금유보액</span><span class="kv-val" id="bmnr-net-debt">--</span></div>
-        <div class="kv-row">
-          <span class="kv-lbl">재무 건전성 커버리지</span>
-          <span class="kv-val"><span id="bmnr-coverage">--</span> · <span class="badge-tag green">무차입 우량</span></span>
+      <div class="acc-body">
+        <div id="inst-box-BTC">
+          <div class="kv-row"><span class="kv-lbl">보유량 (평균 매입단가)</span><span class="kv-val" id="mstr-holdings">--</span></div>
+          <div class="kv-row"><span class="kv-lbl">실시간 평가액 (미실현 손익)</span><span class="kv-val" id="mstr-val-pnl">--</span></div>
+          <div class="kv-row"><span class="kv-lbl">순부채 (총부채 - 현금유보)</span><span class="kv-val" id="mstr-net-debt">--</span></div>
+          <div class="kv-row">
+            <span class="kv-lbl">자산 대비 부채 커버리지</span>
+            <span class="kv-val"><span id="mstr-coverage">--</span> · <span class="badge-tag green" id="mstr-risk-badge">안전</span></span>
+          </div>
+          <div style="margin-top:7px; text-align:right;">
+            <a id="mstr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001050446" target="_blank" rel="noopener" style="font-size:11px; color:var(--gold); text-decoration:none; font-weight:700;">SEC EDGAR 공시 원문 보기 ↗</a>
+          </div>
         </div>
-        <div style="margin-top:7px; text-align:right;">
-          <a id="bmnr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001829311" target="_blank" rel="noopener" style="font-size:11px; color:var(--gold); text-decoration:none; font-weight:700;">SEC EDGAR 공시 원문 보기 ↗</a>
+
+        <div id="inst-box-ETH" style="display:none;">
+          <div class="kv-row"><span class="kv-lbl">보유량 (평균 매입단가)</span><span class="kv-val" id="bmnr-holdings">--</span></div>
+          <div class="kv-row"><span class="kv-lbl">실시간 평가액 (미실현 손익)</span><span class="kv-val" id="bmnr-val-pnl">--</span></div>
+          <div class="kv-row"><span class="kv-lbl">총부채 / 현금유보액</span><span class="kv-val" id="bmnr-net-debt">--</span></div>
+          <div class="kv-row">
+            <span class="kv-lbl">재무 건전성 커버리지</span>
+            <span class="kv-val"><span id="bmnr-coverage">--</span> · <span class="badge-tag green">무차입 우량</span></span>
+          </div>
+          <div style="margin-top:7px; text-align:right;">
+            <a id="bmnr-sec-link" href="https://www.sec.gov/edgar/browse/?CIK=0001829311" target="_blank" rel="noopener" style="font-size:11px; color:var(--gold); text-decoration:none; font-weight:700;">SEC EDGAR 공시 원문 보기 ↗</a>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 1st-Tier News Monitor -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
+    <!-- 5. 1st-Tier News Monitor Accordion -->
+    <div class="card card-accordion open" id="acc-news">
+      <div class="acc-header" onclick="toggleAccordion('news')">
+        <div class="acc-title-wrap">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8V6Z"></path></svg>
           <span id="news-card-title">BTC 1군 매체 뉴스 모니터</span>
         </div>
-        <span class="badge-tag" id="news-tr-status">번역 대기</span>
+        <div class="acc-right">
+          <span class="badge-tag" id="news-tr-status">번역 대기</span>
+          <svg class="acc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
       </div>
+      <div class="acc-body">
+        <!-- 3 Essential Filters: 속보(6h), 24시간, 일주일(7d) -->
+        <div class="news-filters">
+          <button type="button" class="news-win-btn active" data-win="live" onclick="setNewsWindow('live')">속보 (6h)</button>
+          <button type="button" class="news-win-btn" data-win="24h" onclick="setNewsWindow('24h')">24시간</button>
+          <button type="button" class="news-win-btn" data-win="7d" onclick="setNewsWindow('7d')">일주일 (7d)</button>
+        </div>
 
-      <div class="news-filters">
-        <button type="button" class="news-win-btn" data-win="live" onclick="setNewsWindow('live')">속보</button>
-        <button type="button" class="news-win-btn active" data-win="24h" onclick="setNewsWindow('24h')">24시간</button>
-        <button type="button" class="news-win-btn" data-win="3d" onclick="setNewsWindow('3d')">3일</button>
-        <button type="button" class="news-win-btn" data-win="7d" onclick="setNewsWindow('7d')">7일</button>
-      </div>
+        <div class="news-sent-bar" id="news-sentiment-bar" style="display:none;">
+          <span id="news-total-label">핵심 기사 0건</span>
+          <div id="news-count-pills" style="display:flex; gap:4px;"></div>
+        </div>
 
-      <div class="news-sent-bar" id="news-sentiment-bar" style="display:none;">
-        <span id="news-total-label">핵심 기사 0건</span>
-        <div id="news-count-pills" style="display:flex; gap:4px;"></div>
-      </div>
+        <div id="news-list"></div>
 
-      <div id="news-list"></div>
-
-      <div class="briefing-box" id="period-briefing-panel" style="display:none;">
-        <div class="briefing-title" id="briefing-panel-title">기간별 핵심 이슈 요약</div>
-        <div id="briefing-list"></div>
+        <div class="briefing-box" id="period-briefing-panel" style="display:none;">
+          <div class="briefing-title" id="briefing-panel-title">기간별 핵심 이슈 요약</div>
+          <div id="briefing-list"></div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- =====================================================
-       TAB 3: AI MULTI-HORIZON DCA STRATEGY (v5.0)
+       TAB 3: AI MULTI-HORIZON DCA STRATEGY (v6.0)
        ===================================================== -->
   <section class="tab-section" id="tab-strategy">
     <!-- 1. Comprehensive Multi-Horizon Overview & Seed Allocation -->
-    <div class="card">
+    <div class="card card-hero">
       <div class="card-header">
         <div class="card-title">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
@@ -1589,6 +1855,88 @@
       </div>
 
       <button type="button" class="btn-primary" onclick="saveMyAvgPrices()">원화·달러 평단 저장 및 차트·전략 반영</button>
+    </div>
+
+    <!-- DCA & Additional Buy Simulator Card -->
+    <div class="card card-hero">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span id="sim-card-title">BTC 분할매수(물타기) 시뮬레이터</span>
+          <button type="button" class="help-btn" onclick="openHelp('dca_sim')">?</button>
+        </div>
+        <span class="badge-tag gold" id="sim-verdict-badge">실시간 시뮬레이션</span>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span>추가 매수할 금액 (원화 ₩)</span>
+          <span style="color:var(--gold);">가용 시드 투입</span>
+        </label>
+        <input type="number" id="input-sim-add-krw" placeholder="예: 1000000 (100만원)" step="10000" oninput="runDcaSimulation()" />
+        <div class="sim-quick-btns">
+          <button type="button" class="sim-qbtn" onclick="addSimAmount(100000)">+10만</button>
+          <button type="button" class="sim-qbtn" onclick="addSimAmount(500000)">+50만</button>
+          <button type="button" class="sim-qbtn" onclick="addSimAmount(1000000)">+100만</button>
+          <button type="button" class="sim-qbtn" onclick="addSimAmount(5000000)">+500만</button>
+          <button type="button" class="sim-qbtn" onclick="resetSimAmount()">초기화</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <span>매수 예정 단가 (원화 ₩)</span>
+          <span style="color:var(--text-sub);">AI 타점 빠른선택</span>
+        </label>
+        <input type="number" id="input-sim-price-krw" placeholder="매수 가격 입력" step="1000" oninput="runDcaSimulation()" />
+        <div class="sim-quick-btns">
+          <button type="button" class="sim-qbtn" onclick="setSimPriceTarget('current')">현재가 적용</button>
+          <button type="button" class="sim-qbtn" onclick="setSimPriceTarget('t1')">AI 1차 타점</button>
+          <button type="button" class="sim-qbtn" onclick="setSimPriceTarget('t2')">AI 2차 타점</button>
+        </div>
+      </div>
+
+      <!-- Simulation Output Box -->
+      <div class="sim-res-box">
+        <div class="kv-row" style="padding-top:0;">
+          <span class="kv-lbl">추가 매수 예상 수량</span>
+          <span class="kv-val" id="sim-add-qty">0.0000</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-lbl">매수 후 신규 평단가</span>
+          <span class="kv-val" id="sim-new-avg">₩--</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-lbl">기존 평단 대비 인하율</span>
+          <span class="kv-val" style="color:var(--green);" id="sim-drop-pct">--</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-lbl">신규 손익분기 필요 상승폭</span>
+          <span class="kv-val" id="sim-breakeven-pct">--</span>
+        </div>
+        <div class="sim-verdict good" id="sim-verdict-box">
+          금액과 단가를 입력하면 실시간 물타기 진단과 전략 판정이 표시됩니다.
+        </div>
+      </div>
+
+      <!-- Target Profit Table -->
+      <div style="margin-top:10px;">
+        <span style="font-size:11.5px; font-weight:700; color:var(--text-sub); display:block; margin-bottom:4px;">🎯 매수 후 목표 수익률별 매도가 역산</span>
+        <table class="target-return-table">
+          <thead>
+            <tr>
+              <th>목표</th>
+              <th>매도 단가 (원화)</th>
+              <th>현재가 대비 필요 상승</th>
+            </tr>
+          </thead>
+          <tbody id="sim-target-rows">
+            <tr><td>+5% 익절</td><td id="tr-5-price">--</td><td id="tr-5-dist">--</td></tr>
+            <tr><td>+10% 익절</td><td id="tr-10-price">--</td><td id="tr-10-dist">--</td></tr>
+            <tr><td>+20% 익절</td><td id="tr-20-price">--</td><td id="tr-20-dist">--</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Target Price & RSI Alert Card (Supports KRW & USD) -->
@@ -1782,13 +2130,32 @@
     dismissedAlerts: {},
     overlays: { ma: true, bb: true, bs: true, avg: true },
     hoverIdx: -1,
-    ws: null
+    ws: null,
+    tickerExpanded: false,
+    accordions: {
+      etf: true,
+      deriv: true,
+      halving: false,
+      inst: false,
+      news: true
+    },
+    wsRetries: 0,
+    wsFallbackPolling: false,
+    simState: {
+      addKrw: 0,
+      priceKrw: 0
+    }
   };
 
   // =========================================================
   // Help Dictionary (? Bottom Sheet)
   // =========================================================
   const HELP_DICT = {
+    dca_sim: {
+      title: '분할매수(물타기) 시뮬레이터',
+      desc: '추가 매수할 금액과 단가를 입력하면 신규 평단가, 수량 변화, 기존 평단 대비 인하율, 손익분기점 도달 필요 상승률 및 목표 수익률(+5%, +10%, +20%) 달성가를 실시간 계산합니다.',
+      tip: '실전 해석: AI 중·장기 추매 점수가 높은 구간에서 분할매수 시 평단 인하 효율이 극대화됩니다.'
+    },
     rsi: {
       title: 'RSI (14) · 상대강도지수',
       desc: '최근 14개 봉 동안의 상승폭과 하락폭 비율을 0~100으로 나타낸 모멘텀 지표입니다.',
@@ -2010,7 +2377,48 @@
     });
   }
 
+  function calcMACD(arr, fast = 12, slow = 26, signal = 9) {
+    const emaFast = calcEMA(arr, fast);
+    const emaSlow = calcEMA(arr, slow);
+    const macdLine = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (emaFast[i] !== null && emaSlow[i] !== null) {
+        macdLine.push(emaFast[i] - emaSlow[i]);
+      } else {
+        macdLine.push(null);
+      }
+    }
+    const validMacd = macdLine.filter(x => x !== null);
+    const sigValid = calcEMA(validMacd, signal);
+    const sigLine = new Array(arr.length - validMacd.length).fill(null).concat(sigValid);
+    const hist = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (macdLine[i] !== null && sigLine[i] !== null) {
+        hist.push(macdLine[i] - sigLine[i]);
+      } else {
+        hist.push(null);
+      }
+    }
+    return { macd: macdLine, signal: sigLine, hist };
+  }
+
   // Navigation & UI Controls
+  function toggleTickerDetails() {
+    state.tickerExpanded = !state.tickerExpanded;
+    const pane = document.getElementById('ticker-details-pane');
+    const btn = document.getElementById('ticker-toggle-btn');
+    const txt = document.getElementById('ticker-toggle-txt');
+    if (pane) pane.classList.toggle('open', state.tickerExpanded);
+    if (btn) btn.classList.toggle('open', state.tickerExpanded);
+    if (txt) txt.innerText = state.tickerExpanded ? '간략히' : '상세 지표';
+  }
+
+  function toggleAccordion(key) {
+    const el = document.getElementById('acc-' + key);
+    if (!el) return;
+    const isOpen = el.classList.toggle('open');
+    state.accordions[key] = isOpen;
+  }
   function switchTab(tabId) {
     document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -2290,60 +2698,101 @@
   }
 
   // =========================================================
-  // WebSocket Live Stream & Background Resume
+  // WebSocket Live Stream & Exponential Backoff Resilience
   // =========================================================
   function connectWebSocket() {
     if (state.ws) {
       try { state.ws.close(); } catch (e) {}
     }
-    const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker');
-    state.ws = ws;
-    ws.onopen = () => {
-      document.getElementById('ws-status-dot').style.background = 'var(--green)';
-    };
-    ws.onmessage = ev => {
-      try {
-        const msg = JSON.parse(ev.data);
-        const d = msg.data;
-        if (!d || !d.s) return;
-        const sym = d.s === 'BTCUSDT' ? 'BTC' : 'ETH';
-        const usd = parseFloat(d.c);
-        const open = parseFloat(d.o);
-        const high = parseFloat(d.h);
-        const low = parseFloat(d.l);
-        const vol = parseFloat(d.q);
-        const chg = open > 0 ? ((usd - open) / open) * 100 : state.prices[sym].chg;
-        if (usd > state.ath[sym]) state.ath[sym] = usd;
+    const dot = document.getElementById('ws-status-dot');
+    const pill = document.getElementById('ticker-ws-pill');
 
-        const prev = state.prices[sym];
-        const krw = prev.krw > 0 && prev.usd > 0 ? prev.krw * (usd / prev.usd) : usd * state.usdtKrw;
-        const globalKrw = usd * state.usdtKrw;
-        const kimp = globalKrw > 0 ? ((krw - globalKrw) / globalKrw) * 100 : prev.kimp;
+    try {
+      const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker');
+      state.ws = ws;
 
-        state.prices[sym] = { usd, chg, high, low, vol, krw, kimp };
-
-        const kArr = state.klines[sym];
-        if (kArr.length > 0) {
-          const last = kArr[kArr.length - 1];
-          last.c = usd;
-          if (usd > last.h) last.h = usd;
-          if (usd < last.l) last.l = usd;
+      ws.onopen = () => {
+        state.wsRetries = 0;
+        state.wsFallbackPolling = false;
+        if (dot) dot.style.background = 'var(--green)';
+        if (pill) {
+          pill.className = 'status-pill live';
+          pill.innerText = 'LIVE';
         }
+      };
 
-        if (sym === state.asset) {
-          renderTicker();
-          if (document.getElementById('tab-chart').classList.contains('active') && state.hoverIdx === -1) {
-            drawProChart();
+      ws.onmessage = ev => {
+        try {
+          const msg = JSON.parse(ev.data);
+          const d = msg.data;
+          if (!d || !d.s) return;
+          const sym = d.s === 'BTCUSDT' ? 'BTC' : 'ETH';
+          const usd = parseFloat(d.c);
+          const open = parseFloat(d.o);
+          const high = parseFloat(d.h);
+          const low = parseFloat(d.l);
+          const vol = parseFloat(d.q);
+          const chg = open > 0 ? ((usd - open) / open) * 100 : state.prices[sym].chg;
+          if (usd > state.ath[sym]) state.ath[sym] = usd;
+
+          const prev = state.prices[sym];
+          const krw = prev.krw > 0 && prev.usd > 0 ? prev.krw * (usd / prev.usd) : usd * state.usdtKrw;
+          const globalKrw = usd * state.usdtKrw;
+          const kimp = globalKrw > 0 ? ((krw - globalKrw) / globalKrw) * 100 : prev.kimp;
+
+          state.prices[sym] = { usd, chg, high, low, vol, krw, kimp };
+
+          const kArr = state.klines[sym];
+          if (kArr.length > 0) {
+            const last = kArr[kArr.length - 1];
+            last.c = usd;
+            if (usd > last.h) last.h = usd;
+            if (usd < last.l) last.l = usd;
           }
-          renderPositionPnL();
+
+          if (sym === state.asset) {
+            renderTicker();
+            if (document.getElementById('tab-chart').classList.contains('active') && state.hoverIdx === -1) {
+              drawProChart();
+            }
+            renderPositionPnL();
+            runDcaSimulation();
+          }
+          checkAlerts();
+        } catch (e) {}
+      };
+
+      ws.onclose = () => {
+        state.wsRetries++;
+        if (dot) dot.style.background = 'var(--gold)';
+        if (pill) {
+          pill.className = 'status-pill delayed';
+          pill.innerText = 'RECONNECT';
         }
-        checkAlerts();
-      } catch (e) {}
-    };
-    ws.onclose = () => {
-      document.getElementById('ws-status-dot').style.background = 'var(--red)';
-      setTimeout(connectWebSocket, 4000);
-    };
+
+        let delay = Math.min(30000, 2000 * Math.pow(1.5, Math.min(8, state.wsRetries)));
+        if (state.wsRetries >= 5) {
+          state.wsFallbackPolling = true;
+          if (dot) dot.style.background = 'var(--gold)';
+          if (pill) {
+            pill.className = 'status-pill delayed';
+            pill.innerText = 'POLLING';
+          }
+          delay = 30000;
+        }
+        setTimeout(connectWebSocket, delay);
+      };
+
+      ws.onerror = () => {
+        try { ws.close(); } catch (e) {}
+      };
+    } catch (e) {
+      if (dot) dot.style.background = 'var(--red)';
+      if (pill) {
+        pill.className = 'status-pill offline';
+        pill.innerText = 'OFFLINE';
+      }
+    }
   }
 
   document.addEventListener('visibilitychange', () => {
@@ -2351,6 +2800,12 @@
       manualRefresh(true);
       if (!state.ws || state.ws.readyState !== WebSocket.OPEN) connectWebSocket();
     }
+  });
+
+  window.addEventListener('online', () => {
+    state.wsRetries = 0;
+    manualRefresh(true);
+    connectWebSocket();
   });
 
   // =========================================================
@@ -2894,6 +3349,16 @@
       s1_rsi = Math.min(35, s1_rsi + 5);
     }
 
+    // 4H MACD Momentum & Histogram Turn
+    const macd4h = calcMACD(c4h, 12, 26, 9);
+    const hist4h = macd4h.hist;
+    const lastHist = hist4h[hist4h.length - 1] || 0;
+    const prevHist = hist4h[hist4h.length - 2] || 0;
+    const isMacdTurn = (prevHist <= 0 && lastHist > 0) || (lastHist > prevHist && lastHist > 0);
+    if (isMacdTurn) {
+      s1_rsi = Math.min(35, s1_rsi + 3);
+    }
+
     const bb4h = calcBB(c4h, 20, 2);
     const bb4L = bb4h.lower[bb4h.lower.length - 1];
     const bb4M = bb4h.mid[bb4h.mid.length - 1];
@@ -2906,6 +3371,15 @@
       else if (distPct <= 1.2) s2_bb = 20;
       else if (distPct <= 2.5) s2_bb = 15;
       else if (distPct >= 6.0) s2_bb = 6;
+    }
+
+    // 4H Volume Surge Detection
+    const v4h = hzData.k4h.map(b => b.v);
+    const lastV4h = v4h[v4h.length - 1] || 0;
+    const avgV4h = v4h.slice(-20).reduce((a, b) => a + b, 0) / Math.max(1, Math.min(20, v4h.length));
+    const isVolSurge = avgV4h > 0 && (lastV4h / avgV4h >= 1.6);
+    if (isVolSurge && p.usd >= (bb4L || 0)) {
+      s2_bb = Math.min(25, s2_bb + 3);
     }
 
     const fr = state.deriv[sym].funding || 0;
@@ -2939,7 +3413,7 @@
       resUsd: resist4h,
       resKrw: resist4h * krwRate,
       advice: shortScore >= 75
-        ? `1H RSI(${Math.round(r1h)})·4H RSI(${Math.round(r4h)}) 과매도 및 펀딩비(${fr.toFixed(4)}%) 구조가 단기 기술적 반등에 우호적입니다. 1차 눌림목 지정가로 짧게 대응하고 4H 20EMA 부근에서 일부 익절을 검토하세요.`
+        ? `1H RSI(${Math.round(r1h)})·4H RSI(${Math.round(r4h)}) 과매도 및 펀딩비(${fr.toFixed(4)}%) 구조가 단기 기술적 반등에 우호적입니다. ${isMacdTurn ? '4H MACD 히스토그램 반등 턴이 감지되었습니다. ' : ''}1차 눌림목 지정가로 짧게 대응하고 4H 20EMA 부근에서 일부 익절을 검토하세요.`
         : shortScore >= 52
           ? `단기 파동이 중립 구간에 있어 추격 매수보다 1·2차 지지선 지정가 대기 전략이 유리합니다.`
           : `단기 과열 또는 김프·롱 쏠림 구간입니다. 단기 스윙 신규 진입은 보류하고 눌림목을 기다리세요.`
@@ -2953,9 +3427,19 @@
     const m20 = sma20_1d[sma20_1d.length - 1] || p.usd;
     const m60 = sma60_1d[sma60_1d.length - 1] || p.usd;
 
+    // Golden Cross / Death Cross Detection (20MA vs 60MA)
+    const prevM20 = sma20_1d[sma20_1d.length - 5] || m20;
+    const prevM60 = sma60_1d[sma60_1d.length - 5] || m60;
+    const isGoldenCross = prevM20 <= prevM60 && m20 > m60;
+    const isBullishAlign = m20 > m60;
+
     let m1_trend = Math.round(Math.max(4, Math.min(22, ((75 - rsi1d) / 50) * 22)));
-    if (p.usd >= m60 * 0.98 && p.usd <= m20 * 1.02) {
+    if (isGoldenCross) {
+      m1_trend = Math.min(30, m1_trend + 6);
+    } else if (p.usd >= m60 * 0.98 && p.usd <= m20 * 1.02) {
       m1_trend = Math.min(30, m1_trend + 8);
+    } else if (isBullishAlign) {
+      m1_trend = Math.min(30, m1_trend + 3);
     } else if (p.usd < m60 * 0.92) {
       m1_trend = Math.min(30, m1_trend + 4);
     }
@@ -2993,7 +3477,7 @@
       ma20Usd: m20,
       ma20Krw: m20 * krwRate,
       advice: midScore >= 72
-        ? `현물 ETF 수급(${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M)과 일봉 눌림목 구조가 중기 스윙 매집에 유리합니다. 1·2차 지정가로 분할 매집 후 일봉 20일선(${fmtUsd(m20, dec)}) 안착 여부를 확인하세요.`
+        ? `현물 ETF 수급(${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M)과 일봉 눌림목 구조가 중기 스윙 매집에 유리합니다. ${isGoldenCross ? '20일선-60일선 골든크로스 모멘텀이 가세했습니다. ' : ''}1·2차 지정가로 분할 매집 후 일봉 20일선(${fmtUsd(m20, dec)}) 안착 여부를 확인하세요.`
         : midScore >= 50
           ? `중기 추세는 방향성 탐색 구간입니다. 성급한 비중 확대보다 20일선(${fmtUsd(m20, dec)}) 회복 또는 2차 지지선 도달 시 분할 접근하세요.`
           : `ETF 순유출 또는 중기 역배열 압력이 존재합니다. 중기 스윙 비중은 보수적으로 유지하세요.`
@@ -3114,8 +3598,8 @@
       short: {
         score: shortScore, tag: shortTag, tagCls: shortTagCls,
         factors: [
-          { name: '1. 1H·4H 초단기 RSI 과매도 & 반등 턴', help: 'rsi', score: s1_rsi, max: 35, desc: `1H RSI ${Math.round(r1h)} · 4H RSI ${Math.round(r4h)} (${r1h > r1hPrev || r4h > r4hPrev ? '상승 턴 포착' : '하락/횡보 진행'})` },
-          { name: '2. 4H 볼린저밴드 하단 지지 강도', help: 'ma', score: s2_bb, max: 25, desc: `4H 밴드 하단 ${fmtUsd(bb4L || 0, dec)} · 단기 저항(20EMA) ${fmtUsd(resist4h, dec)}` },
+          { name: '1. 1H·4H 초단기 RSI 과매도 & MACD 모멘텀', help: 'rsi', score: s1_rsi, max: 35, desc: `1H RSI ${Math.round(r1h)} · 4H RSI ${Math.round(r4h)} · MACD ${isMacdTurn ? '반등턴(+) 포착' : '하방진행'}` },
+          { name: '2. 4H 볼린저밴드 하단 지지 & 수급 거래량', help: 'ma', score: s2_bb, max: 25, desc: `4H 밴드 하단 ${fmtUsd(bb4L || 0, dec)} ${isVolSurge ? '· 거래량 급증(+)' : ''} · 저항(20EMA) ${fmtUsd(resist4h, dec)}` },
           { name: '3. 선물 8h 펀딩비 숏 스퀴즈 압력', help: 'funding', score: s3_fr, max: 25, desc: `8h 펀딩비 ${fr >= 0 ? '+' : ''}${fr.toFixed(4)}% (${fr < 0 ? '숏 과밀·반등 유리' : '중립/롱 우위'})` },
           { name: '4. 실시간 김프 역프/안정 수급', help: 'kimp', score: s4_kimp, max: 15, desc: `국내외 가격 괴리율 ${kimp >= 0 ? '+' : ''}${kimp.toFixed(2)}%` }
         ],
@@ -3124,7 +3608,7 @@
       mid: {
         score: midScore, tag: midTag, tagCls: midTagCls,
         factors: [
-          { name: '1. 일봉 RSI(14) & 20일·60일 이평선 지지', help: 'ma', score: m1_trend, max: 30, desc: `일봉 RSI ${Math.round(rsi1d)} · 20일선 ${fmtUsd(m20, dec)} · 60일선 ${fmtUsd(m60, dec)}` },
+          { name: '1. 일봉 RSI(14) & 20·60일선 (골든크로스)', help: 'ma', score: m1_trend, max: 30, desc: `일봉 RSI ${Math.round(rsi1d)} · 20일선 ${fmtUsd(m20, dec)} · 60일선 ${fmtUsd(m60, dec)} (${isGoldenCross ? '골든크로스!' : isBullishAlign ? '정배열 유지' : '역배열/혼조'})` },
           { name: '2. 미국 현물 ETF 기관 순유입 수급', help: 'etf_flow', score: m2_etf, max: 30, desc: `${sym} 현물 ETF 일간 ${etfM >= 0 ? '+' : ''}$${etfM.toFixed(1)}M (${etfM >= 0 ? '순유입' : '순유출'})` },
           { name: '3. 공포·탐욕 심리 & 상대강도', help: 'fng', score: m3_sent, max: 20, desc: `심리지수 ${fng} (${sym === 'BTC' ? state.fngBtc.cls : state.fngEth.cls})` },
           { name: '4. 온체인 멤풀 & 파생 레버리지 건전성', help: 'deriv_oi', score: m4_health, max: 20, desc: `멤풀 수수료 ${state.mempoolFee || '--'} sat/vB · 펀딩비 ${fr.toFixed(4)}%` }
@@ -3393,6 +3877,13 @@
     document.getElementById('etf-eth-sub').innerText = inst.ethEtfFlowM >= 0 ? '순유입 (기관 매수 우위)' : '순유출 (단기 매도 우위)';
     document.getElementById('etf-summary-note').innerText = inst.etfNote || '미국 현물 ETF 일간 자금 유출입 현황';
 
+    const etfVal = sym === 'BTC' ? inst.btcEtfFlowM : inst.ethEtfFlowM;
+    const etfPrevEl = document.getElementById('acc-etf-preview');
+    if (etfPrevEl) {
+      etfPrevEl.innerText = `${etfVal >= 0 ? '+' : ''}$${etfVal.toFixed(1)}M`;
+      etfPrevEl.style.color = etfVal >= 0 ? 'var(--green)' : 'var(--red)';
+    }
+
     document.getElementById('deriv-card-title').innerText = `${sym} 파생상품 수급 & 온체인`;
     const fr = state.deriv[sym].funding;
     const oi = state.deriv[sym].oi;
@@ -3406,6 +3897,12 @@
     } else {
       regimeBadge.innerText = '파생 수급 균형';
       regimeBadge.className = 'badge-tag gold';
+    }
+
+    const derivPrevEl = document.getElementById('acc-deriv-preview');
+    if (derivPrevEl) {
+      derivPrevEl.innerText = `펀딩 ${fr >= 0 ? '+' : ''}${fr.toFixed(4)}%`;
+      derivPrevEl.style.color = fr < 0 ? 'var(--green)' : (fr >= 0.04 ? 'var(--red)' : 'var(--text)');
     }
 
     const tile4Label = sym === 'BTC' ? 'Mayer 배수 (200일선)' : 'ETH/BTC 상대강도';
@@ -3439,7 +3936,8 @@
       </div>
     `;
 
-    document.getElementById('halving-card-wrap').style.display = sym === 'BTC' ? 'block' : 'none';
+    const halvingCard = document.getElementById('acc-halving');
+    if (halvingCard) halvingCard.style.display = sym === 'BTC' ? 'block' : 'none';
     if (state.halving.height > 0) {
       document.getElementById('halving-dday-pill').innerText = `D-${state.halving.dday}일`;
       document.getElementById('halving-cur-block').innerText = state.halving.height.toLocaleString();
@@ -3483,6 +3981,15 @@
     document.getElementById('bmnr-net-debt').innerText = `$${inst.bmnrDebtB.toFixed(2)}B / $${inst.bmnrCashB.toFixed(2)}B`;
     document.getElementById('bmnr-coverage').innerText = inst.bmnrCashB >= inst.bmnrDebtB ? '순현금 초과유동성' : `${(bmnrValB / Math.max(0.01, inst.bmnrDebtB)).toFixed(1)}x 커버`;
     document.getElementById('bmnr-sec-link').href = inst.bmnrSecUrl || 'https://www.sec.gov/edgar/browse/?CIK=0001829311';
+
+    const instPrevEl = document.getElementById('acc-inst-preview');
+    if (instPrevEl) {
+      if (sym === 'BTC') {
+        instPrevEl.innerText = `MSTR ${mstrCov.toFixed(1)}x 커버`;
+      } else {
+        instPrevEl.innerText = `BMNR $${bmnrValB.toFixed(1)}B 자산`;
+      }
+    }
   }
 
   // =========================================================
@@ -3544,6 +4051,29 @@
     };
   }
 
+  function extractNewsTokens(title) {
+    if (!title) return [];
+    return title.toLowerCase()
+      .replace(/https?:\/\/\S+/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= 3 && !['the','and','for','with','about','from','into','over','after','this','that','will','have','been','were','what','when','where','which','more','than'].includes(w));
+  }
+
+  function isDuplicateNews(itemA, itemB) {
+    if (!itemA || !itemB) return false;
+    if (itemA.link && itemB.link && itemA.link === itemB.link) return true;
+    if (Math.abs(itemA.pubMs - itemB.pubMs) > 36 * 3600000) return false;
+    const tokensA = extractNewsTokens(itemA.titleEn);
+    const tokensB = extractNewsTokens(itemB.titleEn);
+    if (tokensA.length === 0 || tokensB.length === 0) return false;
+    const setB = new Set(tokensB);
+    const common = tokensA.filter(t => setB.has(t));
+    const overlapRatio = common.length / Math.min(tokensA.length, tokensB.length);
+    const jaccardRatio = common.length / (new Set([...tokensA, ...tokensB]).size || 1);
+    return (common.length >= 3 && (overlapRatio >= 0.65 || jaccardRatio >= 0.45));
+  }
+
   async function fetchNewsFeeds() {
     const statusEl = document.getElementById('news-tr-status');
     statusEl.innerText = '수집·번역중';
@@ -3593,13 +4123,30 @@
       });
     });
 
-    const map = new Map();
-    [...archive, ...collected].forEach(item => {
-      if (Date.now() - item.pubMs <= 7 * 86400000) {
-        map.set(item.id, { ...(map.get(item.id) || {}), ...item });
+    // 1) First-pass deduplication among newly collected items across different RSS feeds
+    collected.sort((a, b) => b.score - a.score);
+    const uniqueCollected = [];
+    for (const it of collected) {
+      if (!uniqueCollected.some(ex => isDuplicateNews(ex, it))) {
+        uniqueCollected.push(it);
       }
-    });
-    const merged = Array.from(map.values()).sort((a, b) => b.score - a.score);
+    }
+
+    // 2) Merge with archive and deduplicate
+    const all = [...uniqueCollected, ...archive].filter(it => (Date.now() - it.pubMs) <= 7 * 86400000);
+    const merged = [];
+    all.sort((a, b) => b.pubMs - a.pubMs);
+    for (const it of all) {
+      const existing = merged.find(ex => isDuplicateNews(ex, it));
+      if (!existing) {
+        merged.push({ ...it });
+      } else {
+        if (!existing.titleKo && it.titleKo) existing.titleKo = it.titleKo;
+        if (!existing.descKo && it.descKo) existing.descKo = it.descKo;
+        if (it.score > existing.score) existing.score = it.score;
+      }
+    }
+    merged.sort((a, b) => b.score - a.score);
 
     await Promise.all(merged.slice(0, 14).map(async it => {
       if (!it.titleKo) it.titleKo = await translateKo(it.titleEn);
@@ -3611,7 +4158,7 @@
       localStorage.setItem(LS_KEYS.NEWS_ARCHIVE, JSON.stringify(merged.slice(0, 60)));
     } catch (e) {}
 
-    statusEl.innerText = '1군 매체 · 번역완료';
+    statusEl.innerText = '1군 매체 · 중복제거 완료';
     renderNewsSection();
   }
 
@@ -3620,9 +4167,8 @@
     document.getElementById('news-card-title').innerText = `${sym} 1군 매체 뉴스 모니터`;
     const now = Date.now();
     const maxAgeMap = {
-      live: 12 * 3600000,
+      live: 6 * 3600000,
       '24h': 24 * 3600000,
-      '3d': 3 * 86400000,
       '7d': 7 * 86400000
     };
     const maxAge = maxAgeMap[state.newsWindow] || 24 * 3600000;
@@ -3663,6 +4209,7 @@
     listEl.innerHTML = enriched.map(it => {
       const diffM = Math.max(1, Math.round((now - it.pubMs) / 60000));
       const timeTxt = diffM < 60 ? `${diffM}분 전` : diffM < 1440 ? `${Math.floor(diffM / 60)}시간 전` : `${Math.floor(diffM / 1440)}일 전`;
+      const exactTime = new Date(it.pubMs).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
       const title = it.titleKo || it.titleEn;
       const bodySum = it.descKo || it.descEn || '';
       return `
@@ -3670,7 +4217,7 @@
           <div class="news-meta">
             <span class="badge-tag ${it.clsInfo.cls}">${it.clsInfo.tag}</span>
             <strong>${it.source}</strong>
-            <span>· ${timeTxt}</span>
+            <span>· ${timeTxt} (${exactTime})</span>
           </div>
           <a class="news-title" href="${it.link}" target="_blank" rel="noopener">${title} ↗</a>
           ${bodySum ? `<div class="news-body-sum">${bodySum}</div>` : ''}
@@ -3679,8 +4226,8 @@
       `;
     }).join('');
 
-    const winNames = { live: '현시점 속보', '24h': '최근 24시간', '3d': '최근 3일간', '7d': '일주일(7일)' };
-    document.getElementById('briefing-panel-title').innerText = `${winNames[state.newsWindow]} 핵심 이슈 요약 정리`;
+    const winNames = { live: '현시점 속보 (6시간)', '24h': '최근 24시간', '7d': '일주일(7일)' };
+    document.getElementById('briefing-panel-title').innerText = `${winNames[state.newsWindow] || '최근 이슈'} 핵심 이슈 요약 정리`;
     briefPanel.style.display = 'block';
     document.getElementById('briefing-list').innerHTML = enriched.slice(0, 4).map(it => {
       const title = it.titleKo || it.titleEn;
@@ -3691,6 +4238,11 @@
         </div>
       `;
     }).join('');
+
+    const newsPrevEl = document.getElementById('acc-news-preview');
+    if (newsPrevEl) {
+      newsPrevEl.innerText = `${enriched.length}건 (호재 ${bullCnt} · 리스크 ${bearCnt})`;
+    }
   }
 
   // =========================================================
@@ -3851,6 +4403,7 @@
     localStorage.setItem(LS_KEYS.POS, JSON.stringify(state.myPos));
     syncPositionInputs();
     renderPositionPnL();
+    runDcaSimulation();
     renderStrategy();
     drawProChart();
     showToast('원화·달러 평단이 저장되어 차트와 AI 전략에 반영되었습니다');
@@ -3862,6 +4415,9 @@
     document.getElementById('pos-group-BTC').style.display = sym === 'BTC' ? 'block' : 'none';
     document.getElementById('pos-group-ETH').style.display = sym === 'ETH' ? 'block' : 'none';
     document.getElementById('my-pnl-krw-label').innerText = `${sym} 원화(₩) 기준 손익`;
+
+    const simTitleEl = document.getElementById('sim-card-title');
+    if (simTitleEl) simTitleEl.innerText = `${sym} 분할매수(물타기) 시뮬레이터`;
 
     const pos = state.myPos[sym];
     const p = state.prices[sym];
@@ -3897,6 +4453,193 @@
       usdEl.style.color = 'var(--text-sub)';
       evalRow.style.display = 'none';
     }
+
+    runDcaSimulation();
+  }
+
+  // =========================================================
+  // DCA & Additional Buy Simulator Logic
+  // =========================================================
+  function addSimAmount(amt) {
+    const el = document.getElementById('input-sim-add-krw');
+    if (!el) return;
+    const cur = parseFloat(el.value) || 0;
+    el.value = cur + amt;
+    runDcaSimulation();
+  }
+
+  function resetSimAmount() {
+    const el = document.getElementById('input-sim-add-krw');
+    if (el) el.value = '';
+    runDcaSimulation();
+  }
+
+  function setSimPriceTarget(type) {
+    const sym = state.asset;
+    const pKrw = state.prices[sym].krw || 0;
+    const priceEl = document.getElementById('input-sim-price-krw');
+    if (!priceEl) return;
+    if (type === 'current') {
+      priceEl.value = Math.round(pKrw);
+    } else if (type === 't1') {
+      priceEl.value = Math.round(pKrw * 0.975);
+    } else if (type === 't2') {
+      priceEl.value = Math.round(pKrw * 0.94);
+    }
+    runDcaSimulation();
+  }
+
+  function runDcaSimulation() {
+    const sym = state.asset;
+    const pos = state.myPos[sym];
+    const p = state.prices[sym];
+    const curP = p.krw || 0;
+
+    const addKrwInput = document.getElementById('input-sim-add-krw');
+    const targetPriceInput = document.getElementById('input-sim-price-krw');
+    if (!addKrwInput || !targetPriceInput) return;
+
+    const addKrw = parseFloat(addKrwInput.value) || 0;
+    let targetPrice = parseFloat(targetPriceInput.value) || 0;
+    if (targetPrice <= 0 && curP > 0) {
+      targetPriceInput.placeholder = `현재가: ${fmtKrw(curP)}`;
+    }
+
+    const effectiveBuyPrice = targetPrice > 0 ? targetPrice : curP;
+    const addQty = effectiveBuyPrice > 0 && addKrw > 0 ? (addKrw / effectiveBuyPrice) : 0;
+
+    const qtyEl = document.getElementById('sim-add-qty');
+    const newAvgEl = document.getElementById('sim-new-avg');
+    const dropPctEl = document.getElementById('sim-drop-pct');
+    const bePctEl = document.getElementById('sim-breakeven-pct');
+    const verdictBox = document.getElementById('sim-verdict-box');
+    const verdictBadge = document.getElementById('sim-verdict-badge');
+
+    if (qtyEl) qtyEl.innerText = `${addQty.toFixed(sym === 'ETH' ? 4 : 6)} ${sym}`;
+
+    if (effectiveBuyPrice <= 0 || addKrw <= 0) {
+      if (newAvgEl) newAvgEl.innerText = pos.avgKrw > 0 ? fmtKrw(pos.avgKrw) : '₩--';
+      if (dropPctEl) {
+        dropPctEl.innerText = '--';
+        dropPctEl.style.color = 'var(--text-sub)';
+      }
+      if (bePctEl) bePctEl.innerText = '--';
+      if (verdictBadge) {
+        verdictBadge.innerText = '실시간 시뮬레이션';
+        verdictBadge.className = 'badge-tag gold';
+      }
+      if (verdictBox) {
+        verdictBox.className = 'sim-verdict good';
+        verdictBox.innerText = '추가 매수할 원화 금액과 희망 매수 단가를 설정하면 실시간 평단 변화와 목표 익절가가 계산됩니다.';
+      }
+      updateTargetReturnRows(pos.avgKrw > 0 ? pos.avgKrw : curP, curP);
+      return;
+    }
+
+    let newAvgKrw = effectiveBuyPrice;
+    let dropPct = 0;
+
+    if (pos.avgKrw > 0) {
+      const existingQty = pos.qty > 0 ? pos.qty : 1;
+      const totalCost = (pos.avgKrw * existingQty) + addKrw;
+      const totalQty = existingQty + addQty;
+      newAvgKrw = totalQty > 0 ? totalCost / totalQty : pos.avgKrw;
+      dropPct = ((pos.avgKrw - newAvgKrw) / pos.avgKrw) * 100;
+
+      if (newAvgEl) newAvgEl.innerText = fmtKrw(newAvgKrw);
+
+      if (dropPctEl) {
+        if (dropPct > 0) {
+          dropPctEl.innerText = `-${dropPct.toFixed(2)}% 인하 (평단 방어)`;
+          dropPctEl.style.color = 'var(--green)';
+        } else if (dropPct < 0) {
+          dropPctEl.innerText = `+${Math.abs(dropPct).toFixed(2)}% 인상 (불타기)`;
+          dropPctEl.style.color = 'var(--gold)';
+        } else {
+          dropPctEl.innerText = '0.00% (동일)';
+          dropPctEl.style.color = 'var(--text-sub)';
+        }
+      }
+    } else {
+      newAvgKrw = effectiveBuyPrice;
+      if (newAvgEl) newAvgEl.innerText = fmtKrw(newAvgKrw);
+      if (dropPctEl) {
+        dropPctEl.innerText = '신규 진입 평단 생성';
+        dropPctEl.style.color = 'var(--blue)';
+      }
+    }
+
+    if (bePctEl) {
+      if (curP > 0 && newAvgKrw > 0) {
+        const beDiffPct = ((newAvgKrw - curP) / curP) * 100;
+        if (beDiffPct > 0) {
+          bePctEl.innerText = `현재가 대비 +${beDiffPct.toFixed(2)}% 상승 시 본전 회복`;
+          bePctEl.style.color = 'var(--gold)';
+        } else {
+          bePctEl.innerText = `현재 이미 +${Math.abs(beDiffPct).toFixed(2)}% 수익권`;
+          bePctEl.style.color = 'var(--green)';
+        }
+      } else {
+        bePctEl.innerText = '--';
+      }
+    }
+
+    // AI strategy integration
+    const strat = computeMultiHorizonStrategy(sym);
+    if (pos.avgKrw > 0 && dropPct >= 2.0 && strat.total >= 48) {
+      if (verdictBadge) {
+        verdictBadge.innerText = '물타기 유효 타점';
+        verdictBadge.className = 'badge-tag green';
+      }
+      if (verdictBox) {
+        verdictBox.className = 'sim-verdict good';
+        verdictBox.innerHTML = `✅ <strong>전략 판정 [적극 유효]</strong>: 기존 평단 대비 <strong>${dropPct.toFixed(1)}%</strong> 인하되며 손익분기점이 신속히 단축됩니다. AI 종합 점수(${strat.tier}등급, ${strat.total}점) 및 지지선 수급과 부합하므로 분할 체결이 권장됩니다.`;
+      }
+    } else if (pos.avgKrw > 0 && dropPct < 0) {
+      if (verdictBadge) {
+        verdictBadge.innerText = '불타기 주의';
+        verdictBadge.className = 'badge-tag gold';
+      }
+      if (verdictBox) {
+        verdictBox.className = 'sim-verdict caution';
+        verdictBox.innerHTML = `ℹ️ <strong>전략 판정 [평단 상승]</strong>: 현재가 추격 매수 시 기존 평단보다 <strong>${Math.abs(dropPct).toFixed(1)}%</strong> 높아집니다. 강력한 추세 돌파가 아니라면 지지선 눌림목 체결을 권장합니다.`;
+      }
+    } else if (strat.total < 40) {
+      if (verdictBadge) {
+        verdictBadge.innerText = '신중 분할 대기';
+        verdictBadge.className = 'badge-tag red';
+      }
+      if (verdictBox) {
+        verdictBox.className = 'sim-verdict caution';
+        verdictBox.innerHTML = `⚠️ <strong>전략 판정 [분할 보수]</strong>: 단기 하방 리스크 지표가 유지 중이므로, 한 번에 전액 투입하기보다 AI 2차 타점(₩${fmtKrw(effectiveBuyPrice * 0.95)})까지 간격을 넓혀 분할 진입하세요.`;
+      }
+    } else {
+      if (verdictBadge) {
+        verdictBadge.innerText = '시뮬레이션 완료';
+        verdictBadge.className = 'badge-tag gold';
+      }
+      if (verdictBox) {
+        verdictBox.className = 'sim-verdict good';
+        verdictBox.innerHTML = `💡 <strong>전략 판정 [시뮬레이션 완료]</strong>: 신규 평단 <strong>${fmtKrw(newAvgKrw)}</strong> 기준 매수 후 목표 수익률별 매도가를 참고하여 분할 익절 전략을 수립하세요.`;
+      }
+    }
+
+    updateTargetReturnRows(newAvgKrw, curP);
+  }
+
+  function updateTargetReturnRows(basePrice, curP) {
+    if (!basePrice || basePrice <= 0) return;
+    [5, 10, 20].forEach(pct => {
+      const targetP = basePrice * (1 + pct / 100);
+      const distPct = curP > 0 ? ((targetP - curP) / curP) * 100 : pct;
+      const pEl = document.getElementById(`tr-${pct}-price`);
+      const dEl = document.getElementById(`tr-${pct}-dist`);
+      if (pEl) pEl.innerText = fmtKrw(targetP);
+      if (dEl) {
+        dEl.innerText = `${distPct >= 0 ? '+' : ''}${distPct.toFixed(1)}%`;
+        dEl.style.color = distPct >= 0 ? 'var(--green)' : 'var(--red)';
+      }
+    });
   }
 
   function saveAlertSettings() {
