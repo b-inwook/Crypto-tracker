@@ -195,9 +195,12 @@
     }
     .card.card-hero {
       border-left: 3.5px solid var(--gold);
-      background: linear-gradient(180deg, var(--surface) 0%, rgba(24, 26, 32, 0.96) 100%);
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
       padding: 15px 16px;
+    }
+    [data-theme="light"] .card.card-hero {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     }
     .card-header {
       display: flex;
@@ -1668,9 +1671,9 @@
         </div>
       </div>
       <div class="acc-body">
-        <!-- 3 Essential Filters: 속보(6h), 24시간, 일주일(7d) -->
+        <!-- 3 Essential Filters: 속보(8h), 24시간, 일주일(7d) -->
         <div class="news-filters">
-          <button type="button" class="news-win-btn active" data-win="live" onclick="setNewsWindow('live')">속보 (6h)</button>
+          <button type="button" class="news-win-btn active" data-win="live" onclick="setNewsWindow('live')">속보 (8h)</button>
           <button type="button" class="news-win-btn" data-win="24h" onclick="setNewsWindow('24h')">24시간</button>
           <button type="button" class="news-win-btn" data-win="7d" onclick="setNewsWindow('7d')">일주일 (7d)</button>
         </div>
@@ -2096,7 +2099,7 @@
     timeframe: '1d',
     chartType: 'candle',
     horizonTab: 'all',
-    newsWindow: '24h',
+    newsWindow: 'live',
     usdtKrw: 1450,
     prices: {
       BTC: { usd: 0, chg: 0, high: 0, low: 0, vol: 0, krw: 0, kimp: 0 },
@@ -2442,6 +2445,8 @@
     const next = cur === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem(LS_KEYS.THEME, next);
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', next === 'light' ? '#F5F7FA' : '#0B0E11');
     drawProChart();
   }
 
@@ -4089,7 +4094,7 @@
 
     const results = await Promise.allSettled(
       feeds.map(f =>
-        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}`)
+        fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(f.url)}&count=20`)
           .then(r => r.json())
           .then(j => ({ source: f.name, items: j.items || [] }))
       )
@@ -4099,7 +4104,7 @@
     results.forEach(r => {
       if (r.status !== 'fulfilled') return;
       const src = r.value.source;
-      r.value.items.slice(0, 12).forEach(it => {
+      r.value.items.slice(0, 18).forEach(it => {
         const titleEn = decodeEntities(it.title);
         const descEn = decodeEntities(it.description || it.content || '').slice(0, 180);
         const pubMs = it.pubDate ? new Date(it.pubDate.replace(' ', 'T') + 'Z').getTime() : Date.now();
@@ -4146,16 +4151,16 @@
         if (it.score > existing.score) existing.score = it.score;
       }
     }
-    merged.sort((a, b) => b.score - a.score);
+    merged.sort((a, b) => b.pubMs - a.pubMs);
 
-    await Promise.all(merged.slice(0, 14).map(async it => {
+    await Promise.all(merged.slice(0, 18).map(async it => {
       if (!it.titleKo) it.titleKo = await translateKo(it.titleEn);
       if (!it.descKo && it.descEn) it.descKo = await translateKo(it.descEn.slice(0, 130));
     }));
 
     state.newsItems = merged;
     try {
-      localStorage.setItem(LS_KEYS.NEWS_ARCHIVE, JSON.stringify(merged.slice(0, 60)));
+      localStorage.setItem(LS_KEYS.NEWS_ARCHIVE, JSON.stringify(merged.slice(0, 80)));
     } catch (e) {}
 
     statusEl.innerText = '1군 매체 · 중복제거 완료';
@@ -4167,16 +4172,19 @@
     document.getElementById('news-card-title').innerText = `${sym} 1군 매체 뉴스 모니터`;
     const now = Date.now();
     const maxAgeMap = {
-      live: 6 * 3600000,
+      live: 8 * 3600000,
       '24h': 24 * 3600000,
       '7d': 7 * 86400000
     };
     const maxAge = maxAgeMap[state.newsWindow] || 24 * 3600000;
 
     let filtered = state.newsItems.filter(it => (sym === 'BTC' ? it.isBtc : it.isEth));
-    const inWindow = filtered.filter(it => now - it.pubMs <= maxAge);
-    if (inWindow.length > 0) filtered = inWindow;
-    const list = filtered.slice(0, 8);
+    // Strictly filter out articles older than the selected window
+    filtered = filtered.filter(it => (now - it.pubMs) <= maxAge);
+    // Sort strictly by publication time (newest first) for all tabs
+    filtered.sort((a, b) => b.pubMs - a.pubMs);
+    const maxListLen = state.newsWindow === 'live' ? 8 : 12;
+    const list = filtered.slice(0, maxListLen);
 
     const bar = document.getElementById('news-sentiment-bar');
     const listEl = document.getElementById('news-list');
@@ -4185,7 +4193,8 @@
     if (list.length === 0) {
       bar.style.display = 'none';
       briefPanel.style.display = 'none';
-      listEl.innerHTML = `<div style="font-size:12px; color:var(--text-sub); padding:8px 0;">수집된 뉴스가 없습니다. 잠시 후 새로고침해 주세요.</div>`;
+      const hoursTxt = state.newsWindow === 'live' ? '8시간' : state.newsWindow === '24h' ? '24시간' : '7일';
+      listEl.innerHTML = `<div style="font-size:12px; color:var(--text-sub); padding:14px 4px; text-align:center;">최근 ${hoursTxt} 이내에 보도된 뉴스가 없습니다. 상단의 다른 기간 탭을 선택해 이전 뉴스를 확인하실 수 있습니다.</div>`;
       return;
     }
 
@@ -4226,7 +4235,7 @@
       `;
     }).join('');
 
-    const winNames = { live: '현시점 속보 (6시간)', '24h': '최근 24시간', '7d': '일주일(7일)' };
+    const winNames = { live: '현시점 속보 (8시간)', '24h': '최근 24시간', '7d': '일주일(7일)' };
     document.getElementById('briefing-panel-title').innerText = `${winNames[state.newsWindow] || '최근 이슈'} 핵심 이슈 요약 정리`;
     briefPanel.style.display = 'block';
     document.getElementById('briefing-list').innerHTML = enriched.slice(0, 4).map(it => {
@@ -4800,7 +4809,11 @@
   // =========================================================
   (async function initApp() {
     const savedTheme = localStorage.getItem(LS_KEYS.THEME);
-    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme) metaTheme.setAttribute('content', savedTheme === 'light' ? '#F5F7FA' : '#0B0E11');
+    }
 
     loadSavedSettings();
     setupChartInteraction();
