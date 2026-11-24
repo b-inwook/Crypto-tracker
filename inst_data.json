@@ -11,9 +11,9 @@
   "bmnrCashB": 0.48,
   "bmnrFilingDate": "2026-11-09",
   "bmnrSecUrl": "https://www.sec.gov/edgar/browse/?CIK=0001829311",
-  "btcEtfFlowM": -2500.0,
+  "btcEtfFlowM": -1800.0,
   "ethEtfFlowM": 68.5,
-  "etfDate": "2026-11-23",
-  "etfNote": "Bitcoin ETF assets fall to three-month low as 2026 net outflows top $2",
-  "updatedAt": "2026-11-23 15:46 KST"
+  "etfDate": "2026-11-24",
+  "etfNote": "Bitcoin ETFs shed $1.8B in third-largest weekly outflow",
+  "updatedAt": "2026-11-24 10:30 KST"
 }
